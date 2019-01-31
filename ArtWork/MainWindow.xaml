@@ -1,10 +1,10 @@
-﻿<controls:Window x:Class="ArtWork.MainWindow"
+﻿<controls:BlurWindow x:Class="ArtWork.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
-        Style="{StaticResource WindowWin10}"
+        Style="{StaticResource WindowBlur}"
         BorderThickness="1"
                      BorderBrush="#262e2f"
                  CloseButtonForeground="{StaticResource DangerBrush}"
@@ -12,7 +12,7 @@
                      OtherButtonHoverBackground="#888580"
                      OtherButtonHoverForeground="White"
                      OtherButtonForeground="White"
-        
+        Loaded="BlurWindow_Loaded"
         xmlns:local="clr-namespace:ArtWork"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -21,16 +21,38 @@
             
         </StackPanel>
     </controls:Window.NonClientAreaContent>
-    <Grid Margin="5">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="10*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <controls:TextBox Name="txtSearch" TextChanged="TextBox_TextChanged" Style="{StaticResource TextBoxExtend}" controls:InfoElement.Placeholder="Search..."/>
-        <controls:CoverView HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="1" Name="cover" Width="auto" Height="auto" ItemWidth="460" ItemHeight="460">
-            
+
+        <GridSplitter Grid.Row="1" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
+        <GridSplitter Grid.Row="0" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
+        <controls:TextBox Grid.Row="0" Background="Transparent" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="10" Name="txtSearch" Style="{StaticResource TextBoxExtend}" controls:InfoElement.Placeholder="Search In Artists..."/>
+
+        <ListBox Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,5,5,0" ItemsSource="{Binding SampleData}" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged"/>
+
+        <StackPanel Grid.Column="1" Grid.Row="0">
+            <controls:TextBox Background="Transparent" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="10" Name="txtImageSearch" Style="{StaticResource TextBoxExtend}" controls:InfoElement.Placeholder="Search In Images..."/>
+            <StackPanel Orientation="Horizontal">
+                <controls:Shield Name="shTitle" Subject="Title" Status="Netherlandish Proverbs" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="{Binding}" controls:LinkElement.Link=""/>
+                <controls:Shield Name="shSubject" Subject="Artist" Status="Pieter Bruegel the Elder" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="{Binding}" controls:LinkElement.Link=""/>
+                <controls:Shield Name="shGallery" Subject="Gallery" Status="Gemäldegalerie" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="{Binding}" controls:LinkElement.Link=""/>
+                <controls:Shield Name="shCity" Subject="City" Status="Berlin" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}" Command="{Binding}" controls:LinkElement.Link=""/>
+                <controls:Shield Name="shCountry" Subject="Country" Status="Germany" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}" Command="{Binding}" controls:LinkElement.Link=""/>
+                <controls:Shield Name="shDate" Subject="Date" Status="1559" Margin="4,0,0,0" Color="{DynamicResource WarningBrush}" Command="{Binding}" controls:LinkElement.Link=""/>
+
+            </StackPanel>
+        </StackPanel>
+        <controls:LoadingCircle Name="loading" Visibility="Collapsed" Grid.Column="1" Grid.Row="1"/>
+        <controls:CoverView Margin="0,20,0,0" ItemContentHeightFixed="True" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
         </controls:CoverView>
-        <controls:Pagination Name="page" PageUpdated="Pagination_PageUpdated" Grid.Row="2"/>
+
     </Grid>
-</controls:Window>
+</controls:BlurWindow>

@@ -13,5 +13,11 @@ namespace ArtWork
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            var path = Environment.CurrentDirectory + @"\data";
+            //if (!System.IO.Directory.Exists(path) || System.IO.Directory.Exists(path) && !System.IO.Directory.GetFiles(path).Any())
+            //    new Downloader().ShowDialog();
+        }
     }
 }

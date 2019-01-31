@@ -1,0 +1,29 @@
+﻿<controls:Window x:Class="ArtWork.Downloader"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArtWork"
+        mc:Ignorable="d"
+         xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
+        Style="{StaticResource WindowWin10}"
+        BorderThickness="1"
+                     BorderBrush="#262e2f"
+                 CloseButtonForeground="{StaticResource DangerBrush}"
+                     NonClientAreaBackground="#262e2f"
+                     OtherButtonHoverBackground="#888580"
+                     OtherButtonHoverForeground="White"
+                     OtherButtonForeground="White"
+                 WindowStartupLocation="CenterScreen"
+        Title="Downloader" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="10">
+            <Button Click="Button_Click" Content="Download Selected"/>
+            <ProgressBar Margin="5"/>
+        </StackPanel>
+    </Grid>
+</controls:Window>
