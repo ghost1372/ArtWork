@@ -1,29 +1,44 @@
-﻿<controls:Window x:Class="ArtWork.Downloader"
+﻿<controls:BlurWindow x:Class="ArtWork.Downloader"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArtWork"
         mc:Ignorable="d"
+        ResizeMode="CanMinimize"
          xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
-        Style="{StaticResource WindowWin10}"
+        Style="{StaticResource WindowBlur}"
         BorderThickness="1"
                      BorderBrush="#262e2f"
                  CloseButtonForeground="{StaticResource DangerBrush}"
                      NonClientAreaBackground="#262e2f"
+                     NonClientAreaForeground="White"
                      OtherButtonHoverBackground="#888580"
                      OtherButtonHoverForeground="White"
                      OtherButtonForeground="White"
+                     ShowTitle="True"
                  WindowStartupLocation="CenterScreen"
-        Title="Downloader" Height="450" Width="800">
+        Title="Downloader" Height="170" Width="450">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Margin="10">
-            <Button Click="Button_Click" Content="Download Selected"/>
-            <ProgressBar Margin="5"/>
+        <StackPanel Grid.Row="1" Margin="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <controls:ProgressButton Name="prgButton" Style="{DynamicResource ProgressButtonPrimary}" Click="Button_Click" Content="Download Art"/>
+            </StackPanel>
         </StackPanel>
+        <StackPanel Margin="10" Grid.Row="0">
+            <StackPanel  Orientation="Horizontal">
+                <controls:Shield Name="shTitle" Subject="Title" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" />
+                <controls:Shield Name="shSubject" Subject="Artist" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}"/>
+                <controls:Shield Name="shItems" Subject="Total Items" Status="0" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
+                <controls:Shield Name="shDownloadedItem" Subject="Items Downloaded" Status="0" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
+            </StackPanel>
+            <ProgressBar Value="{Binding ElementName=prgButton, Path=Progress}" Name="prgBar" Margin="5"/>
+        </StackPanel>
+        <GridSplitter IsEnabled="False" HorizontalAlignment="Stretch" Height="4" Background="Transparent" BorderThickness="0,1,1,0" BorderBrush="{DynamicResource BorderBrush}" Margin="0,70,-0.4,10"/>
+
     </Grid>
-</controls:Window>
+</controls:BlurWindow>

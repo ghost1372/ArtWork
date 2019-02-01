@@ -238,10 +238,16 @@ namespace ArtWork
             var file = ShellFile.FromFilePath(item.Tag.ToString());
             try
             {
+                var country = string.Empty;
+                if (file.Properties.System.Keywords.Value[1].Equals("Empty"))
+                    country = "Location Unknown";
+                else
+                    country = file.Properties.System.Keywords.Value[1];
+
                 shTitle.Status = file.Properties.System.Title.Value;
                 shSubject.Status = file.Properties.System.Subject.Value;
-                shCountry.Status = file.Properties.System.Keywords.Value[0];
-                shCity.Status = file.Properties.System.Keywords.Value[1];
+                shCountry.Status =country;
+                shCity.Status = file.Properties.System.Keywords.Value[0];
                 shGallery.Status = file.Properties.System.Comment.Value;
                 shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
             }
@@ -285,6 +291,11 @@ namespace ArtWork
             
             ButtonNude.Style = style;
             
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            new Downloader().Show();
         }
     }
 

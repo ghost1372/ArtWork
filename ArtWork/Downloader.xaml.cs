@@ -24,20 +24,29 @@ namespace ArtWork
         public Downloader()
         {
             InitializeComponent();
-
-
         }
+
+
+        // 1-Get all items number
+        // 2-Get all folders and subfolders files
+        // 3-calculate Downloaded Items
+        // 4-DeSelect Downloaded Items
+        // 5-Get Json Info
+        // 6-Fix Json Invalid
+        // 7-Download Jpg
+        // 8-Write Properties
+        // 9-Put in Directory
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            IFileDownloader fileDownloader = new FileDownloader.FileDownloader();
-            fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
-            fileDownloader.DownloadProgressChanged += OnDownloadProgressChanged;
+            //IFileDownloader fileDownloader = new FileDownloader.FileDownloader();
+            //fileDownloader.DownloadFileCompleted += DownloadFileCompleted;
+            //fileDownloader.DownloadProgressChanged += OnDownloadProgressChanged;
 
 
-            fileDownloader.DownloadFileAsync(new Uri("https://kraken99.blob.core.windows.net/images4000xn/1.jpg"), Environment.CurrentDirectory + @"\data\1.jpg");
+            //fileDownloader.DownloadFileAsync(new Uri("https://kraken99.blob.core.windows.net/images4000xn/1.jpg"), Environment.CurrentDirectory + @"\data\1.jpg");
 
-           
+            
 
             
         }
