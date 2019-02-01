@@ -1,44 +1,64 @@
 ﻿using HandyControl.Controls;
-using HandyControl.Tools.Extension;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using Path = System.IO.Path;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace ArtWork
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : INotifyPropertyChanged
+    public partial class MainWindow
     {
         IEnumerable<string> AllofItems;
-        IEnumerable<string> CurrentofItems;
-        List<string> currentList;
+        public List<string> MyItems { get; set; }
         public MainWindow()
         {
             InitializeComponent();
 
             this.DataContext = this;
-            
         }
 
+        #region load menu items
+
+        //todo: Load items dynamic
+        ObservableCollection<string> sampleData = new ObservableCollection<string>();
+        public ObservableCollection<string> SampleData
+        {
+            get
+            {
+                if (sampleData.Count < 1)
+                {
+                    var items = @"C:\Users\Mahdi\Desktop\title.txt";
+                    var lines = File.ReadAllLines(items);
+                    foreach (var line in lines)
+                        sampleData.Add(line);
+                }
+
+                return sampleData;
+            }
+        }
+        #endregion
+
+        private bool UserFilter(object item)
+        {
+            if (String.IsNullOrEmpty(txtSearch.Text))
+                return true;
+            else
+                return ((item as object).ToString().IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+        }
 
         public IEnumerable<string> GetFileList(string rootFolderPath)
         {
@@ -69,140 +89,112 @@ namespace ArtWork
         }
 
 
-        #region Load Artist name
-        //todo: dynamic datatext
-        ObservableCollection<string> sampleData = new ObservableCollection<string>();
-        public ObservableCollection<string> SampleData
+        private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            get
-            {
-                if (sampleData.Count < 1)
-                {
-                    var items = @"C:\Users\Mahdi\Desktop\title.txt";
-                    var lines = File.ReadAllLines(items);
-                    foreach (var line in lines)
-                        sampleData.Add(line);
-                }
-
-                if (SearchText == null) return sampleData;
-
-                // Convert IEnum to Observ https://stackoverflow.com/questions/3559821/how-to-convert-ienumerable-to-observablecollection
-                var myObservableCollection = new ObservableCollection<string>(sampleData.Where(x => x.ToLower().StartsWith(SearchText.ToLower())));
-
-                return myObservableCollection;
-            }
-        }
-
-        // https://social.msdn.microsoft.com/Forums/vstudio/en-US/28d7aa0e-21c2-4fb8-b780-ad020b4556ad/how-to-create-a-search-textbox-in-wpf-to-search-the-listbox-databound-items-?forum=wpf
-
-        //Search in Listbox
-        private string _searchText;
-
-        public string SearchText
-        {
-            get { return _searchText; }
-            set
-            {
-                _searchText = value;
-
-                OnPropertyChanged("SearchText");
-                OnPropertyChanged("SampleData");
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        void OnPropertyChanged(string name)
-        {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name));
-        }
-
-        #endregion
-
-
-
-        #region Search in Images
-        //if (!string.IsNullOrWhiteSpace(txtSearch.Text))
-        //    {
-        //        cover.Items.Clear();
-        //        CurrentList = TotalList.Where(x => x.Contains(txtSearch.Text)).ToArray();
-        //CurrentList.ForEachWithIndex((item, idx) =>
-        //        {
-
-
-        //            Dispatcher.BeginInvoke(new Action(() =>
-        //            {
-        //    var cv = new CoverViewItem();
-        //    var txt = new TextBlock();
-        //    var img = new Image();
-        //    txt.Text = "Test " + idx;
-        //    img.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
-        //    cv.Header = img;
-        //    cv.Content = txt;
-        //    cover.Items.Add(cv);
-
-        //}), DispatcherPriority.Background);
-        //        });
-        //    }
-        #endregion
-
-
-
-        private void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
             AllofItems = GetFileList(@"E:\DL\newArtWork\Art\" + listbox.SelectedItem).ToArray();
-            
-            loading.Visibility = Visibility.Visible;
+
+            //Fix for Load All Items when Search
+            if (AllofItems.Count() > 2000)
+                return;
+
             cover.Items.Clear();
-            AllofItems.ForEachWithIndex((item, idx) =>
+
+            await Task.Run(() =>
             {
-               
-                var cv = new CoverViewItem();
-                var contentImg = new Image();
-                contentImg.Stretch = Stretch.UniformToFill;
-                contentImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
+                AllofItems.ForEachWithIndex((item, idx) =>
+                {
 
+                    this.Dispatcher.Invoke(() => {
+                        // add the control.
+                        var cv = new CoverViewItem();
+                        var context = new ContextMenu();
+                        var menuItem = new MenuItem();
+                        var menuItem2 = new MenuItem();
 
+                        menuItem.Header = "Set as Desktop Wallpaper";
+                        menuItem2.Header = "Go to Location";
 
-                var img = new Image();
-                img.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
+                        menuItem.Click += delegate { DisplayPicture(item,true); };
+                        menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item + "\""); };
 
+                        context.Items.Add(menuItem);
+                        context.Items.Add(menuItem2);
+                     
+                        var contentImg = new Image();
+                        contentImg.Stretch = Stretch.UniformToFill;
+                        contentImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
+                       
+                        var img = new Image();
+                        img.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
+                        cv.Header = img;
+                        cv.Tag = item;
+                        cv.Content = contentImg;
+                        cv.ContextMenu = context;
+                        cv.Selected += Cv_Selected;
+                        cv.Deselected += Cv_Deselected;
 
+                        //-< source >- 
+                        BitmapImage src = new BitmapImage();
+                        src.BeginInit();
+                        src.UriSource = new Uri(item, UriKind.Absolute);
+                        //< thumbnail > 
+                        src.DecodePixelWidth = 160;
+                        src.CacheOption = BitmapCacheOption.OnLoad;
+                        //</ thumbnail > 
 
+                        src.EndInit();
+                        img.Source = src;
+                        //-</ source >- 
 
-                //-< source >- 
-                BitmapImage src = new BitmapImage();
-                src.BeginInit();
-                src.UriSource = new Uri(item, UriKind.Absolute);
-                //< thumbnail > 
-                src.DecodePixelWidth = 160;
-                src.CacheOption = BitmapCacheOption.OnLoad;
-                //</ thumbnail > 
+                        img.Stretch = Stretch.Uniform;
+                        img.Height = 160;
 
-                src.EndInit();
-                img.Source = src;
-                //-</ source >- 
-
-                img.Stretch = Stretch.Uniform;
-                img.Height = 160;
-
-
-
-
-
-
-
-                cv.Header = img;
-                cv.Tag = item;
-                cv.Content = contentImg;
-                cv.Selected += Cv_Selected;
-                cover.Items.Add(cv);
+                        cover.Items.Add(cv);
+                        Task.Delay(50);
+                        
+                    }, DispatcherPriority.Background);
+                });
             });
-            loading.Visibility = Visibility.Collapsed;
-
-
         }
 
+        #region Set as Desktop
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SystemParametersInfo(uint uiAction, uint uiParam, String pvParam, uint fWinIni);
+
+        private const uint SPI_SETDESKWALLPAPER = 0x14;
+        private const uint SPIF_UPDATEINIFILE = 0x1;
+        private const uint SPIF_SENDWININICHANGE = 0x2;
+        private void DisplayPicture(string file_name, bool update_registry)
+        {
+            try
+            {
+                // If we should update the registry,
+                // set the appropriate flags.
+                uint flags = 0;
+                if (update_registry)
+                    flags = SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE;
+
+                // Set the desktop background to this file.
+                if (!SystemParametersInfo(SPI_SETDESKWALLPAPER,
+                    0, file_name, flags))
+                {
+                    MessageBox.Show("SystemParametersInfo failed.","Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error displaying picture ", "Error");
+            }
+        }
+        #endregion
+
+        #region Cover Items Events
+        private void Cv_Deselected(object sender, RoutedEventArgs e)
+        {
+            var item = sender as CoverViewItem;
+            item.Content = null;
+        }
 
         private void Cv_Selected(object sender, RoutedEventArgs e)
         {
@@ -211,14 +203,25 @@ namespace ArtWork
             shTitle.Status = file.Properties.System.Title.Value;
             shSubject.Status = file.Properties.System.Subject.Value;
             shCountry.Status = file.Properties.System.Keywords.Value[0];
-            shCity.Status = file.Properties.System.Title.Value;
+            shCity.Status = file.Properties.System.Keywords.Value[1];
             shGallery.Status = file.Properties.System.Comment.Value;
+            shDate.Status = file.Properties.System.Keywords.Value[9];
         }
+        #endregion
 
         private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
         {
             listbox.SelectedIndex = 0;
             AllofItems = GetFileList(@"E:\DL\newArtWork\Art\" + listbox.SelectedItem).ToArray();
+
+            //Initialize Search
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
+            view.Filter = UserFilter;
+        }
+
+        private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CollectionViewSource.GetDefaultView(listbox.ItemsSource).Refresh();
         }
     }
 }
