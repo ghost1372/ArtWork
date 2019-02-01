@@ -236,12 +236,19 @@ namespace ArtWork
         {
             var item = sender as CoverViewItem;
             var file = ShellFile.FromFilePath(item.Tag.ToString());
-            shTitle.Status = file.Properties.System.Title.Value;
-            shSubject.Status = file.Properties.System.Subject.Value;
-            shCountry.Status = file.Properties.System.Keywords.Value[0];
-            shCity.Status = file.Properties.System.Keywords.Value[1];
-            shGallery.Status = file.Properties.System.Comment.Value;
-            shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
+            try
+            {
+                shTitle.Status = file.Properties.System.Title.Value;
+                shSubject.Status = file.Properties.System.Subject.Value;
+                shCountry.Status = file.Properties.System.Keywords.Value[0];
+                shCity.Status = file.Properties.System.Keywords.Value[1];
+                shGallery.Status = file.Properties.System.Comment.Value;
+                shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
+            }
+            catch (IndexOutOfRangeException)
+            {
+
+            }
         }
         #endregion
 
