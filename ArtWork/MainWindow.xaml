@@ -1,24 +1,23 @@
 ﻿<controls:BlurWindow x:Class="ArtWork.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
                      xmlns:interactivity="clr-namespace:HandyControl.Interactivity;assembly=HandyControl"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
-        Style="{StaticResource WindowBlur}"
-        BorderThickness="1"
+                     Style="{StaticResource WindowBlur}"
+                     BorderThickness="1"
                      BorderBrush="#262e2f"
-                 CloseButtonForeground="{StaticResource DangerBrush}"
+                     CloseButtonForeground="{StaticResource DangerBrush}"
                      NonClientAreaBackground="#262e2f"
                      NonClientAreaForeground="White"
                      OtherButtonHoverBackground="#888580"
                      OtherButtonHoverForeground="White"
                      OtherButtonForeground="White"
                      ShowTitle="True"
-        Loaded="BlurWindow_Loaded"
-        xmlns:local="clr-namespace:ArtWork"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="1200">
+                     Loaded="BlurWindow_Loaded"
+                     mc:Ignorable="d"
+                     Title="MainWindow" Height="650" Width="1200">
     <controls:Window.NonClientAreaContent>
         <StackPanel Orientation="Horizontal">
             
@@ -31,14 +30,17 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <GridSplitter Grid.Row="1" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
         <GridSplitter Grid.Row="0" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
-        <controls:TextBox Grid.Row="0" Background="Transparent" TextChanged="TxtSearch_TextChanged" VerticalAlignment="Top" Margin="10" Name="txtSearch" Style="{StaticResource TextBoxExtend}" controls:InfoElement.Placeholder="Search In Artists..."/>
-
+        <controls:TextBox Grid.Row="0" Background="Transparent" TextChanged="TxtSearch_TextChanged" VerticalAlignment="Top" Margin="10,5,10,10" Name="txtSearch" Style="{StaticResource TextBoxExtend}" controls:InfoElement.Placeholder="Search In Artists..."/>
+        <ToggleButton Style="{DynamicResource ToggleButtonPrimary}" Checked="ButtonNude_Checked" Unchecked="ButtonNude_Checked" Name="ButtonNude" Content="Nude Filter" Grid.Row="0" Grid.Column="0" Margin="10,0,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            
+            
+        </ToggleButton>
         <ListBox ItemsSource="{Binding SampleData}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,5,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged"/>
 
         <StackPanel Grid.Column="1" Grid.Row="0">
@@ -53,7 +55,6 @@
                 <controls:Shield Name="shItems" Subject="NumberOfItems" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
             </StackPanel>
         </StackPanel>
-        <controls:LoadingCircle Name="loading" Visibility="Collapsed" Grid.Column="1" Grid.Row="1"/>
         <controls:CoverView Margin="0,20,0,0" ItemContentHeightFixed="True" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
         </controls:CoverView>
     </Grid>

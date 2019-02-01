@@ -1,11 +1,13 @@
 ﻿using HandyControl.Controls;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,7 +25,7 @@ namespace ArtWork
     public partial class MainWindow
     {
         IEnumerable<string> AllofItems;
-        public List<string> MyItems { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -35,16 +37,32 @@ namespace ArtWork
 
         //todo: Load items dynamic
         ObservableCollection<string> sampleData = new ObservableCollection<string>();
+        ObservableCollection<string> nudeData = new ObservableCollection<string>();
+        ObservableCollection<string> newnude = new ObservableCollection<string>();
         public ObservableCollection<string> SampleData
         {
             get
             {
                 if (sampleData.Count < 1)
                 {
+                    
                     var items = @"C:\Users\Mahdi\Desktop\title.txt";
+                    var nudeItems = @"C:\Users\Mahdi\Desktop\nudes.txt";
+                    
+
                     var lines = File.ReadAllLines(items);
                     foreach (var line in lines)
+                    {
+
                         sampleData.Add(line);
+                    }
+
+                    var nudesLines = File.ReadAllLines(nudeItems);
+                    foreach (var line in nudesLines)
+                    {
+                        nudeData.Add(line);
+                    }
+
                 }
 
                 return sampleData;
@@ -88,74 +106,92 @@ namespace ArtWork
             }
         }
 
+        
 
-        private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AllofItems = GetFileList(@"E:\DL\newArtWork\Art\" + listbox.SelectedItem).ToArray();
 
+            var CurrentIndex = listbox.SelectedIndex;
+            AllofItems = GetFileList(@"E:\DL\newArtWork\Art\" + listbox.SelectedItem).ToArray();
             //Fix for Load All Items when Search
             if (AllofItems.Count() > 2000)
                 return;
 
+            //Check Nudes
+
+            if (ButtonNude.IsChecked == true)
+            {
+                foreach (var item in AllofItems)
+                {
+                    foreach (var itemx in nudeData)
+                    {
+                        if (itemx.Equals(Path.GetFileNameWithoutExtension(item)))
+                            newnude.Add(item.Replace(Path.GetFileName(item), itemx + ".jpg"));
+                    }
+                }
+                AllofItems = AllofItems.Except(newnude);
+            }
+
             cover.Items.Clear();
 
-            await Task.Run(() =>
+            foreach (var item in AllofItems)
             {
-                AllofItems.ForEachWithIndex((item, idx) =>
-                {
+               
+                this.Dispatcher.Invoke(() => {
 
-                    this.Dispatcher.Invoke(() => {
-                        // add the control.
-                        var cv = new CoverViewItem();
-                        var context = new ContextMenu();
-                        var menuItem = new MenuItem();
-                        var menuItem2 = new MenuItem();
+                    if (CurrentIndex != listbox.SelectedIndex)
+                        return;
 
-                        menuItem.Header = "Set as Desktop Wallpaper";
-                        menuItem2.Header = "Go to Location";
+                    // add the control.
+                    var cv = new CoverViewItem();
+                    var context = new ContextMenu();
+                    var menuItem = new MenuItem();
+                    var menuItem2 = new MenuItem();
 
-                        menuItem.Click += delegate { DisplayPicture(item,true); };
-                        menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item + "\""); };
+                    menuItem.Header = "Set as Desktop Wallpaper";
+                    menuItem2.Header = "Go to Location";
 
-                        context.Items.Add(menuItem);
-                        context.Items.Add(menuItem2);
-                     
-                        var contentImg = new Image();
-                        contentImg.Stretch = Stretch.UniformToFill;
-                        contentImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
-                       
-                        var img = new Image();
-                        img.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
-                        cv.Header = img;
-                        cv.Tag = item;
-                        cv.Content = contentImg;
-                        cv.ContextMenu = context;
-                        cv.Selected += Cv_Selected;
-                        cv.Deselected += Cv_Deselected;
+                    menuItem.Click += delegate { DisplayPicture(item, true); };
+                    menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item + "\""); };
 
-                        //-< source >- 
-                        BitmapImage src = new BitmapImage();
-                        src.BeginInit();
-                        src.UriSource = new Uri(item, UriKind.Absolute);
-                        //< thumbnail > 
-                        src.DecodePixelWidth = 160;
-                        src.CacheOption = BitmapCacheOption.OnLoad;
-                        //</ thumbnail > 
+                    context.Items.Add(menuItem);
+                    context.Items.Add(menuItem2);
 
-                        src.EndInit();
-                        img.Source = src;
-                        //-</ source >- 
+                    var contentImg = new Image();
+                    contentImg.Stretch = Stretch.UniformToFill;
+                    contentImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
 
-                        img.Stretch = Stretch.Uniform;
-                        img.Height = 160;
+                    var img = new Image();
+                    img.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
+                    cv.Header = img;
+                    cv.Tag = item;
+                    cv.Content = contentImg;
+                    cv.ContextMenu = context;
+                    cv.Selected += Cv_Selected;
+                    cv.Deselected += Cv_Deselected;
 
-                        cover.Items.Add(cv);
-                        Task.Delay(50);
-                        
-                    }, DispatcherPriority.Background);
-                });
-            });
-        }
+                    //-< source >- 
+                    BitmapImage src = new BitmapImage();
+                    src.BeginInit();
+                    src.UriSource = new Uri(item, UriKind.Absolute);
+                    //< thumbnail > 
+                    src.DecodePixelWidth = 160;
+                    src.CacheOption = BitmapCacheOption.OnLoad;
+                    //</ thumbnail > 
+
+                    src.EndInit();
+                    img.Source = src;
+                    //-</ source >- 
+
+                    img.Stretch = Stretch.Uniform;
+                    img.Height = 160;
+
+                    cover.Items.Add(cv);
+                    Task.Delay(50);
+
+                }, DispatcherPriority.Background);
+            }
+        }        
 
         #region Set as Desktop
         [DllImport("user32.dll", SetLastError = true)]
@@ -205,7 +241,7 @@ namespace ArtWork
             shCountry.Status = file.Properties.System.Keywords.Value[0];
             shCity.Status = file.Properties.System.Keywords.Value[1];
             shGallery.Status = file.Properties.System.Comment.Value;
-            shDate.Status = file.Properties.System.Keywords.Value[9];
+            shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
         }
         #endregion
 
@@ -213,6 +249,8 @@ namespace ArtWork
         {
             listbox.SelectedIndex = 0;
             AllofItems = GetFileList(@"E:\DL\newArtWork\Art\" + listbox.SelectedItem).ToArray();
+
+            
 
             //Initialize Search
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
@@ -223,7 +261,26 @@ namespace ArtWork
         {
             CollectionViewSource.GetDefaultView(listbox.ItemsSource).Refresh();
         }
+
+        private void ButtonNude_Checked(object sender, RoutedEventArgs e)
+        {
+            setStyle((bool)ButtonNude.IsChecked);
+            Listbox_SelectionChanged(null, null);
+        }
+        private void setStyle(bool isChecked)
+        {
+            Style style;
+
+            if (isChecked)
+                style = this.FindResource("ToggleButtonDanger") as Style;
+            else
+                style = this.FindResource("ToggleButtonPrimary") as Style;
+            
+            ButtonNude.Style = style;
+            
+        }
     }
+
 }
 public static class ForEachExtensions
 {
