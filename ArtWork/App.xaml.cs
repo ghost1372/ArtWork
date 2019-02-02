@@ -17,7 +17,7 @@ namespace ArtWork
         {
             var path = Environment.CurrentDirectory + @"\data";
             //if (!System.IO.Directory.Exists(path) || System.IO.Directory.Exists(path) && !System.IO.Directory.GetFiles(path).Any())
-            //    new Downloader().ShowDialog();
+                new Downloader().ShowDialog();
         }
     }
 }

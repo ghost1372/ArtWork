@@ -18,7 +18,7 @@
                      OtherButtonForeground="White"
                      ShowTitle="True"
                  WindowStartupLocation="CenterScreen"
-        Title="Downloader" Height="170" Width="450">
+        Title="Downloader" Height="150" Width="450">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -26,14 +26,15 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="1" Margin="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <controls:ProgressButton Name="prgButton" Style="{DynamicResource ProgressButtonPrimary}" Click="Button_Click" Content="Download Art"/>
+                <controls:ProgressButton Style="{DynamicResource ProgressButtonPrimary}" Content="Download" Name="prgButton" Click="Button_Click">
+                </controls:ProgressButton>
             </StackPanel>
         </StackPanel>
         <StackPanel Margin="10" Grid.Row="0">
             <StackPanel  Orientation="Horizontal">
                 <controls:Shield Name="shTitle" Subject="Title" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" />
                 <controls:Shield Name="shSubject" Subject="Artist" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}"/>
-                <controls:Shield Name="shItems" Subject="Total Items" Status="0" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
+                <controls:Shield Name="shItems" Subject="Total Items" Status="9299" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
                 <controls:Shield Name="shDownloadedItem" Subject="Items Downloaded" Status="0" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
             </StackPanel>
             <ProgressBar Value="{Binding ElementName=prgButton, Path=Progress}" Name="prgBar" Margin="5"/>

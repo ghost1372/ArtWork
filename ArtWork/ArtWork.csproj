@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack.Core.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -152,10 +153,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\.NetFileDownloader-master\src\FileDownloader.csproj">
-      <Project>{deb25df4-20af-4f85-8920-c3e14e147d9d}</Project>
-      <Name>FileDownloader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HandyControl\HandyControl.csproj">
       <Project>{dc966e3d-bcff-4652-98cf-070e5494749a}</Project>
       <Name>HandyControl</Name>
