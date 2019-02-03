@@ -26,8 +26,8 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="1" Margin="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <controls:ProgressButton Width="140" Style="{DynamicResource ProgressButtonPrimary}" Content="Download" Name="prgButton" Click="Button_Click">
-                </controls:ProgressButton>
+                <controls:ProgressButton Margin="5,0" Width="140" Style="{DynamicResource ProgressButtonPrimary}" Content="Download" Name="prgButton" Click="Button_Click"/>
+                <controls:ProgressButton Margin="5,0" Width="140" Style="{DynamicResource ProgressButtonWarning}" Content="Change Directory" Name="prgDirectory" Click="PrgDirectory_Click"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Margin="10" Grid.Row="0">

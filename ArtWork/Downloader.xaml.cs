@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAPICodePack.Shell;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using Newtonsoft.Json;
 using System;
@@ -250,6 +251,20 @@ namespace ArtWork
             double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
             double percentage = bytesIn / totalBytes * 100;
             prgButton.Progress = int.Parse(Math.Truncate(percentage).ToString());
+        }
+
+        private void PrgDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            var browserDialog = new CommonOpenFileDialog();
+            browserDialog.IsFolderPicker = true;
+            browserDialog.Title = Title;
+            browserDialog.InitialDirectory = GlobalData.Config.DataPath;
+
+            if (browserDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                GlobalData.Config.DataPath = browserDialog.FileName;
+                GlobalData.Save();
+            }
         }
     }
 }
