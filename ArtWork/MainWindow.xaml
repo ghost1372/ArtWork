@@ -40,10 +40,10 @@
                     </MenuItem>
 
                 </MenuItem>
-                <MenuItem Foreground="White" Header="Repository">
-                    <MenuItem Header="GitHub">
+                <MenuItem Foreground="White" Header="Config">
+                    <MenuItem Click="MenuItem_Click_1" Header="Data Path">
                         <MenuItem.Icon>
-                            <Path Data="{StaticResource GithubGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
+                            <Path Data="{StaticResource ConfigGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     

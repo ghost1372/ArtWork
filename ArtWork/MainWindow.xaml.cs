@@ -1,4 +1,6 @@
 ﻿using HandyControl.Controls;
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Concurrent;
@@ -297,22 +299,20 @@ namespace ArtWork
         {
             new Downloader().Show();
         }
-    }
 
-}
-public static class ForEachExtensions
-{
-    public static void ForEachWithIndex<T>(this IEnumerable<T> enumerable, Action<T, int> handler)
-    {
-        try
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
         {
-            int idx = 0;
-            foreach (T item in enumerable)
-                handler(item, idx++);
-        }
-        catch (Exception)
-        {
+            var browserDialog = new CommonOpenFileDialog();
+            browserDialog.IsFolderPicker = true;
+            browserDialog.Title = Title;
+            browserDialog.InitialDirectory = GlobalData.Config.DataPath;
 
+            if (browserDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                GlobalData.Config.DataPath = browserDialog.FileName;
+                GlobalData.Save();
+            }
         }
     }
+
 }

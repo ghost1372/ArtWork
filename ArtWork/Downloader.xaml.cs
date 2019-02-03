@@ -45,10 +45,7 @@ namespace ArtWork
 
         public Downloader()
         {
-            InitializeComponent();
-
-            GlobalData.Init();
-           
+            InitializeComponent();           
 
             // Generate All Items
             for (int i = 1; i < AppVar.NumberOfAllItemExist; i++)
