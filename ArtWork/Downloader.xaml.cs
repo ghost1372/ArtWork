@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -23,11 +26,24 @@ namespace ArtWork
     public partial class Downloader
     {
         private readonly int NumberOfAllItemExist = 9300;
-        public readonly string imagesBaseLine = "https://kraken99.blob.core.windows.net/images4000xn/";
+        public readonly string imagesBaseUrl = "https://kraken99.blob.core.windows.net/images4000xn/";
+        public readonly string jsonBaseUrl = "https://kraken99.blob.core.windows.net/tileinfo/";
+        public static readonly string NudPath = @"C:\Users\Mahdi\Desktop\nudes.txt";
 
         private Queue<string> _downloadUrls = new Queue<string>();
 
         ObservableCollection<string> generatedLinks = new ObservableCollection<string>();
+
+        public string title { get; set; }
+        public string sig { get; set; }
+        public string gal { get; set; }
+        public string city { get; set; }
+        public string country { get; set; }
+        public double lat { get; set; }
+        public double @long { get; set; }
+        public string @Imagepath { get; set; }
+        public string @JsonPath { get; set; }
+        public string wikiartist { get; set; }
 
         public Downloader()
         {
@@ -36,7 +52,7 @@ namespace ArtWork
             // Generate All Items
             for (int i = 1; i < NumberOfAllItemExist; i++)
             {
-                generatedLinks.Add(imagesBaseLine + i + ".jpg");
+                generatedLinks.Add(imagesBaseUrl + i + ".jpg");
             }
 
             //Get Exist Items
@@ -46,21 +62,22 @@ namespace ArtWork
             //Remove Exist Item From Generated Links
             foreach (var item in existItems)
             {
-                generatedLinks.Remove(imagesBaseLine + System.IO.Path.GetFileName(item));
+                generatedLinks.Remove(imagesBaseUrl + System.IO.Path.GetFileName(item));
             }
         }
-      
+
 
         // 1-Get all items number ====================> Done
         // 2-Get all folders and subfolders files ====> Done
         // 3-calculate Downloaded Items ==============> Done
         // 4-DeSelect Downloaded Items ===============> Done
-        // 5-Get Json Info
-        // 6-Fix Json Invalid
-        // 7-Download Jpg
-        // Check File Exist
-        // 8-Write Properties
-        // 9-Put in Directory
+        // 5-Get Json Info ===========================> Done
+        // 6-Fix Json Invalid ========================> Fixed
+        // 7-Download Jpg with Fixed Name ============> Fixed
+        // Check File Exist ==========================> Fixed
+        // Check Nudus ===============================> Fixed
+        // 8-Write Properties ========================> Fixed
+        // 9-Put in Directory ========================> Fixed
         public IEnumerable<string> GetFileList(string rootFolderPath)
         {
             Queue<string> pending = new Queue<string>();
@@ -96,6 +113,19 @@ namespace ArtWork
             downloadFile(generatedLinks);
         }
 
+        public class RootObject
+        {
+            public string title { get; set; }
+            public string sig { get; set; }
+            public string gal { get; set; }
+            public string city { get; set; }
+            public string country { get; set; }
+            public double lat { get; set; }
+            public double @long { get; set; }
+            public string wiki { get; set; }
+            public string wikiartist { get; set; }
+        }
+
         private void downloadFile(IEnumerable<string> urls)
         {
             foreach (var url in urls)
@@ -119,6 +149,23 @@ namespace ArtWork
                 string FileName = url.Substring(url.LastIndexOf("/") + 1,
                             (url.Length - url.LastIndexOf("/") - 1));
 
+                MessageBox.Show(jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
+                var json = client.DownloadString(jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
+                var root = JsonConvert.DeserializeObject<RootObject>(json);
+                shTitle.Status = root.title;
+                shSubject.Status = root.sig;
+
+                title = root.title;
+                sig = root.sig;
+                wikiartist = root.wikiartist;
+                country = root.country;
+                city = root.city;
+                gal = root.gal;
+                @long = root.@long;
+                lat = root.lat;
+                @Imagepath = Environment.CurrentDirectory + @"\data\" + FileName;
+                @JsonPath = jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json";
+
                 client.DownloadFileAsync(new Uri(url), Environment.CurrentDirectory + @"\data\" + FileName);
                 return;
             }
@@ -140,11 +187,67 @@ namespace ArtWork
             shDownloadedItem.Status = Convert.ToInt32(shDownloadedItem.Status) + 1;
             // Handle Rename 
 
+            var file = ShellFile.FromFilePath(@Imagepath);
+
+            var lines = File.ReadAllLines(NudPath);
+            string isNude = "NOTNUDE";
+
+          
+            //Check Nud
+
+            if (DomainExists(System.IO.Path.GetFileNameWithoutExtension(@JsonPath), NudPath))
+            {
+                isNude = "ITSNUDE";
+
+            }
+            else
+            {
+                isNude = "NOTNUDE";
+
+            }
+
+
+            var date = sig.Substring(sig.LastIndexOf(',') + 1);
+            
+
+            try
+            {
+                //Set Attrib
+                ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
+                propertyWriter.WriteProperty(SystemProperties.System.Title, title ?? "Empty");
+                propertyWriter.WriteProperty(SystemProperties.System.Subject, sig ?? "Empty");
+                propertyWriter.WriteProperty(SystemProperties.System.Comment, gal ?? "Empty");
+                propertyWriter.WriteProperty(SystemProperties.System.Author, wikiartist ?? "Unknown Artist");
+                propertyWriter.WriteProperty(SystemProperties.System.Keywords, new string[] {
+                   city ?? "Location Unknown", country ?? "Location Unknown", lat.ToString() ?? "Empty",
+                   @long.ToString() ?? "Empty", sig ?? "Empty", title ?? "Empty",
+                   wikiartist ?? "Empty", gal ?? "Empty", isNude ?? "Empty", date ?? "Empty"
+                });
+
+                propertyWriter.Close();
+            }
+            catch (Exception)
+            {
+            }
+            string cleanFileName = String.Join("", wikiartist.Split(System.IO.Path.GetInvalidFileNameChars()));
+            if (!Directory.Exists(Environment.CurrentDirectory + @"\data\" + cleanFileName))
+            {
+                Directory.CreateDirectory(Environment.CurrentDirectory + @"\data\" + cleanFileName);
+            }
+            File.Move(@Imagepath, Environment.CurrentDirectory + @"\data\" + cleanFileName + @"\" + System.IO.Path.GetFileName(@Imagepath));
+
             //
 
             DownloadFile();
         }
+        private static bool DomainExists(string domain, string path)
+        {
+            foreach (string line in File.ReadLines(path))
+                if (domain == line)
+                    return true; // and stop reading lines
 
+            return false;
+        }
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             double bytesIn = double.Parse(e.BytesReceived.ToString());
