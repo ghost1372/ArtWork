@@ -15,7 +15,7 @@ namespace ArtWork
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var path = Environment.CurrentDirectory + @"\data";
+            var path = GlobalData.Config.DataPath;
             //if (!System.IO.Directory.Exists(path) || System.IO.Directory.Exists(path) && !System.IO.Directory.GetFiles(path).Any())
                 new Downloader().ShowDialog();
         }

@@ -25,9 +25,7 @@ namespace ArtWork
     /// </summary>
     public partial class Downloader
     {
-        private readonly int NumberOfAllItemExist = 9300;
-        public readonly string imagesBaseUrl = "https://kraken99.blob.core.windows.net/images4000xn/";
-        public readonly string jsonBaseUrl = "https://kraken99.blob.core.windows.net/tileinfo/";
+        
         public static readonly string NudPath = @"C:\Users\Mahdi\Desktop\nudes.txt";
 
         private Queue<string> _downloadUrls = new Queue<string>();
@@ -49,20 +47,23 @@ namespace ArtWork
         {
             InitializeComponent();
 
+            GlobalData.Init();
+           
+
             // Generate All Items
-            for (int i = 1; i < NumberOfAllItemExist; i++)
+            for (int i = 1; i < AppVar.NumberOfAllItemExist; i++)
             {
-                generatedLinks.Add(imagesBaseUrl + i + ".jpg");
+                generatedLinks.Add(AppVar.imagesBaseUrl + i + ".jpg");
             }
 
             //Get Exist Items
-            var existItems = GetFileList(Environment.CurrentDirectory + @"\data");
+            var existItems = GetFileList(GlobalData.Config.DataPath);
             shDownloadedItem.Status = existItems.Count();
 
             //Remove Exist Item From Generated Links
             foreach (var item in existItems)
             {
-                generatedLinks.Remove(imagesBaseUrl + System.IO.Path.GetFileName(item));
+                generatedLinks.Remove(AppVar.imagesBaseUrl + System.IO.Path.GetFileName(item));
             }
         }
 
@@ -149,8 +150,7 @@ namespace ArtWork
                 string FileName = url.Substring(url.LastIndexOf("/") + 1,
                             (url.Length - url.LastIndexOf("/") - 1));
 
-                MessageBox.Show(jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
-                var json = client.DownloadString(jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
+                var json = client.DownloadString(AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
                 var root = JsonConvert.DeserializeObject<RootObject>(json);
                 shTitle.Status = root.title;
                 shSubject.Status = root.sig;
@@ -163,10 +163,10 @@ namespace ArtWork
                 gal = root.gal;
                 @long = root.@long;
                 lat = root.lat;
-                @Imagepath = Environment.CurrentDirectory + @"\data\" + FileName;
-                @JsonPath = jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json";
+                @Imagepath = GlobalData.Config.DataPath + @"\" + FileName;
+                @JsonPath = AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json";
 
-                client.DownloadFileAsync(new Uri(url), Environment.CurrentDirectory + @"\data\" + FileName);
+                client.DownloadFileAsync(new Uri(url), GlobalData.Config.DataPath + @"\" + FileName);
                 return;
             }
 
@@ -189,7 +189,6 @@ namespace ArtWork
 
             var file = ShellFile.FromFilePath(@Imagepath);
 
-            var lines = File.ReadAllLines(NudPath);
             string isNude = "NOTNUDE";
 
           
@@ -230,11 +229,11 @@ namespace ArtWork
             {
             }
             string cleanFileName = String.Join("", wikiartist.Split(System.IO.Path.GetInvalidFileNameChars()));
-            if (!Directory.Exists(Environment.CurrentDirectory + @"\data\" + cleanFileName))
+            if (!Directory.Exists(GlobalData.Config.DataPath + @"\" + cleanFileName))
             {
-                Directory.CreateDirectory(Environment.CurrentDirectory + @"\data\" + cleanFileName);
+                Directory.CreateDirectory(GlobalData.Config.DataPath + @"\" + cleanFileName);
             }
-            File.Move(@Imagepath, Environment.CurrentDirectory + @"\data\" + cleanFileName + @"\" + System.IO.Path.GetFileName(@Imagepath));
+            File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName + @"\" + System.IO.Path.GetFileName(@Imagepath));
 
             //
 
