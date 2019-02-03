@@ -35,8 +35,9 @@ namespace ArtWork
 
         public Downloader()
         {
-            InitializeComponent();           
+            InitializeComponent();
 
+            generatedLinks.Add(AppVar.imagesBaseUrl + "0.jpg");
             // Generate All Items
             for (int i = 1; i < AppVar.NumberOfAllItemExist; i++)
             {
@@ -51,6 +52,7 @@ namespace ArtWork
             foreach (var item in existItems)
             {
                 generatedLinks.Remove(AppVar.imagesBaseUrl + System.IO.Path.GetFileName(item));
+
             }
         }
 
@@ -129,32 +131,43 @@ namespace ArtWork
         {
             if (_downloadUrls.Any())
             {
-                WebClient client = new WebClient();
-                client.DownloadProgressChanged += Client_DownloadProgressChanged; ;
-                client.DownloadFileCompleted += Client_DownloadFileCompleted; ;
+               
 
-                var url = _downloadUrls.Dequeue();
-                string FileName = url.Substring(url.LastIndexOf("/") + 1,
-                            (url.Length - url.LastIndexOf("/") - 1));
+                try
+                {
+                    WebClient client = new WebClient();
+                    client.DownloadProgressChanged += Client_DownloadProgressChanged; ;
+                    client.DownloadFileCompleted += Client_DownloadFileCompleted; ;
 
-                var json = client.DownloadString(AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
-                var root = JsonConvert.DeserializeObject<RootObject>(json);
-                shTitle.Status = root.title;
-                shSubject.Status = root.sig;
+                    var url = _downloadUrls.Dequeue();
+                    string FileName = url.Substring(url.LastIndexOf("/") + 1,
+                                (url.Length - url.LastIndexOf("/") - 1));
 
-                title = root.title;
-                sig = root.sig;
-                wikiartist = root.wikiartist;
-                country = root.country;
-                city = root.city;
-                gal = root.gal;
-                @long = root.@long;
-                lat = root.lat;
-                @Imagepath = GlobalData.Config.DataPath + @"\" + FileName;
-                @JsonPath = AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json";
+                    var json = client.DownloadString(AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
+                    var root = JsonConvert.DeserializeObject<RootObject>(json);
+                    shTitle.Status = root.title;
+                    shSubject.Status = root.sig;
 
-                client.DownloadFileAsync(new Uri(url), GlobalData.Config.DataPath + @"\" + FileName);
-                return;
+                    title = root.title;
+                    sig = root.sig;
+                    wikiartist = root.wikiartist;
+                    country = root.country;
+                    city = root.city;
+                    gal = root.gal;
+                    @long = root.@long;
+                    lat = root.lat;
+                    @Imagepath = GlobalData.Config.DataPath + @"\" + FileName;
+                    @JsonPath = AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json";
+                    client.DownloadFileAsync(new Uri(url), GlobalData.Config.DataPath + @"\" + FileName);
+                    return;
+
+                }
+                catch (System.Net.WebException) {
+                    DownloadFile();
+                }
+                catch (Exception)
+                {
+                }
             }
 
             // End of the download
