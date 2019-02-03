@@ -13,8 +13,8 @@ namespace ArtWork
         public static readonly string imagesBaseUrl = "https://kraken99.blob.core.windows.net/images4000xn/";
         public static readonly string jsonBaseUrl = "https://kraken99.blob.core.windows.net/tileinfo/";
 
-        public static string UpdateServer = "https://raw.githubusercontent.com/ghost1372/CityArt/master/Updater.xml";
-        public const string UpdateXmlTag = "CityArt"; //Defined in Xml file
+        public static string UpdateServer = "https://raw.githubusercontent.com/ghost1372/ArtWork/master/Updater.xml";
+        public const string UpdateXmlTag = "ArtWork"; //Defined in Xml file
         public const string UpdateXmlChildTag = "AppVersion"; //Defined in Xml file
         public const string UpdateVersionTag = "version"; //Defined in Xml file
         public const string UpdateUrlTag = "url"; //Defined in Xml file
