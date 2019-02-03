@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArtWork>
+  <AppVersion>
+    <version>1.0.0.0</version>
+    <url>https://github.com/ghost1372/ArtWork/releases</url>
+    <changelog>
+First Version
+    </changelog>
+  </AppVersion>
+</ArtWork>
