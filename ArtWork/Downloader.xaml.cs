@@ -37,7 +37,6 @@ namespace ArtWork
         {
             InitializeComponent();
 
-            generatedLinks.Add(AppVar.imagesBaseUrl + "0.jpg");
             // Generate All Items
             for (int i = 1; i < AppVar.NumberOfAllItemExist; i++)
             {
