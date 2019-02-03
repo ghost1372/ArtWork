@@ -298,7 +298,7 @@ namespace HandyControl.Controls
                 Owner = ownerWindow,
                 WindowStartupLocation = ownerIsNull ? WindowStartupLocation.CenterScreen : WindowStartupLocation.CenterOwner,
                 ShowTitle = true,
-                Title = caption,
+                Title = caption ?? "Title",
                 Topmost = ownerIsNull,
                 _messageBoxResult = defaultResult
             };

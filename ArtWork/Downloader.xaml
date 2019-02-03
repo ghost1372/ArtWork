@@ -18,7 +18,7 @@
                      OtherButtonForeground="White"
                      ShowTitle="True"
                  WindowStartupLocation="CenterScreen"
-        Title="Downloader" Height="160" Width="600">
+        Title="Downloader" Height="160" Width="700">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>

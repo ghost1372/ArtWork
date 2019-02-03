@@ -61,37 +61,116 @@ namespace ArtWork.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Aaron Shikler
-        ///Abanindranath Tagore
-        ///Abbott Handerson Thayer
-        ///Abdul Qadir Al Rassam
-        ///Abraham Bloemaert
-        ///Abraham de Vries
-        ///Abraham Solomon
-        ///Adam Elsheimer
-        ///Adi Holzer
-        ///Adolf Mackeprang
-        ///Adolf Mosengel
-        ///Adolf Ulrik Wertmüller
-        ///Adolph Menzel
-        ///Adriaen Brouwer
-        ///Adriaen van de Velde
-        ///Adriaen van de Venne
-        ///Adriaen van Ostade
-        ///Adriaen van Utrecht
-        ///Adrian Smith
-        ///Adélaïde Labille-Guiard
-        ///Aelbert Cuyp
-        ///Agasias of Ephesus
-        ///Agesander et al. c. 25 BC
-        ///Agnolo Bronzino
-        ///Agostino Brunias
-        ///Akseli Gallen-Kallela
-        ///Alba Calderó [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 7
+        ///8
+        ///14
+        ///15
+        ///16
+        ///20
+        ///30
+        ///31
+        ///32
+        ///43
+        ///50
+        ///75
+        ///105
+        ///114
+        ///120
+        ///121
+        ///122
+        ///141
+        ///171
+        ///172
+        ///198
+        ///201
+        ///202
+        ///203
+        ///242
+        ///243
+        ///248
+        ///324
+        ///338
+        ///386
+        ///387
+        ///388
+        ///397
+        ///398
+        ///404
+        ///407
+        ///418
+        ///426
+        ///428
+        ///441
+        ///453
+        ///458
+        ///464
+        ///485
+        ///495
+        ///505
+        ///518
+        ///525
+        ///535
+        ///543
+        ///545
+        ///546
+        ///547
+        ///551
+        ///567
+        ///583
+        ///699
+        ///703
+        ///706
+        ///729
+        ///730
+        ///731
+        ///732
+        ///733
+        ///734
+        ///738
+        ///762
+        ///763
+        ///764
+        ///765
+        ///766
+        ///767
+        ///768
+        ///769
+        ///770
+        ///782
+        ///784
+        ///785
+        ///789
+        ///790
+        ///793
+        ///796
+        ///801
+        ///805
+        ///808
+        ///811
+        ///818
+        ///821
+        ///824
+        ///826
+        ///839
+        ///842
+        ///843
+        ///851
+        ///858
+        ///880
+        ///901
+        ///913
+        ///920
+        ///923
+        ///925
+        ///937
+        ///941
+        ///942
+        ///953
+        ///9 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string artist {
+        internal static string nudes {
             get {
-                return ResourceManager.GetString("artist", resourceCulture);
+                return ResourceManager.GetString("nudes", resourceCulture);
             }
         }
     }

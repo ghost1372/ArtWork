@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 
 namespace ArtWork
@@ -16,9 +11,8 @@ namespace ArtWork
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             GlobalData.Init();
-            var path = GlobalData.Config.DataPath;
-            //if (!System.IO.Directory.Exists(path) || System.IO.Directory.Exists(path) && !System.IO.Directory.GetFiles(path).Any())
-             //   new Downloader().ShowDialog();
+            if (!AppVar.GetFileList(GlobalData.Config.DataPath).Any())
+                new Downloader().ShowDialog();
         }
     }
 }

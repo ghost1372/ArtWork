@@ -1,15 +1,14 @@
 ﻿using HandyControl.Controls;
-using Microsoft.Win32;
+using HandyControl.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +16,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Xml.Linq;
 using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace ArtWork
@@ -27,6 +27,10 @@ namespace ArtWork
     public partial class MainWindow
     {
         IEnumerable<string> AllofItems;
+        private string newVersion = string.Empty;
+
+        private string ChangeLog = string.Empty;
+        private string url = "";
 
         public MainWindow()
         {
@@ -48,19 +52,16 @@ namespace ArtWork
                 if (sampleData.Count < 1)
                 {
                     
-                    var items = @"C:\Users\Mahdi\Desktop\title.txt";
-                    var nudeItems = @"C:\Users\Mahdi\Desktop\nudes.txt";
-                    
+                    var items = System.IO.Directory.GetDirectories(GlobalData.Config.DataPath);
+                    var nudeResource = Properties.Resources.nudes;
+                    var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-                    var lines = File.ReadAllLines(items);
-                    foreach (var line in lines)
+                    foreach (var line in items)
                     {
-
-                        sampleData.Add(line);
+                        sampleData.Add(line.Replace(Path.GetDirectoryName(line) + Path.DirectorySeparatorChar, ""));
                     }
 
-                    var nudesLines = File.ReadAllLines(nudeItems);
-                    foreach (var line in nudesLines)
+                    foreach (var line in nudeItems)
                     {
                         nudeData.Add(line);
                     }
@@ -114,7 +115,7 @@ namespace ArtWork
         {
 
             var CurrentIndex = listbox.SelectedIndex;
-            AllofItems = GetFileList(@"E:\DL\newArtWork\Art\" + listbox.SelectedItem).ToArray();
+            AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
             //Fix for Load All Items when Search
             if (AllofItems.Count() > 2000)
                 return;
@@ -138,8 +139,9 @@ namespace ArtWork
 
             foreach (var item in AllofItems)
             {
-               
-                this.Dispatcher.Invoke(() => {
+
+                this.Dispatcher.Invoke(() =>
+                {
 
                     if (CurrentIndex != listbox.SelectedIndex)
                         return;
@@ -263,7 +265,7 @@ namespace ArtWork
         private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
         {
             listbox.SelectedIndex = 0;
-            AllofItems = GetFileList(@"E:\DL\newArtWork\Art\" + listbox.SelectedItem).ToArray();
+            AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
 
             
 
@@ -312,6 +314,77 @@ namespace ArtWork
                 GlobalData.Config.DataPath = browserDialog.FileName;
                 GlobalData.Save();
             }
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            new About().ShowDialog();
+        }
+
+        private void showGrowlNotification(bool isSuccess, params string[] param)
+        {
+            if (isSuccess)
+            {
+                Growl.Info(new GrowlInfo
+                {
+                    Message = $"New Version {param[0]} Found, Now upgrade to the latest version" + Environment.NewLine + ChangeLog,
+                    CancelStr = "Cancel",
+                    ConfirmStr = "Download",
+                    ShowDateTime = false,
+                    ActionBeforeClose = isConfirm =>
+                    {
+                        if (isConfirm)
+                            System.Diagnostics.Process.Start(param[1]);
+
+                        return true;
+                    }
+                });
+            }
+            else
+            {
+                Growl.Error(new GrowlInfo { Message = $"شما از آخرین نسخه {Assembly.GetExecutingAssembly().GetName().Version.ToString()} استفاده می کنید", ShowDateTime = false });
+            }
+
+        }
+        private void CompareVersions()
+        {
+            if (AppVar.IsVersionLater(newVersion, Assembly.GetExecutingAssembly().GetName().Version.ToString()))
+            {
+                showGrowlNotification(true, newVersion, url);
+            }
+            else
+            {
+                showGrowlNotification(false);
+            }
+        }
+        private void CheckUpdate()
+        {
+            try
+            {
+                newVersion = string.Empty;
+                ChangeLog = string.Empty;
+                url = "";
+
+                XDocument doc = XDocument.Load(AppVar.UpdateServer);
+                var items = doc
+                    .Element(XName.Get(AppVar.UpdateXmlTag))
+                    .Elements(XName.Get(AppVar.UpdateXmlChildTag));
+                var versionItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateVersionTag)).Value);
+                var urlItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateUrlTag)).Value);
+                var changelogItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateChangeLogTag)).Value);
+
+                newVersion = versionItem.FirstOrDefault();
+                url = urlItem.FirstOrDefault();
+                ChangeLog = changelogItem.FirstOrDefault();
+                CompareVersions();
+            }
+            catch (Exception)
+            {
+            }
+        }
+        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        {
+            CheckUpdate();
         }
     }
 

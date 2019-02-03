@@ -8,16 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ArtWork
 {
@@ -27,8 +18,6 @@ namespace ArtWork
     public partial class Downloader
     {
         
-        public static readonly string NudPath = @"C:\Users\Mahdi\Desktop\nudes.txt";
-
         private Queue<string> _downloadUrls = new Queue<string>();
 
         ObservableCollection<string> generatedLinks = new ObservableCollection<string>();
@@ -192,7 +181,7 @@ namespace ArtWork
           
             //Check Nud
 
-            if (DomainExists(System.IO.Path.GetFileNameWithoutExtension(@JsonPath), NudPath))
+            if (DomainExists(System.IO.Path.GetFileNameWithoutExtension(@JsonPath)))
             {
                 isNude = "ITSNUDE";
 
@@ -237,9 +226,11 @@ namespace ArtWork
 
             DownloadFile();
         }
-        private static bool DomainExists(string domain, string path)
+        private static bool DomainExists(string domain)
         {
-            foreach (string line in File.ReadLines(path))
+            var nudeResource = Properties.Resources.nudes;
+            var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in nudeItems)
                 if (domain == line)
                     return true; // and stop reading lines
 

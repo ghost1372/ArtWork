@@ -17,6 +17,7 @@
                      ShowTitle="True"
                      Loaded="BlurWindow_Loaded"
                      mc:Ignorable="d"
+                     Icon="Resources\Img\iconfinder_LL_Art_70779.ico"
                      Title="MainWindow" Height="650" Width="1200">
     <controls:Window.NonClientAreaContent>
         <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal">
@@ -49,18 +50,25 @@
                     
                 </MenuItem>
                 <MenuItem Foreground="White" Header="About">
-                    
-                    <MenuItem Tag="mailto:mahdidvb72@gmail.com" Header="Email">
+
+                    <MenuItem Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="mailto:mahdidvb72@gmail.com" Header="Email">
                         <MenuItem.Icon>
                             <Path Data="{StaticResource EmailGeometry}" Fill="{DynamicResource WarningBrush}"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                   
-                    <MenuItem Header="About">
+
+                    <MenuItem Click="MenuItem_Click_3" Header="Check for Update">
+                        <MenuItem.Icon>
+                            <Path Data="{StaticResource GithubGeometry}" Fill="{DynamicResource PrimaryBrush}"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    
+                    <MenuItem Click="MenuItem_Click_2" Header="About">
                         <MenuItem.Icon>
                             <Path Data="{StaticResource InfoGeometry}" Fill="{DynamicResource SuccessBrush}"/>
                         </MenuItem.Icon>
                     </MenuItem>
+                   
                 </MenuItem>
             </Menu>
         </StackPanel>
@@ -99,5 +107,8 @@
         </StackPanel>
         <controls:CoverView Margin="0,20,0,0" ItemContentHeightFixed="True" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
         </controls:CoverView>
+        <controls:ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
+            <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
+        </controls:ScrollViewer>
     </Grid>
 </controls:BlurWindow>
