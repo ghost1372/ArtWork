@@ -39,7 +39,7 @@ namespace ArtWork
             public static readonly string SavePath = $"{AppDomain.CurrentDomain.BaseDirectory}AppConfig.json";
 
             public string DataPath { get; set; } = Environment.CurrentDirectory + @"\data";
-
+            public string Lang { get; set; } = "en-US";
         }
     }
 }

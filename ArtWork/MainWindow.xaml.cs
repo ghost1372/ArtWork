@@ -5,10 +5,13 @@ using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +29,8 @@ namespace ArtWork
     /// </summary>
     public partial class MainWindow
     {
+        ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang));
+
         IEnumerable<string> AllofItems;
         private string newVersion = string.Empty;
 
@@ -37,6 +42,13 @@ namespace ArtWork
             InitializeComponent();
 
             this.DataContext = this;
+            setFlowDirection();
+        }
+        private void setFlowDirection()
+        {
+            var IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
+            if (IsRightToLeft)
+                main.FlowDirection = FlowDirection.RightToLeft;
         }
 
         #region load menu items
@@ -113,7 +125,6 @@ namespace ArtWork
 
         private void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             var CurrentIndex = listbox.SelectedIndex;
             AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
             //Fix for Load All Items when Search
@@ -152,8 +163,8 @@ namespace ArtWork
                     var menuItem = new MenuItem();
                     var menuItem2 = new MenuItem();
 
-                    menuItem.Header = "Set as Desktop Wallpaper";
-                    menuItem2.Header = "Go to Location";
+                    menuItem.Header = rm.GetString("SetasDesktop");
+                    menuItem2.Header = rm.GetString("GoToLoc");
 
                     menuItem.Click += delegate { DisplayPicture(item, true); };
                     menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item + "\""); };
@@ -327,9 +338,9 @@ namespace ArtWork
             {
                 Growl.Info(new GrowlInfo
                 {
-                    Message = $"New Version {param[0]} Found, Now upgrade to the latest version" + Environment.NewLine + ChangeLog,
-                    CancelStr = "Cancel",
-                    ConfirmStr = "Download",
+                    Message = string.Format(rm.GetString("NewVersionFind"),param[0]) + Environment.NewLine + ChangeLog,
+                    CancelStr = rm.GetString("Cancel"),
+                    ConfirmStr = rm.GetString("Download"),
                     ShowDateTime = false,
                     ActionBeforeClose = isConfirm =>
                     {
@@ -342,7 +353,7 @@ namespace ArtWork
             }
             else
             {
-                Growl.Error(new GrowlInfo { Message = $"شما از آخرین نسخه {Assembly.GetExecutingAssembly().GetName().Version.ToString()} استفاده می کنید", ShowDateTime = false });
+                Growl.Error(new GrowlInfo { Message = string.Format(rm.GetString("CurrentIsLastVersion"),Assembly.GetExecutingAssembly().GetName().Version.ToString()), ShowDateTime = false });
             }
 
         }
@@ -385,6 +396,19 @@ namespace ArtWork
         private void MenuItem_Click_3(object sender, RoutedEventArgs e)
         {
             CheckUpdate();
+        }
+
+        private void MenuItem_Click_4(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            if (item.Tag.Equals("Persian"))
+                GlobalData.Config.Lang = "fa-IR";
+            else
+                GlobalData.Config.Lang = "en-US";
+            GlobalData.Save();
+
+            System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
+            Environment.Exit(0);
         }
     }
 

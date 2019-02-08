@@ -5,9 +5,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Resources;
 using System.Windows;
 
 namespace ArtWork
@@ -98,7 +100,9 @@ namespace ArtWork
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             prgButton.IsEnabled = false;
-            prgButton.Content = "Downloading...";
+           
+            var rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang));
+            prgButton.Content = rm.GetString("Downloading");
             downloadFile(generatedLinks);
         }
 
