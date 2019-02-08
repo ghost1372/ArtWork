@@ -120,6 +120,12 @@
   <data name="Artist" xml:space="preserve">
     <value>Artist</value>
   </data>
+  <data name="ArtWork" xml:space="preserve">
+    <value>ArtWork</value>
+  </data>
+  <data name="AutoPlay" xml:space="preserve">
+    <value>Auto Play</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -180,6 +186,9 @@
   <data name="NewVersionFind" xml:space="preserve">
     <value>New Version {0} Found, Now upgrade to the latest version</value>
   </data>
+  <data name="Note" xml:space="preserve">
+    <value>Click each item to get Details</value>
+  </data>
   <data name="NudeFilter" xml:space="preserve">
     <value>Nude Filter</value>
   </data>
@@ -209,5 +218,11 @@
   </data>
   <data name="US" xml:space="preserve">
     <value>English</value>
+  </data>
+  <data name="AboutNote" xml:space="preserve">
+    <value>This App Created based on UWP App CityArt Special Thanks to Brian Kernan</value>
+  </data>
+  <data name="Programmer" xml:space="preserve">
+    <value>Coded By Mahdi Hosseini</value>
   </data>
 </root>

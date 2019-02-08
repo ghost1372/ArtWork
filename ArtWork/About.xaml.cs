@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ArtWork
 {
@@ -26,7 +14,7 @@ namespace ArtWork
         {
             InitializeComponent();
             DataContext = this;
-
+            setFlowDirection();
             var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location);
             CopyRight = versionInfo.LegalCopyright;
             Version = $"v {versionInfo.FileVersion}";
@@ -48,6 +36,13 @@ namespace ArtWork
         {
             get => (string)GetValue(VersionProperty);
             set => SetValue(VersionProperty, value);
+        }
+
+        private void setFlowDirection()
+        {
+            var IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
+            if (IsRightToLeft)
+                main.FlowDirection = FlowDirection.RightToLeft;
         }
     }
 }

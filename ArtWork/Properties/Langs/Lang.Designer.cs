@@ -61,11 +61,38 @@ namespace ArtWork.Properties.Langs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to این برنامه بر پایه برنامه ی یونیورسال  CityArt طراحی شده است. با تشکر ویژه از Brian Kernan.
+        /// </summary>
+        public static string AboutNote {
+            get {
+                return ResourceManager.GetString("AboutNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to هنرمند.
         /// </summary>
         public static string Artist {
             get {
                 return ResourceManager.GetString("Artist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آثار هنری.
+        /// </summary>
+        public static string ArtWork {
+            get {
+                return ResourceManager.GetString("ArtWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to نمایش خودکار.
+        /// </summary>
+        public static string AutoPlay {
+            get {
+                return ResourceManager.GetString("AutoPlay", resourceCulture);
             }
         }
         
@@ -250,6 +277,15 @@ namespace ArtWork.Properties.Langs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to توجه: برای نمایش اطلاعات هر اثر روی آن یکبار کلیک کنید.
+        /// </summary>
+        public static string Note {
+            get {
+                return ResourceManager.GetString("Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فیلتر برهنگی.
         /// </summary>
         public static string NudeFilter {
@@ -282,6 +318,15 @@ namespace ArtWork.Properties.Langs {
         public static string Persian {
             get {
                 return ResourceManager.GetString("Persian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to برنامه نویس : سید مهدی حسینی.
+        /// </summary>
+        public static string Programmer {
+            get {
+                return ResourceManager.GetString("Programmer", resourceCulture);
             }
         }
         

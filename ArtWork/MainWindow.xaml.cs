@@ -29,6 +29,8 @@ namespace ArtWork
     /// </summary>
     public partial class MainWindow
     {
+        internal static MainWindow mainWindow;
+
         ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang));
 
         IEnumerable<string> AllofItems;
@@ -42,6 +44,7 @@ namespace ArtWork
             InitializeComponent();
 
             this.DataContext = this;
+            mainWindow = this;
             setFlowDirection();
         }
         private void setFlowDirection()
@@ -173,7 +176,7 @@ namespace ArtWork
                     context.Items.Add(menuItem2);
 
                     var contentImg = new Image();
-                    contentImg.Stretch = Stretch.UniformToFill;
+                    contentImg.Stretch = Stretch.Uniform;
                     contentImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
 
                     var img = new Image();
@@ -184,7 +187,7 @@ namespace ArtWork
                     cv.ContextMenu = context;
                     cv.Selected += Cv_Selected;
                     cv.Deselected += Cv_Deselected;
-
+                    cv.MouseDoubleClick += Cv_MouseDoubleClick;
                     //-< source >- 
                     BitmapImage src = new BitmapImage();
                     src.BeginInit();
@@ -206,7 +209,17 @@ namespace ArtWork
 
                 }, DispatcherPriority.Background);
             }
-        }        
+        }
+
+        private void Cv_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            List<string> items = new List<string>();
+            foreach (var item in cover.Items.OfType<CoverViewItem>())
+                items.Add(item.Tag.ToString());
+
+            ImageViewer.Items = items;
+            new ImageViewer().ShowDialog();
+        }
 
         #region Set as Desktop
         [DllImport("user32.dll", SetLastError = true)]
@@ -216,7 +229,7 @@ namespace ArtWork
         private const uint SPI_SETDESKWALLPAPER = 0x14;
         private const uint SPIF_UPDATEINIFILE = 0x1;
         private const uint SPIF_SENDWININICHANGE = 0x2;
-        private void DisplayPicture(string file_name, bool update_registry)
+        public void DisplayPicture(string file_name, bool update_registry)
         {
             try
             {

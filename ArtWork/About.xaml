@@ -4,6 +4,7 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
+                 xmlns:langs="clr-namespace:ArtWork.Properties.Langs"
                                       xmlns:interactivity="clr-namespace:HandyControl.Interactivity;assembly=HandyControl"
                  mc:Ignorable="d"
                  Title="About"
@@ -19,14 +20,19 @@
                  ResizeMode="NoResize"
                  ShowInTaskbar="False"
                  WindowStartupLocation="CenterOwner"
-                 Width="430"
-                 Height="230">
+                 Width="480"
+                 Name="main"
+                 Height="280">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
-            <TextBlock Text="ArtWork" FontSize="30" Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            <TextBlock Text="{x:Static langs:Lang.ArtWork}" FontSize="30" Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            <TextBlock Text="{x:Static langs:Lang.Programmer}" FontSize="30" Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Top" HorizontalAlignment="Center"/>
             <TextBlock Text="{Binding Version}" HorizontalAlignment="Center" Margin="0,10,0,0" Foreground="{StaticResource PrimaryBrush}"/>
-            <TextBlock Text="This App Created based on UWP App CityArt Special Thanks to Brian Kernan" HorizontalAlignment="Center" Margin="0,10,0,0" Foreground="{StaticResource PrimaryBrush}"/>
-            <Button Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="mailto:brianke@microsoft.com" Content="brianke@microsoft.com" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+            <TextBlock Text="{x:Static langs:Lang.AboutNote}" HorizontalAlignment="Center" Margin="0,10,0,0" Foreground="{StaticResource PrimaryBrush}"/>
+            <StackPanel HorizontalAlignment="Center" Margin="0,10,0,0" Orientation="Horizontal">
+                <Button Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="mailto:mahdidvb72@gmail.com" Content="mahdidvb72@gmail.com" HorizontalAlignment="Center" Margin="5,0"/>
+                <Button Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="mailto:brianke@microsoft.com" Content="brianke@microsoft.com" HorizontalAlignment="Center" Margin="5,0"/>
+            </StackPanel>
         </StackPanel>
         <TextBlock Text="{Binding CopyRight}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,14" Foreground="{StaticResource ThirdlyTextBrush}"/>
     </Grid>

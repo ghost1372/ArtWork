@@ -120,6 +120,12 @@
   <data name="Artist" xml:space="preserve">
     <value>هنرمند</value>
   </data>
+  <data name="ArtWork" xml:space="preserve">
+    <value>آثار هنری</value>
+  </data>
+  <data name="AutoPlay" xml:space="preserve">
+    <value>نمایش خودکار</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>انصراف</value>
   </data>
@@ -180,6 +186,9 @@
   <data name="NewVersionFind" xml:space="preserve">
     <value>نسخه جدید {0} پیدا شد, همین حالا به آخرین نسخه بروزرسانی کنید</value>
   </data>
+  <data name="Note" xml:space="preserve">
+    <value>توجه: برای نمایش اطلاعات هر اثر روی آن یکبار کلیک کنید</value>
+  </data>
   <data name="NudeFilter" xml:space="preserve">
     <value>فیلتر برهنگی</value>
   </data>
@@ -209,5 +218,11 @@
   </data>
   <data name="US" xml:space="preserve">
     <value>انگلیسی</value>
+  </data>
+  <data name="AboutNote" xml:space="preserve">
+    <value>این برنامه بر پایه برنامه ی یونیورسال  CityArt طراحی شده است. با تشکر ویژه از Brian Kernan</value>
+  </data>
+  <data name="Programmer" xml:space="preserve">
+    <value>برنامه نویس : سید مهدی حسینی</value>
   </data>
 </root>

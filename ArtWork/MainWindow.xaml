@@ -20,7 +20,7 @@
                      mc:Ignorable="d"
                      Name="main"
                      Icon="Resources\Img\logo.ico"
-                     Title="ArtWork" Height="650" Width="1200">
+                     Title="{x:Static langs:Lang.ArtWork}" Height="650" Width="1200">
     <controls:Window.NonClientAreaContent>
         <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal">
             <Button Margin="4,0,0,0" Width="28" Height="29" Style="{StaticResource ButtonCustom}">
@@ -108,17 +108,14 @@
         </ToggleButton>
         <ListBox ItemsSource="{Binding SampleData}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,5,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged"/>
 
-        <StackPanel Grid.Column="1" Grid.Row="0">
-            <controls:TextBox Height="35" Background="Transparent" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="10" Name="txtImageSearch" Style="{StaticResource TextBoxExtend}" controls:InfoElement.Placeholder="{x:Static langs:Lang.SearchInImages}"/>
-            <StackPanel Orientation="Horizontal">
-                <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-                <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-                <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-                <controls:Shield Name="shCity" Subject="{x:Static langs:Lang.City}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
-                <controls:Shield Name="shCountry" Subject="{x:Static langs:Lang.Country}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
-                <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
-                <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+            <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+            <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+            <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+            <controls:Shield Name="shCity" Subject="{x:Static langs:Lang.City}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
+            <controls:Shield Name="shCountry" Subject="{x:Static langs:Lang.Country}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
+            <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
+            <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
         </StackPanel>
         <controls:CoverView Margin="0,20,0,0" ItemContentHeightFixed="True" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
         </controls:CoverView>
