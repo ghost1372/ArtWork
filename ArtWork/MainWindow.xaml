@@ -95,7 +95,7 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="75"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -108,7 +108,7 @@
         </ToggleButton>
         <ListBox ItemsSource="{Binding SampleData}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,5,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
             <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
             <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
             <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
@@ -119,7 +119,7 @@
         </StackPanel>
         <controls:CoverView Margin="0,20,0,0" ItemContentHeightFixed="True" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
         </controls:CoverView>
-        <controls:ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
+        <controls:ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
             <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
         </controls:ScrollViewer>
     </Grid>

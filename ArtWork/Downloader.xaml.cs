@@ -231,7 +231,8 @@ namespace ArtWork
             catch (Exception)
             {
             }
-            string cleanFileName = String.Join("", wikiartist.Split(System.IO.Path.GetInvalidFileNameChars()));
+            var wikiart = wikiartist ?? "Unknown Artist";
+            string cleanFileName = String.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
             if (!Directory.Exists(GlobalData.Config.DataPath + @"\" + cleanFileName))
             {
                 Directory.CreateDirectory(GlobalData.Config.DataPath + @"\" + cleanFileName);
