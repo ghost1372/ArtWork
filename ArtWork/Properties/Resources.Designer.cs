@@ -61,6 +61,164 @@ namespace ArtWork.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aarhus
+        ///Aberdeen
+        ///Aberdeenshire
+        ///Abu Dhabi
+        ///Adana
+        ///Adelaide
+        ///Agra
+        ///Ahmedabad
+        ///Aix-en-Provence
+        ///Ajaccio
+        ///Alatskivi
+        ///Albi
+        ///Alexandria
+        ///Alfriston
+        ///Alice Springs
+        ///Alta
+        ///Altenburg
+        ///Amarante
+        ///Amersfoort
+        ///Amherst
+        ///Amiens
+        ///Amman
+        ///Amritsar
+        ///Amsterdam
+        ///Ancona
+        ///Andover
+        ///Angers
+        ///Ann Arbor
+        ///Annandale-on-Hudson
+        ///Antalya
+        ///Antwerp
+        ///Aparecida
+        ///Ardingly
+        ///Ardأ¨che
+        ///Arezzo
+        ///Aschaffenburg
+        ///Asciano
+        ///Athens
+        ///Atlanta
+        ///Auckland
+        ///Austin
+        ///Avignon
+        ///Axum
+        ///Ballarat
+        ///Baltimore
+        ///Bam
+        ///Bandel
+        ///Bangalore
+        ///Bangkok
+        ///Barcelona
+        ///Barnard Castle
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string city {
+            get {
+                return ResourceManager.GetString("city", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Albania
+        ///Argentina
+        ///Armenia
+        ///Australia
+        ///Austria
+        ///Bangladesh
+        ///Belgium
+        ///Brazil
+        ///Bulgaria
+        ///Canada
+        ///Chile
+        ///China
+        ///Colombia
+        ///Croatia
+        ///Cuba
+        ///Cyprus
+        ///Czech Republic
+        ///Denmark
+        ///Egypt
+        ///Empty
+        ///England
+        ///Estonia
+        ///Ethiopia
+        ///Finland
+        ///France
+        ///Georgia
+        ///Germany
+        ///Ghana
+        ///Greece
+        ///Greenland
+        ///Hungary
+        ///India
+        ///Indonesia
+        ///Iran
+        ///Iraq
+        ///Ireland
+        ///Israel
+        ///Italy
+        ///Japan
+        ///Jordan
+        ///Kuwait
+        ///Latvia
+        ///Libya
+        ///Liechtenstein
+        ///Macedonia
+        ///Malaysia
+        ///Malta
+        ///Mexico
+        ///Monaco
+        ///Netherlands
+        ///New Zealand
+        ///North Korea
+        ///Northern Ireland
+        ///Norway
+        ///Oman
+        ///Pakistan
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string country {
+            get {
+                return ResourceManager.GetString("country", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 8 Spruce Street
+        ///Abbey of Saint-Michel-de-Cuxa
+        ///Abbey of St. Gall
+        ///Aberdeen Art Gallery
+        ///Academy of Athens
+        ///Academy of Fine Arts
+        ///Accademia Carrara
+        ///Accademia di San Luca
+        ///Ackland Art Museum
+        ///Acropolis Museum
+        ///Adachi Museum of Art
+        ///Addison Gallery of American Art
+        ///African Renaissance Monument
+        ///Agnes Etherington Art Centre
+        ///Agora
+        ///Ahsan Manzil
+        ///Aivazovsky National Art Gallery
+        ///Al-Aqsa Mosque
+        ///Al-Khazneh
+        ///Alatskivi Castle
+        ///Albert Bridge
+        ///Albert Memorial
+        ///Albertina
+        ///Albright-Knox Art Gallery
+        ///Alexander Column        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string gallery {
+            get {
+                return ResourceManager.GetString("gallery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 7
         ///8
         ///14

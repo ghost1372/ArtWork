@@ -154,6 +154,7 @@
                 <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
             </StackPanel>
             <controls:CoverView ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160"/>
+            <ProgressBar Grid.Row="1" Value="0" Name="prg" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
             <controls:ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
                 <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
             </controls:ScrollViewer>

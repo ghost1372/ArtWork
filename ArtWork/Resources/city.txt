@@ -1,0 +1,645 @@
+Aarhus
+Aberdeen
+Aberdeenshire
+Abu Dhabi
+Adana
+Adelaide
+Agra
+Ahmedabad
+Aix-en-Provence
+Ajaccio
+Alatskivi
+Albi
+Alexandria
+Alfriston
+Alice Springs
+Alta
+Altenburg
+Amarante
+Amersfoort
+Amherst
+Amiens
+Amman
+Amritsar
+Amsterdam
+Ancona
+Andover
+Angers
+Ann Arbor
+Annandale-on-Hudson
+Antalya
+Antwerp
+Aparecida
+Ardingly
+Ardèche
+Arezzo
+Aschaffenburg
+Asciano
+Athens
+Atlanta
+Auckland
+Austin
+Avignon
+Axum
+Ballarat
+Baltimore
+Bam
+Bandel
+Bangalore
+Bangkok
+Barcelona
+Barnard Castle
+Basel
+Bassac
+Bath
+Bayeux
+Bayonne
+Beaune
+Bedugul
+Beijing
+Belfast
+Belgrade
+Bellevue
+Belvoir
+Bentonville
+Bergamo
+Berkeley
+Berlin
+Bern
+Besançon
+Bielefeld
+Bilbao
+Birmingham
+Bogotá
+Bologna
+Bolton
+Bonn
+Bordeaux
+Borgund
+Borja
+Borough of Burnley
+Boston
+Bourges
+Bournemouth
+Braine-l'Alleud
+Brasília
+Braunschweig
+Bremen
+Brescia
+Bridgeport
+Bristol
+Broadway
+Bruges
+Brussels
+Bucharest
+Buckland Monachorum
+Budapest
+Budești
+Buenos Aires
+Buffalo
+Bukittinggi
+Burnley
+Buyeo
+Bârsana
+Caen
+Cairo
+Calais
+Calgary
+Cambrai
+Cambridge
+Campillo de Dueñas
+Canajoharie
+Canberra
+Cape Town
+Caracas
+Cardiff
+Castelfranco Veneto
+Cedar Rapids
+Chambord
+Changi
+Changsha
+Chantilly
+Chapel Hill
+Charleston
+Charlotte
+Charlottesville
+Chattanooga
+Chennai
+Chenonceaux
+Chiayi
+Chicago
+Chichen Itza
+Choisel
+Chora
+Christchurch
+Cincinnati
+Cleveland
+Codalet
+Cody
+Colmar
+Cologne
+Colombo
+Columbia
+Columbus
+Concepción
+Constanța
+Copenhagen
+Corning
+Corunna
+Coventry
+Curtea de Argeș
+Cádiz
+Córdoba
+Dakar
+Dallas
+Darmstadt
+Daventry District
+Dayton
+Delphi
+Denver
+Derby
+Derbyshire
+Des Moines
+Detroit
+Dhaka
+Didrichsen
+Dijon
+Doha
+Dordrecht
+Dornach
+Dresden
+Dubai
+Dublin
+Duisburg
+Dukla
+Dundee
+Dunedin
+Durham
+Düsseldorf
+Edinburgh
+Edmonton
+Eilean Donan
+Eindhoven
+El Giza
+El Paso
+Elciego
+Encinitas
+Ephesus
+Ermoupoli
+Espoo
+Essen
+Falkirk
+Falmouth
+Farmington
+Feodosia
+Fife
+Figueres
+Florence
+Fort Worth
+Frankfurt
+Fredericton
+Funchal
+Gateshead
+Gatineau
+Gdańsk
+Geelong
+Geneva
+Genoa
+Ghent
+Girona
+Giverny
+Glasgow
+Glens Falls
+Golspie
+Gotha
+Gothenburg
+Granada
+Graz
+Grenoble
+Großbottwar
+Gudhjem
+Gyeongju
+Haarlem
+Halle
+Hamburg
+Hampton
+Hanover
+Hartford
+Havana
+Heddal
+Helsinki
+Hillerød
+Ho Chi Minh
+Hobart
+Hohenschwangau
+Hong Kong
+Honolulu
+Houston
+Huntington
+Hyderabad
+Ikaruga
+Indianapolis
+Innsbruck
+Inveraray
+Iowa City
+Isle of Bute
+Issaquah
+Isselburg
+Istanbul
+Ithaca
+Izhevsk
+Jaffa
+Jakarta
+Jerusalem
+Jhansi
+Johannesburg
+Josselin
+Jægersborg
+Kaiserslautern
+Kampala
+Kansas City
+Kaohsiung
+Karlsruhe
+Kassel
+Katowice
+Kazan
+Kelheim
+Kent
+Keystone
+Kharkiv
+Khoms
+Kiev
+Kingston
+Kingston upon Hull
+Kitakyūshū
+Kobe
+Kochel
+Kolkata
+Komaki
+Kota Kinabalu
+Kraków
+Krefeld
+Kroměříž
+Kuala Lumpur
+Kuching
+Kurashiki
+Kursk
+Kutná Hora
+Kuwait City
+Kværndrup
+Kyoto
+Lahore
+Landsort
+Larabanga
+Las Vegas
+Lawrence
+Le Havre
+Leeds
+Leiden
+Leipzig
+Leshan
+Leuven
+Lichfield
+Lier
+Lietava
+Lille
+Lima
+Lindau
+Linköping
+Lisbon
+Little Rock
+Liverpool
+Liège
+Ljubljana
+Location Unknown
+Lolland
+London
+Longniddry
+Los Angeles
+Louisville
+Lublin
+Lucerne
+Lucknow
+Luhansk
+Lviv
+Lyon
+Lübeck
+Macau
+Madrid
+Maintenon
+Malmö
+Manchester
+Manila
+Marbella
+Mashhad
+Matsumoto
+Mayapur
+Medellín
+Melbourne
+Mere
+Merrill
+Mespelbrunn
+Messina
+Mexico City
+Miami
+Miami Beach
+Midleton
+Milan
+Milwaukee
+Minneapolis
+Minsk
+Modena
+Moers
+Mont Saint-Michel
+Montclair
+Monte Carlo
+Monterchi
+Montpellier
+Montreal
+Moscow
+Moulins
+Mumbai
+Muncie
+Munich
+Muscat
+Mysore
+Málaga
+Mõdriku
+Münster
+Nagoya
+Nancy
+Nanjing
+Nantes
+Naoshima
+Naples
+Nara
+Narbonne
+Nashville
+New Britain
+New Brunswick
+New Canaan
+New Delhi
+New Haven
+New Orleans
+New York City
+Newark
+Newcastle upon Tyne
+Nice
+Nicosia
+Niort
+Nivå
+Nizhny Novgorod
+No Physical Location
+No Specified Locations
+Nonextant
+Norfolk
+Norilsk
+Northampton
+Novgorod
+Novi Sad
+Novosibirsk
+Nuremberg
+Nuuk
+Nîmes
+Oakland
+Oberlin
+Oberschleißheim
+Odense
+Odessa
+Odsherred
+Ohrid
+Oldham
+Olomouc
+Olympia
+Omaha
+Orenburg
+Orihuela
+Orléans
+Orvieto
+Osaka
+Oslo
+Ottawa
+Otterlo
+Oxford
+Padua
+Paisley
+Palencia
+Palermo
+Paris
+Parma
+Pasadena
+Patna
+Pau
+Pebble Beach
+Penza
+Perth
+Petra
+Petworth
+Philadelphia
+Phoenix
+Piacenza
+Pisa
+Pittsburgh
+Pittsfield
+Plano
+Plopiș
+Poeke
+Poienile Izei
+Poitiers
+Pommersfelden
+Ponce
+Port Sunlight
+Portland
+Porto
+Porto Alegre
+Potsdam
+Poznań
+Prague
+Preston-on-Tees
+Princeton
+Providence
+Purchase
+Pyongyang
+Qom
+Quebec City
+Quimper
+Radishchev
+Raleigh
+Randers
+Ratley
+Ravenna
+Recanati
+Recife
+Regensburg
+Reggio Calabria
+Rennes
+Ribe
+Richmond
+Riehen
+Riga
+Rimini
+Rio de Janeiro
+River Forest
+Rogoz
+Rome
+Roseville
+Rosslyn
+Rotterdam
+Rouen
+Rueil-Malmaison
+Sacramento
+Saint-Germain-en-Laye
+Sakura
+Salem
+Salt Lake City
+Salzburg
+Samarkand
+Samarra
+San Antonio
+San Diego
+San Francisco
+San Ildefonso
+San Lorenzo de El Escorial
+San Marino
+Sansepolcro
+Santa Clara
+Santa Cruz de Tenerife
+Santiago
+Santiago de Compostela
+Sarasota
+Sarnath
+Schweinfurt
+Schwerin
+Seattle
+Segovia
+Semarang
+Seoul
+Seville
+Shanghai
+Shelburne
+Shiraz
+Sibiu
+Siena
+Silverton
+Singapore City
+Sintra
+Skagen
+Skopje
+Sofia
+Solovetsky District
+Southampton
+Speyer
+St. Gallen
+St. John's
+St. Louis
+St. Moritz
+St. Petersburg
+Stanford
+Stewart Township
+Stockbridge
+Stockholm
+Stone Mountain
+Strasbourg
+Stuttgart
+Surakarta
+Surin
+Surrey
+Sydney
+Syracuse
+São Paulo
+Taagepera
+Tacoma
+Taichung
+Taipei
+Taiyuan
+Tallinn
+Tbilisi
+Tehran
+Tel Aviv
+Tewkesbury
+The Hague
+Thessaloniki
+Tintagel
+Tirana
+Tokyo
+Toledo
+Toronto
+Toruń
+Toulouse
+Tournai
+Tripoli
+Trondheim
+Troyes
+Tulsa
+Tunis
+Turin
+Turku
+Tuusulan
+Târgu Jiu
+Tübingen
+Uch
+Ulm
+Upper Galilee
+Urbino
+Utrecht
+Vaduz
+Valencia
+Valetta
+Valladolid
+Vatican City
+Vaxholm
+Venice
+Verona
+Versailles
+Victoria
+Vienna
+Vilanova i la Geltrú
+Viseu
+Vladivostok
+Volgograd
+Volterra
+Voorburg
+Vrnjačka Banja
+Vyborg
+Väike-Maarja
+Waddesdon
+Walsall
+Warm Springs
+Warsaw
+Washington DC
+Waterville
+Weimar
+Wellesley
+Wellington
+Wells
+West Palm Beach
+Westminster
+Wichita
+Wiesbaden
+Williamstown
+Wilmington
+Wilton
+Windsor
+Winnipeg
+Winston-Salem
+Winterthur
+Woburn
+Worcester
+Wrocław
+Wuhan
+Wuppertal
+Włocławek
+Xalapa
+Xi'an
+Yasugi
+Yekaterinburg
+Yerevan
+Yogyakarta
+York
+Youngstown
+Zagreb
+Zaragoza
+Zürich
+Ópusztaszer
+Łańcut
+Łódź

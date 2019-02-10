@@ -199,6 +199,9 @@
     <Resource Include="Resources\Img\Iran.png" />
     <Resource Include="Resources\Img\usa.png" />
     <Resource Include="Resources\Img\logo.ico" />
+    <Content Include="Resources\city.txt" />
+    <Content Include="Resources\country.txt" />
+    <Content Include="Resources\gallery.txt" />
     <Content Include="Resources\nudes.txt" />
   </ItemGroup>
   <ItemGroup>

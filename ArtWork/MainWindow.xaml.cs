@@ -5,6 +5,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -32,6 +33,11 @@ namespace ArtWork
         internal static MainWindow mainWindow;
         ObservableCollection<string> nudeData = new ObservableCollection<string>();
         ObservableCollection<string> newnude = new ObservableCollection<string>();
+
+        ObservableCollection<string> galleryData = new ObservableCollection<string>();
+        ObservableCollection<string> cityData = new ObservableCollection<string>();
+        ObservableCollection<string> countryData = new ObservableCollection<string>();
+
         ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang));
 
         IEnumerable<string> AllofItems;
@@ -39,7 +45,8 @@ namespace ArtWork
 
         private string ChangeLog = string.Empty;
         private string url = "";
-
+        bool isCanceled = true;
+        int TotalItem = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -51,10 +58,108 @@ namespace ArtWork
             var nudeResource = Properties.Resources.nudes;
             var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in nudeItems)
-            {
                 nudeData.Add(line);
+
+            var galleryResource = Properties.Resources.gallery;
+            var galleryItems = galleryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in galleryItems)
+                galleryData.Add(item);
+
+            var cityResource = Properties.Resources.city;
+            var cityItems = cityResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in cityItems)
+                cityData.Add(item);
+
+            var countryResource = Properties.Resources.country;
+            var countryItems = countryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in countryItems)
+                countryData.Add(item);
+
+        }
+        public async Task ExecuteManuallyCancellableTaskAsync(IProgress<int> progress)
+        {
+            if (listbox.SelectedIndex == -1) return;
+
+            isCanceled = false;
+            var mprogress = 0;
+            prg.Value = 0;
+            cover.Items.Clear();
+            using (var cancellationTokenSource = new CancellationTokenSource())
+            {
+                cancellationTokenSource.Cancel();
+
+                var SearchTask = Task.Run(async () =>
+                {
+                    foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
+                    {
+
+                        if (isCanceled)
+                        {
+                            cancellationTokenSource.Cancel();
+                            return;
+                        }
+                        mprogress += 1;
+                        progress.Report((mprogress * 100 / TotalItem));
+
+                        var item = ShellFile.FromFilePath(file.FullName); // for example C:\myfolder\1.jpg
+                        await Dispatcher.InvokeAsync(() =>
+                         {
+                            if (item.Properties.System.Keywords.Value[0].Equals(listbox.SelectedItem))
+                             {
+                                // add the control.
+                                var cv = new CoverViewItem();
+                                 var context = new ContextMenu();
+                                 var menuItem = new MenuItem();
+                                 var menuItem2 = new MenuItem();
+
+                                 menuItem.Header = rm.GetString("SetasDesktop");
+                                 menuItem2.Header = rm.GetString("GoToLoc");
+
+                                 menuItem.Click += delegate { DisplayPicture(file.FullName, true); };
+                                 menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + file.FullName + "\""); };
+
+                                 context.Items.Add(menuItem);
+                                 context.Items.Add(menuItem2);
+
+                                 var contentImg = new Image();
+                                 contentImg.Stretch = Stretch.Uniform;
+                                 contentImg.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
+
+                                 var img = new Image();
+                                 img.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
+                                 cv.Header = img;
+                                 cv.Tag = file.FullName;
+                                 cv.Content = contentImg;
+                                 cv.ContextMenu = context;
+                                 cv.Selected += Cv_Selected;
+                                 cv.Deselected += Cv_Deselected;
+                                 cv.MouseDoubleClick += Cv_MouseDoubleClick;
+                                //-< source >- 
+                                BitmapImage src = new BitmapImage();
+                                 src.BeginInit();
+                                 src.UriSource = new Uri(file.FullName, UriKind.Absolute);
+                                //< thumbnail > 
+                                src.DecodePixelWidth = 160;
+                                 src.CacheOption = BitmapCacheOption.OnLoad;
+                                //</ thumbnail > 
+
+                                src.EndInit();
+                                 img.Source = src;
+                                //-</ source >- 
+
+                                img.Stretch = Stretch.Uniform;
+                                 img.Height = 160;
+                                 cover.Items.Add(cv);
+                             }
+                         }, DispatcherPriority.Background);
+                    }
+
+                });
+
+                await SearchTask;
             }
         }
+
         private void setFlowDirection()
         {
             var IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
@@ -71,27 +176,40 @@ namespace ArtWork
         {
             get
             {
+                if (sampleData.Count < 1)
+                    loadArtists();
 
-                loadArtists();
                 return sampleData;
             }
         }
         private void loadArtists()
         {
-            if (sampleData.Count < 1)
-            {
-
-                if (cmbFilter.SelectedIndex == 0)
-                {
-                    sampleData.Clear();
-                    if(cover != null) cover.Items.Clear();
-                    var items = System.IO.Directory.GetDirectories(GlobalData.Config.DataPath);
-                    foreach (var line in items)
-                    {
-                        sampleData.Add(line.Replace(Path.GetDirectoryName(line) + Path.DirectorySeparatorChar, ""));
-                    }
-                }
-            }
+            sampleData.Clear();
+            if (cover != null) cover.Items.Clear();
+            var items = System.IO.Directory.GetDirectories(GlobalData.Config.DataPath);
+            foreach (var line in items)
+                sampleData.Add(line.Replace(Path.GetDirectoryName(line) + Path.DirectorySeparatorChar, ""));            
+        }
+        private void loadGallery()
+        {
+            sampleData.Clear();
+            if (cover != null) cover.Items.Clear();
+            foreach (var line in galleryData)
+                sampleData.Add(line);
+        }
+        private void loadCity()
+        {
+            sampleData.Clear();
+            if (cover != null) cover.Items.Clear();
+            foreach (var line in cityData)
+                sampleData.Add(line);
+        }
+        private void loadCountry()
+        {
+            sampleData.Clear();
+            if (cover != null) cover.Items.Clear();
+            foreach (var line in countryData)
+                sampleData.Add(line);
         }
         #endregion
 
@@ -102,7 +220,16 @@ namespace ArtWork
             else
                 return ((item as object).ToString().IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
-
+        private async Task<FileInfo[]> GetFileListAsync(string rootFolderPath)
+        {
+            FileInfo[] allfiles = null;
+            await Task.Run(() => {
+                var dir = new DirectoryInfo(rootFolderPath);
+                allfiles = dir.GetFiles("*.jpg*", SearchOption.AllDirectories);
+            });
+            TotalItem = allfiles.Count();
+            return allfiles;
+        }
         public IEnumerable<string> GetFileList(string rootFolderPath)
         {
             Queue<string> pending = new Queue<string>();
@@ -115,6 +242,7 @@ namespace ArtWork
                 {
                     tmp = Directory.GetFiles(rootFolderPath);
                 }
+                catch (DirectoryNotFoundException) { continue; }
                 catch (UnauthorizedAccessException)
                 {
                     continue;
@@ -130,12 +258,8 @@ namespace ArtWork
                 }
             }
         }
-
-        
-
-        private void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void getArtistArt()
         {
-            if (cmbFilter.SelectedIndex == 1) return;
             var CurrentIndex = listbox.SelectedIndex;
             AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
             //Fix for Load All Items when Search
@@ -156,7 +280,6 @@ namespace ArtWork
                 }
                 AllofItems = AllofItems.Except(newnude);
             }
-
             cover.Items.Clear();
 
             foreach (var item in AllofItems)
@@ -217,6 +340,33 @@ namespace ArtWork
 
                 }, DispatcherPriority.Background);
             }
+
+        }
+
+        private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            switch (cmbFilter.SelectedIndex)
+            {
+                case 0:
+                    getArtistArt();
+                    break;
+                case 1:
+                    var progress = new Progress<int>(percent =>
+                    {
+                        prg.Value = percent;
+                    });
+                    isCanceled = true;
+                   await ExecuteManuallyCancellableTaskAsync(progress);
+                    break;
+
+                case 2:
+                    break;
+
+                case 3:
+                    break;
+            }
+           
         }
 
         private void Cv_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -296,10 +446,7 @@ namespace ArtWork
 
         private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
         {
-
-            listbox.SelectedIndex = 0;
             AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
-
 
 
             //Initialize Search
@@ -356,6 +503,7 @@ namespace ArtWork
             new About().ShowDialog();
         }
 
+        #region Update App
         private void showGrowlNotification(bool isSuccess, params string[] param)
         {
             if (isSuccess)
@@ -421,6 +569,7 @@ namespace ArtWork
         {
             CheckUpdate();
         }
+        #endregion
 
         private void MenuItem_Click_4(object sender, RoutedEventArgs e)
         {
@@ -443,16 +592,15 @@ namespace ArtWork
                     loadArtists();
                     break;
                 case 1:
-                    sampleData.Clear();
-                    cover.Items.Clear();
+                    loadCity();
                     break;
 
                 case 2:
-
+                    loadCountry();
                     break;
 
                 case 3:
-
+                    loadGallery();
                     break;
             }
         }
