@@ -225,4 +225,16 @@
   <data name="Programmer" xml:space="preserve">
     <value>Coded By Mahdi Hosseini</value>
   </data>
+  <data name="ComboSearchItem" xml:space="preserve">
+    <value>Select Search Items</value>
+  </data>
+  <data name="SearchInCity" xml:space="preserve">
+    <value>Search in City...</value>
+  </data>
+  <data name="SearchInCountry" xml:space="preserve">
+    <value>Search in Country...</value>
+  </data>
+  <data name="SearchInGallery" xml:space="preserve">
+    <value>Search in Museum Gallery...</value>
+  </data>
 </root>

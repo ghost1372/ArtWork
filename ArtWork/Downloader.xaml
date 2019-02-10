@@ -19,11 +19,11 @@
                      OtherButtonForeground="White"
                      ShowTitle="True"
                  WindowStartupLocation="CenterScreen"
-        Title="Downloader" Height="160" Width="700">
+        Title="Downloader" Height="170" Width="700">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="1" Margin="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

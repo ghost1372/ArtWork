@@ -30,7 +30,8 @@ namespace ArtWork
     public partial class MainWindow
     {
         internal static MainWindow mainWindow;
-
+        ObservableCollection<string> nudeData = new ObservableCollection<string>();
+        ObservableCollection<string> newnude = new ObservableCollection<string>();
         ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang));
 
         IEnumerable<string> AllofItems;
@@ -46,6 +47,13 @@ namespace ArtWork
             this.DataContext = this;
             mainWindow = this;
             setFlowDirection();
+
+            var nudeResource = Properties.Resources.nudes;
+            var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in nudeItems)
+            {
+                nudeData.Add(line);
+            }
         }
         private void setFlowDirection()
         {
@@ -58,32 +66,31 @@ namespace ArtWork
 
         //todo: Load items dynamic
         ObservableCollection<string> sampleData = new ObservableCollection<string>();
-        ObservableCollection<string> nudeData = new ObservableCollection<string>();
-        ObservableCollection<string> newnude = new ObservableCollection<string>();
+       
         public ObservableCollection<string> SampleData
         {
             get
             {
-                if (sampleData.Count < 1)
-                {
-                    
-                    var items = System.IO.Directory.GetDirectories(GlobalData.Config.DataPath);
-                    var nudeResource = Properties.Resources.nudes;
-                    var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
+                loadArtists();
+                return sampleData;
+            }
+        }
+        private void loadArtists()
+        {
+            if (sampleData.Count < 1)
+            {
+
+                if (cmbFilter.SelectedIndex == 0)
+                {
+                    sampleData.Clear();
+                    if(cover != null) cover.Items.Clear();
+                    var items = System.IO.Directory.GetDirectories(GlobalData.Config.DataPath);
                     foreach (var line in items)
                     {
                         sampleData.Add(line.Replace(Path.GetDirectoryName(line) + Path.DirectorySeparatorChar, ""));
                     }
-
-                    foreach (var line in nudeItems)
-                    {
-                        nudeData.Add(line);
-                    }
-
                 }
-
-                return sampleData;
             }
         }
         #endregion
@@ -128,6 +135,7 @@ namespace ArtWork
 
         private void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (cmbFilter.SelectedIndex == 1) return;
             var CurrentIndex = listbox.SelectedIndex;
             AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
             //Fix for Load All Items when Search
@@ -246,7 +254,7 @@ namespace ArtWork
                     MessageBox.Show("SystemParametersInfo failed.","Error");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Error displaying picture ", "Error");
             }
@@ -288,10 +296,11 @@ namespace ArtWork
 
         private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
         {
+
             listbox.SelectedIndex = 0;
             AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
 
-            
+
 
             //Initialize Search
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
@@ -300,6 +309,8 @@ namespace ArtWork
 
         private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (string.IsNullOrEmpty(txtSearch.Text)) return;
+
             CollectionViewSource.GetDefaultView(listbox.ItemsSource).Refresh();
         }
 
@@ -422,6 +433,28 @@ namespace ArtWork
 
             System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
             Environment.Exit(0);
+        }
+
+        private void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (cmbFilter.SelectedIndex)
+            {
+                case 0:
+                    loadArtists();
+                    break;
+                case 1:
+                    sampleData.Clear();
+                    cover.Items.Clear();
+                    break;
+
+                case 2:
+
+                    break;
+
+                case 3:
+
+                    break;
+            }
         }
     }
 

@@ -14,6 +14,9 @@ namespace ArtWork
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             GlobalData.Init();
+            if (!System.IO.Directory.Exists(GlobalData.Config.DataPath))
+                GlobalData.Config.DataPath= Environment.CurrentDirectory + @"\data";
+
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(GlobalData.Config.Lang);
             if (!System.IO.Directory.Exists(Environment.CurrentDirectory + @"\data"))
                 System.IO.Directory.CreateDirectory(Environment.CurrentDirectory + @"\data");

@@ -124,6 +124,15 @@ namespace ArtWork.Properties.Langs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to نحوه جستجو را انتخاب کنید.
+        /// </summary>
+        public static string ComboSearchItem {
+            get {
+                return ResourceManager.GetString("ComboSearchItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کشور.
         /// </summary>
         public static string Country {
@@ -336,6 +345,33 @@ namespace ArtWork.Properties.Langs {
         public static string SearchInArtists {
             get {
                 return ResourceManager.GetString("SearchInArtists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to جستجو در شهر ها....
+        /// </summary>
+        public static string SearchInCity {
+            get {
+                return ResourceManager.GetString("SearchInCity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to جستجو در کشورها....
+        /// </summary>
+        public static string SearchInCountry {
+            get {
+                return ResourceManager.GetString("SearchInCountry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to جستجو در گالری موزه ها....
+        /// </summary>
+        public static string SearchInGallery {
+            get {
+                return ResourceManager.GetString("SearchInGallery", resourceCulture);
             }
         }
         

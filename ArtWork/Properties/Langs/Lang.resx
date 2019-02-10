@@ -225,4 +225,16 @@
   <data name="Programmer" xml:space="preserve">
     <value>برنامه نویس : سید مهدی حسینی</value>
   </data>
+  <data name="ComboSearchItem" xml:space="preserve">
+    <value>نحوه جستجو را انتخاب کنید</value>
+  </data>
+  <data name="SearchInCity" xml:space="preserve">
+    <value>جستجو در شهر ها...</value>
+  </data>
+  <data name="SearchInCountry" xml:space="preserve">
+    <value>جستجو در کشورها...</value>
+  </data>
+  <data name="SearchInGallery" xml:space="preserve">
+    <value>جستجو در گالری موزه ها...</value>
+  </data>
 </root>

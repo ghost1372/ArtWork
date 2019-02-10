@@ -94,33 +94,69 @@
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="75"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
 
-        <GridSplitter Grid.Row="1" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
-        <GridSplitter Grid.Row="0" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
-        <controls:TextBox Height="35" Grid.Row="0" Background="Transparent" TextChanged="TxtSearch_TextChanged" VerticalAlignment="Top" Margin="10,5,10,10" Name="txtSearch" Style="{StaticResource TextBoxExtend}" controls:InfoElement.Placeholder="{x:Static langs:Lang.SearchInArtists}"/>
-        <ToggleButton Style="{DynamicResource ToggleButtonPrimary}" Checked="ButtonNude_Checked" Unchecked="ButtonNude_Checked" Name="ButtonNude" Content="{x:Static langs:Lang.NudeFilter}" Grid.Row="0" Grid.Column="0" Margin="10,0,10,0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-            
-            
-        </ToggleButton>
-        <ListBox ItemsSource="{Binding SampleData}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,5,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged"/>
+        <GridSplitter Grid.Column="0" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
 
-        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
-            <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-            <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-            <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-            <controls:Shield Name="shCity" Subject="{x:Static langs:Lang.City}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
-            <controls:Shield Name="shCountry" Subject="{x:Static langs:Lang.Country}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
-            <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
-            <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
-        </StackPanel>
-        <controls:CoverView Margin="0,20,0,0" ItemContentHeightFixed="True" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
-        </controls:CoverView>
-        <controls:ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
-            <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
-        </controls:ScrollViewer>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Margin="5,5,10,0" Grid.Row="0">
+                <ToggleButton Style="{DynamicResource ToggleButtonPrimary}" Checked="ButtonNude_Checked" Unchecked="ButtonNude_Checked" Name="ButtonNude" Content="{x:Static langs:Lang.NudeFilter}" Margin="0,5,0,0" HorizontalAlignment="Stretch"/>
+                <ComboBox SelectionChanged="CmbFilter_SelectionChanged" Style="{StaticResource ComboBoxExtend}" Name="cmbFilter" SelectedIndex="0" controls:InfoElement.Placeholder="{x:Static langs:Lang.ComboSearchItem}" Background="Transparent" Margin="0,5,0,0">
+                    <ComboBoxItem Content="{x:Static langs:Lang.Artist}"/>
+                    <ComboBoxItem Content="{x:Static langs:Lang.City}"/>
+                    <ComboBoxItem Content="{x:Static langs:Lang.Country}"/>
+                    <ComboBoxItem Content="{x:Static langs:Lang.Gallery}"/>
+                    
+                </ComboBox>
+                <controls:TextBox Height="35" Background="Transparent" TextChanged="TxtSearch_TextChanged" Margin="0,5,0,0" Name="txtSearch" HorizontalAlignment="Stretch">
+                    <controls:TextBox.Style>
+                        <Style BasedOn="{StaticResource TextBoxExtend}" TargetType="controls:TextBox">
+                            <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInArtists}" />
+                            <!-- Here is the 'normal' content -->
+                            <Style.Triggers>
+                                <!-- Here is how we bind to another control's property -->
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="0">
+                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInArtists}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="1">
+                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInCity}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="2">
+                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInCountry}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="3">
+                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInGallery}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:TextBox.Style>
+                </controls:TextBox>
+            </StackPanel>
+          
+            <ListBox SelectedIndex="0" ItemsSource="{Binding SampleData}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,0,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged"/>
+
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="0">
+                <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                <controls:Shield Name="shCity" Subject="{x:Static langs:Lang.City}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
+                <controls:Shield Name="shCountry" Subject="{x:Static langs:Lang.Country}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
+                <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
+                <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
+            </StackPanel>
+            <controls:CoverView ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160"/>
+            <controls:ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
+                <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
+            </controls:ScrollViewer>
+        </Grid>
     </Grid>
 </controls:BlurWindow>
