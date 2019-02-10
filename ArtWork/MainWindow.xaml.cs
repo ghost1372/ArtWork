@@ -40,12 +40,13 @@ namespace ArtWork
 
         ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang));
 
+        CancellationTokenSource ts = new CancellationTokenSource();
+
         IEnumerable<string> AllofItems;
         private string newVersion = string.Empty;
 
         private string ChangeLog = string.Empty;
         private string url = "";
-        bool isCanceled = true;
         int TotalItem = 0;
         public MainWindow()
         {
@@ -76,88 +77,78 @@ namespace ArtWork
                 countryData.Add(item);
 
         }
-        public async Task ExecuteManuallyCancellableTaskAsync(IProgress<int> progress)
+        public async Task ExecuteManuallyCancellableTaskAsync(IProgress<int> progress, CancellationToken ct)
         {
             if (listbox.SelectedIndex == -1) return;
 
-            isCanceled = false;
             var mprogress = 0;
             prg.Value = 0;
             cover.Items.Clear();
-            using (var cancellationTokenSource = new CancellationTokenSource())
+            var SearchTask = Task.Run(async () =>
             {
-                cancellationTokenSource.Cancel();
-
-                var SearchTask = Task.Run(async () =>
+                foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
                 {
-                    foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
+                    mprogress += 1;
+                    progress.Report((mprogress * 100 / TotalItem));
+                    if (!ct.IsCancellationRequested)
                     {
-
-                        if (isCanceled)
-                        {
-                            cancellationTokenSource.Cancel();
-                            return;
-                        }
-                        mprogress += 1;
-                        progress.Report((mprogress * 100 / TotalItem));
-
                         var item = ShellFile.FromFilePath(file.FullName); // for example C:\myfolder\1.jpg
                         await Dispatcher.InvokeAsync(() =>
-                         {
+                        {
                             if (item.Properties.System.Keywords.Value[0].Equals(listbox.SelectedItem))
-                             {
+                            {
                                 // add the control.
                                 var cv = new CoverViewItem();
-                                 var context = new ContextMenu();
-                                 var menuItem = new MenuItem();
-                                 var menuItem2 = new MenuItem();
+                                var context = new ContextMenu();
+                                var menuItem = new MenuItem();
+                                var menuItem2 = new MenuItem();
 
-                                 menuItem.Header = rm.GetString("SetasDesktop");
-                                 menuItem2.Header = rm.GetString("GoToLoc");
+                                menuItem.Header = rm.GetString("SetasDesktop");
+                                menuItem2.Header = rm.GetString("GoToLoc");
 
-                                 menuItem.Click += delegate { DisplayPicture(file.FullName, true); };
-                                 menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + file.FullName + "\""); };
+                                menuItem.Click += delegate { DisplayPicture(file.FullName, true); };
+                                menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + file.FullName + "\""); };
 
-                                 context.Items.Add(menuItem);
-                                 context.Items.Add(menuItem2);
+                                context.Items.Add(menuItem);
+                                context.Items.Add(menuItem2);
 
-                                 var contentImg = new Image();
-                                 contentImg.Stretch = Stretch.Uniform;
-                                 contentImg.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
+                                var contentImg = new Image();
+                                contentImg.Stretch = Stretch.Uniform;
+                                contentImg.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
 
-                                 var img = new Image();
-                                 img.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
-                                 cv.Header = img;
-                                 cv.Tag = file.FullName;
-                                 cv.Content = contentImg;
-                                 cv.ContextMenu = context;
-                                 cv.Selected += Cv_Selected;
-                                 cv.Deselected += Cv_Deselected;
-                                 cv.MouseDoubleClick += Cv_MouseDoubleClick;
+                                var img = new Image();
+                                img.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
+                                cv.Header = img;
+                                cv.Tag = file.FullName;
+                                cv.Content = contentImg;
+                                cv.ContextMenu = context;
+                                cv.Selected += Cv_Selected;
+                                cv.Deselected += Cv_Deselected;
+                                cv.MouseDoubleClick += Cv_MouseDoubleClick;
                                 //-< source >- 
                                 BitmapImage src = new BitmapImage();
-                                 src.BeginInit();
-                                 src.UriSource = new Uri(file.FullName, UriKind.Absolute);
+                                src.BeginInit();
+                                src.UriSource = new Uri(file.FullName, UriKind.Absolute);
                                 //< thumbnail > 
                                 src.DecodePixelWidth = 160;
-                                 src.CacheOption = BitmapCacheOption.OnLoad;
+                                src.CacheOption = BitmapCacheOption.OnLoad;
                                 //</ thumbnail > 
 
                                 src.EndInit();
-                                 img.Source = src;
+                                img.Source = src;
                                 //-</ source >- 
 
                                 img.Stretch = Stretch.Uniform;
-                                 img.Height = 160;
-                                 cover.Items.Add(cv);
-                             }
-                         }, DispatcherPriority.Background);
+                                img.Height = 160;
+                                cover.Items.Add(cv);
+                            }
+                        }, DispatcherPriority.Background);
+
                     }
+                }
+            }, ct);
 
-                });
-
-                await SearchTask;
-            }
+            await SearchTask;
         }
 
         private void setFlowDirection()
@@ -342,7 +333,6 @@ namespace ArtWork
             }
 
         }
-
         private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
@@ -352,12 +342,14 @@ namespace ArtWork
                     getArtistArt();
                     break;
                 case 1:
+                   
                     var progress = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
                     });
-                    isCanceled = true;
-                   await ExecuteManuallyCancellableTaskAsync(progress);
+                    ts?.Cancel();
+                    ts = new CancellationTokenSource();
+                    await ExecuteManuallyCancellableTaskAsync(progress, ts.Token);
                     break;
 
                 case 2:
