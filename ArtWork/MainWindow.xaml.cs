@@ -77,25 +77,34 @@ namespace ArtWork
                 countryData.Add(item);
 
         }
-        public async Task ExecuteManuallyCancellableTaskAsync(IProgress<int> progress, CancellationToken ct)
+        public async Task ExecuteTaskAsync(IProgress<int> progress, CancellationToken ct, int KeywordIndex)
         {
             if (listbox.SelectedIndex == -1) return;
 
             var mprogress = 0;
             prg.Value = 0;
             cover.Items.Clear();
+            dynamic check;
+
             var SearchTask = Task.Run(async () =>
             {
+
                 foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
                 {
                     mprogress += 1;
                     progress.Report((mprogress * 100 / TotalItem));
                     if (!ct.IsCancellationRequested)
                     {
-                        var item = ShellFile.FromFilePath(file.FullName); // for example C:\myfolder\1.jpg
+                        var item = ShellFile.FromFilePath(file.FullName);
                         await Dispatcher.InvokeAsync(() =>
                         {
-                            if (item.Properties.System.Keywords.Value[0].Equals(listbox.SelectedItem))
+                            // check if it is gallery or not
+                            if (KeywordIndex == 2)
+                                check = item.Properties.System.Comment.Value;
+                            else
+                                check = item.Properties.System.Keywords.Value[KeywordIndex];
+
+                            if (check.Equals(listbox.SelectedItem))
                             {
                                 // add the control.
                                 var cv = new CoverViewItem();
@@ -339,23 +348,38 @@ namespace ArtWork
             switch (cmbFilter.SelectedIndex)
             {
                 case 0:
+                    ts?.Cancel();
                     getArtistArt();
                     break;
                 case 1:
                    
-                    var progress = new Progress<int>(percent =>
+                    var progressCity = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
                     });
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await ExecuteManuallyCancellableTaskAsync(progress, ts.Token);
+                    await ExecuteTaskAsync(progressCity, ts.Token, 0);
                     break;
 
                 case 2:
+                    var progressCountry = new Progress<int>(percent =>
+                    {
+                        prg.Value = percent;
+                    });
+                    ts?.Cancel();
+                    ts = new CancellationTokenSource();
+                    await ExecuteTaskAsync(progressCountry, ts.Token, 1);
                     break;
 
                 case 3:
+                    var progressGallery = new Progress<int>(percent =>
+                    {
+                        prg.Value = percent;
+                    });
+                    ts?.Cancel();
+                    ts = new CancellationTokenSource();
+                    await ExecuteTaskAsync(progressGallery, ts.Token, 2);
                     break;
             }
            
