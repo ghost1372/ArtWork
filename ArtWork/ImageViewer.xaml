@@ -29,8 +29,8 @@
             <StackPanel>
                 <StackPanel HorizontalAlignment="Center" Margin="10" Orientation="Horizontal">
                     <ToggleButton Name="autoPlay" IsChecked="True" Content="{x:Static langs:Lang.AutoPlay}"/>
-                    <Button Click="Button_Click" Margin="5,0" Content="{x:Static langs:Lang.GoToLoc}"/>
-                    <Button Click="Button_Click_1" Margin="5,0" Content="{x:Static langs:Lang.SetasDesktop}"/>
+                    <Button Click="GoToLoc_Click" Margin="5,0" Content="{x:Static langs:Lang.GoToLoc}"/>
+                    <Button Click="SetDesktopWallpaper_Click" Margin="5,0" Content="{x:Static langs:Lang.SetasDesktop}"/>
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>

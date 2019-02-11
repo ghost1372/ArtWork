@@ -38,18 +38,18 @@ namespace ArtWork
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void GoToLoc_Click(object sender, RoutedEventArgs e)
         {
             var item = img.Items[img.PageIndex] as Image;
             System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item.Tag + "\"");
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void SetDesktopWallpaper_Click(object sender, RoutedEventArgs e)
         {
             var item = img.Items[img.PageIndex] as Image;
-            MainWindow.mainWindow.DisplayPicture(item.Tag.ToString(), true);
+            MainWindow.mainWindow.SetDesktopWallpaper(item.Tag.ToString(), true);
         }
-
+       
         private void Img_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var item = img.Items[img.PageIndex] as Image;
@@ -81,5 +81,7 @@ namespace ArtWork
             if (IsRightToLeft)
                 main.FlowDirection = FlowDirection.RightToLeft;
         }
+
+        
     }
 }

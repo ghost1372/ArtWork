@@ -1,5 +1,6 @@
 ﻿using HandyControl.Controls;
 using HandyControl.Data;
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
@@ -20,7 +21,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using MessageBox = HandyControl.Controls.MessageBox;
-
 namespace ArtWork
 {
     /// <summary>
@@ -65,6 +65,10 @@ namespace ArtWork
             this.DataContext = this;
             mainWindow = this;
 
+            
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
+
             setFlowDirection(); // set layout direction based on language to rtl
 
             #region load menu items from resources
@@ -95,12 +99,37 @@ namespace ArtWork
 
             #endregion
 
+
+        }
+        async void runOnce()
+        {
+          await  FileWriteAsync("log.txt", MasterCry.System_Details.getOperatingSystemInfo() + Environment.NewLine + "################################" + Environment.NewLine +
+
+                "AllOfItems: " + AllofItems.Count() + "     sampleData: " + sampleData.Count + "     galleryData: " + galleryData.Count +
+                "     cityData: " + cityData.Count + "     countryData: " + countryData.Count + Environment.NewLine
+
+                );
+            foreach (var item in sampleData)
+            {
+              await  FileWriteAsync("log.txt", Environment.NewLine +
+                    item);
+            }
+        }
+        static async void MyHandler(object sender, UnhandledExceptionEventArgs e)
+        {
+           await FileWriteAsync("log.txt",Environment.NewLine + e.ExceptionObject.ToString());
+        }
+        public static async Task FileWriteAsync(string filePath, string messaage, bool append = true)
+        {
+            using (FileStream stream = new FileStream(filePath, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
+            using (StreamWriter sw = new StreamWriter(stream))
+            {
+                await sw.WriteLineAsync(messaage);
+            }
         }
 
-       
-
         #region load menu items
-       
+
         public ObservableCollection<string> SampleData
         {
             get
@@ -238,56 +267,61 @@ namespace ArtWork
                     if (CurrentIndex != listbox.SelectedIndex)
                         return;
 
-                    // add the control.
-                    var cv = new CoverViewItem();
-                    var context = new ContextMenu();
-                    var menuItem = new MenuItem();
-                    var menuItem2 = new MenuItem();
-
-                    menuItem.Header = rm.GetString("SetasDesktop");
-                    menuItem2.Header = rm.GetString("GoToLoc");
-
-                    menuItem.Click += delegate { DisplayPicture(item, true); };
-                    menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item + "\""); };
-
-                    context.Items.Add(menuItem);
-                    context.Items.Add(menuItem2);
-
-                    var contentImg = new Image();
-                    contentImg.Stretch = Stretch.Uniform;
-                    contentImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
-
-                    var img = new Image();
-                    img.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
-                    cv.Header = img;
-                    cv.Tag = item;
-                    cv.Content = contentImg;
-                    cv.ContextMenu = context;
-                    cv.Selected += Cv_Selected;
-                    cv.Deselected += Cv_Deselected;
-                    cv.MouseDoubleClick += Cv_MouseDoubleClick;
-                    //-< source >- 
-                    BitmapImage src = new BitmapImage();
-                    src.BeginInit();
-                    src.UriSource = new Uri(item, UriKind.Absolute);
-                    //< thumbnail > 
-                    src.DecodePixelWidth = 160;
-                    src.CacheOption = BitmapCacheOption.OnLoad;
-                    //</ thumbnail > 
-
-                    src.EndInit();
-                    img.Source = src;
-                    //-</ source >- 
-
-                    img.Stretch = Stretch.Uniform;
-                    img.Height = 160;
-
-                    cover.Items.Add(cv);
+                    createControls(item);
+                   
                     Task.Delay(50);
                 }), DispatcherPriority.Background);
             }
 
         }
+        private void createControls(string item)
+        {
+            // add the control.
+            var cv = new CoverViewItem();
+            var context = new ContextMenu();
+            var SetAsDesktopMenuItem = new MenuItem();
+            var GoToLocationMenuItem = new MenuItem();
+
+            SetAsDesktopMenuItem.Header = rm.GetString("SetasDesktop");
+            GoToLocationMenuItem.Header = rm.GetString("GoToLoc");
+
+            SetAsDesktopMenuItem.Click += delegate { SetDesktopWallpaper(item, true); };
+            GoToLocationMenuItem.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item + "\""); };
+            context.Items.Add(SetAsDesktopMenuItem);
+            context.Items.Add(GoToLocationMenuItem);
+
+            var contentImg = new Image();
+            contentImg.Stretch = Stretch.Uniform;
+            contentImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
+
+            var img = new Image();
+            img.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
+            cv.Header = img;
+            cv.Tag = item;
+            cv.Content = contentImg;
+            cv.ContextMenu = context;
+            cv.Selected += Cv_Selected;
+            cv.Deselected += Cv_Deselected;
+            cv.MouseDoubleClick += Cv_MouseDoubleClick;
+            //-< source >- 
+            BitmapImage src = new BitmapImage();
+            src.BeginInit();
+            src.UriSource = new Uri(item, UriKind.Absolute);
+            //< thumbnail > 
+            src.DecodePixelWidth = 160;
+            src.CacheOption = BitmapCacheOption.OnLoad;
+            //</ thumbnail > 
+
+            src.EndInit();
+            img.Source = src;
+            //-</ source >- 
+
+            img.Stretch = Stretch.Uniform;
+            img.Height = 160;
+
+            cover.Items.Add(cv);
+        }
+       
 
         /// <summary>
         /// getArtsTaskAsync for Searching based on Gallery, City, Country items
@@ -342,49 +376,7 @@ namespace ArtWork
                             if (check.Equals(listbox.SelectedItem))
                             {
                                 // add the control.
-                                var cv = new CoverViewItem();
-                                var context = new ContextMenu();
-                                var menuItem = new MenuItem();
-                                var menuItem2 = new MenuItem();
-
-                                menuItem.Header = rm.GetString("SetasDesktop");
-                                menuItem2.Header = rm.GetString("GoToLoc");
-
-                                menuItem.Click += delegate { DisplayPicture(file.FullName, true); };
-                                menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + file.FullName + "\""); };
-
-                                context.Items.Add(menuItem);
-                                context.Items.Add(menuItem2);
-
-                                var contentImg = new Image();
-                                contentImg.Stretch = Stretch.Uniform;
-                                contentImg.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
-
-                                var img = new Image();
-                                img.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
-                                cv.Header = img;
-                                cv.Tag = file.FullName;
-                                cv.Content = contentImg;
-                                cv.ContextMenu = context;
-                                cv.Selected += Cv_Selected;
-                                cv.Deselected += Cv_Deselected;
-                                cv.MouseDoubleClick += Cv_MouseDoubleClick;
-                                //-< source >- 
-                                BitmapImage src = new BitmapImage();
-                                src.BeginInit();
-                                src.UriSource = new Uri(file.FullName, UriKind.Absolute);
-                                //< thumbnail > 
-                                src.DecodePixelWidth = 160;
-                                src.CacheOption = BitmapCacheOption.OnLoad;
-                                //</ thumbnail > 
-
-                                src.EndInit();
-                                img.Source = src;
-                                //-</ source >- 
-
-                                img.Stretch = Stretch.Uniform;
-                                img.Height = 160;
-                                cover.Items.Add(cv);
+                                createControls(file.FullName);
                             }
                         }, DispatcherPriority.Background);
 
@@ -396,7 +388,7 @@ namespace ArtWork
         }
         #endregion
 
-        #region Set as Desktop
+        #region Set as Wallpaper
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SystemParametersInfo(uint uiAction, uint uiParam, String pvParam, uint fWinIni);
@@ -404,7 +396,7 @@ namespace ArtWork
         private const uint SPI_SETDESKWALLPAPER = 0x14;
         private const uint SPIF_UPDATEINIFILE = 0x1;
         private const uint SPIF_SENDWININICHANGE = 0x2;
-        public void DisplayPicture(string file_name, bool update_registry)
+        public void SetDesktopWallpaper(string file_name, bool update_registry)
         {
             try
             {
@@ -426,6 +418,10 @@ namespace ArtWork
                 MessageBox.Show("Error displaying picture ", "Error");
             }
         }
+
+        //todo: fix lockscreen 
+        // based on this answer https://stackoverflow.com/questions/51781921/programmatically-change-windows-10-lock-screen-background-on-desktop/51785687
+        
         #endregion
 
         #region Cover Items Events
@@ -493,6 +489,7 @@ namespace ArtWork
         #endregion
 
         #region Menu Items
+
         private void DownloaderMenu(object sender, RoutedEventArgs e)
         {
             new Downloader().Show();
@@ -657,6 +654,8 @@ namespace ArtWork
             //Initialize Search
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
             view.Filter = UserFilter;
+
+            runOnce();
         }
 
         // load items to listbox
@@ -683,6 +682,8 @@ namespace ArtWork
                     break;
             }
         }
+
+        
     }
 
 }
