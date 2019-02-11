@@ -233,10 +233,8 @@ namespace ArtWork
 
             foreach (var item in AllofItems)
             {
-
-                this.Dispatcher.Invoke(() =>
+                Dispatcher.BeginInvoke((Action)(() =>
                 {
-
                     if (CurrentIndex != listbox.SelectedIndex)
                         return;
 
@@ -286,8 +284,7 @@ namespace ArtWork
 
                     cover.Items.Add(cv);
                     Task.Delay(50);
-
-                }, DispatcherPriority.Background);
+                }), DispatcherPriority.Background);
             }
 
         }
@@ -320,7 +317,6 @@ namespace ArtWork
                         var item = ShellFile.FromFilePath(file.FullName);
                         await Dispatcher.InvokeAsync(() =>
                         {
-
                             if (ButtonNude.IsChecked == true)
                             {
                                 foreach (var itemx in nudeData)
@@ -615,7 +611,6 @@ namespace ArtWork
         // show items to coverview
         private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             switch (cmbFilter.SelectedIndex)
             {
                 case 0:
@@ -667,6 +662,9 @@ namespace ArtWork
         // load items to listbox
         private void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            
+            if (txtSearch != null && !string.IsNullOrEmpty(txtSearch.Text)) txtSearch.Text = string.Empty;
+
             switch (cmbFilter.SelectedIndex)
             {
                 case 0:
