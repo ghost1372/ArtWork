@@ -293,9 +293,9 @@ namespace ArtWork
         }
 
         /// <summary>
-        /// ExecuteTaskAsync for Searching based on Gallery, City, Country items
+        /// getArtsTaskAsync for Searching based on Gallery, City, Country items
         /// </summary>
-        /// <param name="progress">IProgress<int></param>
+        /// <param name="progress">IProgress</param>
         /// <param name="ct">Cancellation Token</param>
         /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2]</param>
         /// <returns>Await Task</returns>
@@ -307,11 +307,12 @@ namespace ArtWork
             prg.Value = 0;
             cover.Items.Clear();
             dynamic check;
-
+            bool isNude = false;
             var SearchTask = Task.Run(async () =>
             {
                 foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
                 {
+                    isNude = false;
                     mprogress += 1;
                     progress.Report((mprogress * 100 / TotalItem));
                     if (!ct.IsCancellationRequested)
@@ -319,6 +320,23 @@ namespace ArtWork
                         var item = ShellFile.FromFilePath(file.FullName);
                         await Dispatcher.InvokeAsync(() =>
                         {
+
+                            if (ButtonNude.IsChecked == true)
+                            {
+                                foreach (var itemx in nudeData)
+                                {
+                                    if (itemx.Equals(Path.GetFileNameWithoutExtension(file.FullName)))
+                                    {
+                                        isNude = true;
+                                        break;
+                                    }
+
+                                }
+                            }
+
+                            if (isNude)
+                                return;
+
                             // check if it is gallery or not
                             if (KeywordIndex == 2)
                                 check = item.Properties.System.Comment.Value;

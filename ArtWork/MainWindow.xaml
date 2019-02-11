@@ -154,7 +154,7 @@
                 <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
             </StackPanel>
             <controls:CoverView ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160"/>
-            <ProgressBar Margin="0,0,5,0" Grid.Row="1" Value="0" Name="prg" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+            <ProgressBar FlowDirection="LeftToRight" Margin="0,0,5,0" Grid.Row="1" Value="0" Name="prg" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                 <ProgressBar.Style>
                     <Style BasedOn="{StaticResource ProgressBarInfo}" TargetType="ProgressBar">
                         <Setter Property="Visibility" Value="Visible" />
