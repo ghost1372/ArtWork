@@ -1,6 +1,5 @@
 ﻿using HandyControl.Controls;
 using HandyControl.Data;
-using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
@@ -57,17 +56,13 @@ namespace ArtWork
 
         IEnumerable<string> AllofItems;
 
-        
+
         public MainWindow()
         {
             InitializeComponent();
 
             this.DataContext = this;
             mainWindow = this;
-
-            
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
 
             setFlowDirection(); // set layout direction based on language to rtl
 
@@ -97,37 +92,9 @@ namespace ArtWork
             foreach (var item in countryItems)
                 countryData.Add(item);
 
-            #endregion
-
-
+            #endregion            
+            
         }
-        async void runOnce()
-        {
-          await  FileWriteAsync("log.txt", MasterCry.System_Details.getOperatingSystemInfo() + Environment.NewLine + "################################" + Environment.NewLine +
-
-                "AllOfItems: " + AllofItems.Count() + "     sampleData: " + sampleData.Count + "     galleryData: " + galleryData.Count +
-                "     cityData: " + cityData.Count + "     countryData: " + countryData.Count + Environment.NewLine
-
-                );
-            foreach (var item in sampleData)
-            {
-              await  FileWriteAsync("log.txt", Environment.NewLine +
-                    item);
-            }
-        }
-        static async void MyHandler(object sender, UnhandledExceptionEventArgs e)
-        {
-           await FileWriteAsync("log.txt",Environment.NewLine + e.ExceptionObject.ToString());
-        }
-        public static async Task FileWriteAsync(string filePath, string messaage, bool append = true)
-        {
-            using (FileStream stream = new FileStream(filePath, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
-            using (StreamWriter sw = new StreamWriter(stream))
-            {
-                await sw.WriteLineAsync(messaage);
-            }
-        }
-
         #region load menu items
 
         public ObservableCollection<string> SampleData
@@ -655,7 +622,6 @@ namespace ArtWork
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
             view.Filter = UserFilter;
 
-            runOnce();
         }
 
         // load items to listbox
