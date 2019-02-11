@@ -36,14 +36,14 @@
             </Button>
             <Menu Margin="10,0,0,0" Background="Transparent">
                 <MenuItem Foreground="White" Header="{x:Static langs:Lang.Downloader}">
-                    <MenuItem Header="{x:Static langs:Lang.MenuDownload}" Click="MenuItem_Click">
+                    <MenuItem Header="{x:Static langs:Lang.MenuDownload}" Click="DownloaderMenu">
                         <MenuItem.Icon>
                             <Path Data="{StaticResource DownloadGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Foreground="White" Header="{x:Static langs:Lang.MenuConfig}">
-                    <MenuItem Click="MenuItem_Click_1" Header="{x:Static langs:Lang.Path}">
+                    <MenuItem Click="ChangePathMenu" Header="{x:Static langs:Lang.Path}">
                         <MenuItem.Icon>
                             <Path Data="{StaticResource ConfigGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
                         </MenuItem.Icon>
@@ -52,12 +52,12 @@
                         <MenuItem.Icon>
                             <Path Data="{StaticResource WindowsGeometry}" Fill="{DynamicResource PrimaryTextBrush}"/>
                         </MenuItem.Icon>
-                        <MenuItem Tag="Persian" Click="MenuItem_Click_4" Header="{x:Static langs:Lang.Persian}">
+                        <MenuItem Tag="Persian" Click="ChangeLanguageMenu" Header="{x:Static langs:Lang.Persian}">
                             <MenuItem.Icon>
                                 <Image Width="32" Source="/ArtWork;component/Resources/Img/iran.png"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Tag="USA" Click="MenuItem_Click_4" Header="{x:Static langs:Lang.US}">
+                        <MenuItem Tag="USA" Click="ChangeLanguageMenu" Header="{x:Static langs:Lang.US}">
                             <MenuItem.Icon>
                                 <Image Width="32" Source="/ArtWork;component/Resources/Img/usa.png"/>
                             </MenuItem.Icon>
@@ -72,13 +72,13 @@
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem Click="MenuItem_Click_3" Header="{x:Static langs:Lang.MenuUpdate}">
+                    <MenuItem Click="CheckUpdateMenu" Header="{x:Static langs:Lang.MenuUpdate}">
                         <MenuItem.Icon>
                             <Path Data="{StaticResource GithubGeometry}" Fill="{DynamicResource PrimaryBrush}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     
-                    <MenuItem Click="MenuItem_Click_2" Header="{x:Static langs:Lang.MenuAboutWindow}">
+                    <MenuItem Click="AboutMenu" Header="{x:Static langs:Lang.MenuAboutWindow}">
                         <MenuItem.Icon>
                             <Path Data="{StaticResource InfoGeometry}" Fill="{DynamicResource SuccessBrush}"/>
                         </MenuItem.Icon>

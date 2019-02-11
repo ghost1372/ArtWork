@@ -5,8 +5,6 @@ using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,147 +28,78 @@ namespace ArtWork
     /// </summary>
     public partial class MainWindow
     {
-        internal static MainWindow mainWindow;
-        ObservableCollection<string> nudeData = new ObservableCollection<string>();
-        ObservableCollection<string> newnude = new ObservableCollection<string>();
+        internal static MainWindow mainWindow; // for accessing func from another View
+        int TotalItem = 0; // get Total items for progress report
 
-        ObservableCollection<string> galleryData = new ObservableCollection<string>();
-        ObservableCollection<string> cityData = new ObservableCollection<string>();
-        ObservableCollection<string> countryData = new ObservableCollection<string>();
-
-        ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang));
-
-        CancellationTokenSource ts = new CancellationTokenSource();
-
-        IEnumerable<string> AllofItems;
+        #region Update App
         private string newVersion = string.Empty;
 
         private string ChangeLog = string.Empty;
         private string url = "";
-        int TotalItem = 0;
+        #endregion
+
+        #region ObservableCollection for get Items
+
+        ObservableCollection<string> sampleData = new ObservableCollection<string>(); // for artists items
+
+        ObservableCollection<string> nudeData = new ObservableCollection<string>(); // for Nude items
+        ObservableCollection<string> newnude = new ObservableCollection<string>(); // for Nude items
+
+        ObservableCollection<string> galleryData = new ObservableCollection<string>(); // for gallery items
+        ObservableCollection<string> cityData = new ObservableCollection<string>(); // for city items
+        ObservableCollection<string> countryData = new ObservableCollection<string>(); // for country items
+
+        #endregion
+
+        ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang)); // resource manager for get resource language
+
+        CancellationTokenSource ts = new CancellationTokenSource(); // cancel tasks token
+
+        IEnumerable<string> AllofItems;
+
+        
         public MainWindow()
         {
             InitializeComponent();
 
             this.DataContext = this;
             mainWindow = this;
-            setFlowDirection();
 
+            setFlowDirection(); // set layout direction based on language to rtl
+
+            #region load menu items from resources
+
+            //get nude items
             var nudeResource = Properties.Resources.nudes;
             var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in nudeItems)
                 nudeData.Add(line);
 
+            //get gallery items
             var galleryResource = Properties.Resources.gallery;
             var galleryItems = galleryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var item in galleryItems)
                 galleryData.Add(item);
 
+            //get city items
             var cityResource = Properties.Resources.city;
             var cityItems = cityResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var item in cityItems)
                 cityData.Add(item);
 
+            //get country items
             var countryResource = Properties.Resources.country;
             var countryItems = countryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var item in countryItems)
                 countryData.Add(item);
 
-        }
-        public async Task ExecuteTaskAsync(IProgress<int> progress, CancellationToken ct, int KeywordIndex)
-        {
-            if (listbox.SelectedIndex == -1) return;
+            #endregion
 
-            var mprogress = 0;
-            prg.Value = 0;
-            cover.Items.Clear();
-            dynamic check;
-
-            var SearchTask = Task.Run(async () =>
-            {
-
-                foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
-                {
-                    mprogress += 1;
-                    progress.Report((mprogress * 100 / TotalItem));
-                    if (!ct.IsCancellationRequested)
-                    {
-                        var item = ShellFile.FromFilePath(file.FullName);
-                        await Dispatcher.InvokeAsync(() =>
-                        {
-                            // check if it is gallery or not
-                            if (KeywordIndex == 2)
-                                check = item.Properties.System.Comment.Value;
-                            else
-                                check = item.Properties.System.Keywords.Value[KeywordIndex];
-
-                            if (check.Equals(listbox.SelectedItem))
-                            {
-                                // add the control.
-                                var cv = new CoverViewItem();
-                                var context = new ContextMenu();
-                                var menuItem = new MenuItem();
-                                var menuItem2 = new MenuItem();
-
-                                menuItem.Header = rm.GetString("SetasDesktop");
-                                menuItem2.Header = rm.GetString("GoToLoc");
-
-                                menuItem.Click += delegate { DisplayPicture(file.FullName, true); };
-                                menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + file.FullName + "\""); };
-
-                                context.Items.Add(menuItem);
-                                context.Items.Add(menuItem2);
-
-                                var contentImg = new Image();
-                                contentImg.Stretch = Stretch.Uniform;
-                                contentImg.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
-
-                                var img = new Image();
-                                img.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
-                                cv.Header = img;
-                                cv.Tag = file.FullName;
-                                cv.Content = contentImg;
-                                cv.ContextMenu = context;
-                                cv.Selected += Cv_Selected;
-                                cv.Deselected += Cv_Deselected;
-                                cv.MouseDoubleClick += Cv_MouseDoubleClick;
-                                //-< source >- 
-                                BitmapImage src = new BitmapImage();
-                                src.BeginInit();
-                                src.UriSource = new Uri(file.FullName, UriKind.Absolute);
-                                //< thumbnail > 
-                                src.DecodePixelWidth = 160;
-                                src.CacheOption = BitmapCacheOption.OnLoad;
-                                //</ thumbnail > 
-
-                                src.EndInit();
-                                img.Source = src;
-                                //-</ source >- 
-
-                                img.Stretch = Stretch.Uniform;
-                                img.Height = 160;
-                                cover.Items.Add(cv);
-                            }
-                        }, DispatcherPriority.Background);
-
-                    }
-                }
-            }, ct);
-
-            await SearchTask;
         }
 
-        private void setFlowDirection()
-        {
-            var IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
-            if (IsRightToLeft)
-                main.FlowDirection = FlowDirection.RightToLeft;
-        }
+       
 
         #region load menu items
-
-        //todo: Load items dynamic
-        ObservableCollection<string> sampleData = new ObservableCollection<string>();
        
         public ObservableCollection<string> SampleData
         {
@@ -213,6 +142,8 @@ namespace ArtWork
         }
         #endregion
 
+        #region ListBox Search
+
         private bool UserFilter(object item)
         {
             if (String.IsNullOrEmpty(txtSearch.Text))
@@ -220,6 +151,19 @@ namespace ArtWork
             else
                 return ((item as object).ToString().IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
+
+        private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtSearch.Text)) return;
+
+            CollectionViewSource.GetDefaultView(listbox.ItemsSource).Refresh();
+        }
+
+        #endregion
+
+        #region GetFileList
+
+        //get all jpg files exist in All Directory
         private async Task<FileInfo[]> GetFileListAsync(string rootFolderPath)
         {
             FileInfo[] allfiles = null;
@@ -230,6 +174,9 @@ namespace ArtWork
             TotalItem = allfiles.Count();
             return allfiles;
         }
+
+        // get all files exist in Directory and SubDirectory
+
         public IEnumerable<string> GetFileList(string rootFolderPath)
         {
             Queue<string> pending = new Queue<string>();
@@ -242,7 +189,6 @@ namespace ArtWork
                 {
                     tmp = Directory.GetFiles(rootFolderPath);
                 }
-                catch (DirectoryNotFoundException) { continue; }
                 catch (UnauthorizedAccessException)
                 {
                     continue;
@@ -258,6 +204,9 @@ namespace ArtWork
                 }
             }
         }
+        #endregion
+
+        #region show Items in View
         private void getArtistArt()
         {
             var CurrentIndex = listbox.SelectedIndex;
@@ -342,58 +291,96 @@ namespace ArtWork
             }
 
         }
-        private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
 
-            switch (cmbFilter.SelectedIndex)
+        /// <summary>
+        /// ExecuteTaskAsync for Searching based on Gallery, City, Country items
+        /// </summary>
+        /// <param name="progress">IProgress<int></param>
+        /// <param name="ct">Cancellation Token</param>
+        /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2]</param>
+        /// <returns>Await Task</returns>
+        public async Task getArtsTaskAsync(IProgress<int> progress, CancellationToken ct, int KeywordIndex)
+        {
+            if (listbox.SelectedIndex == -1) return;
+
+            var mprogress = 0; // integer variable for progress report
+            prg.Value = 0;
+            cover.Items.Clear();
+            dynamic check;
+
+            var SearchTask = Task.Run(async () =>
             {
-                case 0:
-                    ts?.Cancel();
-                    getArtistArt();
-                    break;
-                case 1:
-                   
-                    var progressCity = new Progress<int>(percent =>
+                foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
+                {
+                    mprogress += 1;
+                    progress.Report((mprogress * 100 / TotalItem));
+                    if (!ct.IsCancellationRequested)
                     {
-                        prg.Value = percent;
-                    });
-                    ts?.Cancel();
-                    ts = new CancellationTokenSource();
-                    await ExecuteTaskAsync(progressCity, ts.Token, 0);
-                    break;
+                        var item = ShellFile.FromFilePath(file.FullName);
+                        await Dispatcher.InvokeAsync(() =>
+                        {
+                            // check if it is gallery or not
+                            if (KeywordIndex == 2)
+                                check = item.Properties.System.Comment.Value;
+                            else
+                                check = item.Properties.System.Keywords.Value[KeywordIndex];
 
-                case 2:
-                    var progressCountry = new Progress<int>(percent =>
-                    {
-                        prg.Value = percent;
-                    });
-                    ts?.Cancel();
-                    ts = new CancellationTokenSource();
-                    await ExecuteTaskAsync(progressCountry, ts.Token, 1);
-                    break;
+                            if (check.Equals(listbox.SelectedItem))
+                            {
+                                // add the control.
+                                var cv = new CoverViewItem();
+                                var context = new ContextMenu();
+                                var menuItem = new MenuItem();
+                                var menuItem2 = new MenuItem();
 
-                case 3:
-                    var progressGallery = new Progress<int>(percent =>
-                    {
-                        prg.Value = percent;
-                    });
-                    ts?.Cancel();
-                    ts = new CancellationTokenSource();
-                    await ExecuteTaskAsync(progressGallery, ts.Token, 2);
-                    break;
-            }
-           
+                                menuItem.Header = rm.GetString("SetasDesktop");
+                                menuItem2.Header = rm.GetString("GoToLoc");
+
+                                menuItem.Click += delegate { DisplayPicture(file.FullName, true); };
+                                menuItem2.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + file.FullName + "\""); };
+
+                                context.Items.Add(menuItem);
+                                context.Items.Add(menuItem2);
+
+                                var contentImg = new Image();
+                                contentImg.Stretch = Stretch.Uniform;
+                                contentImg.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
+
+                                var img = new Image();
+                                img.Source = new BitmapImage(new Uri(file.FullName, UriKind.Absolute));
+                                cv.Header = img;
+                                cv.Tag = file.FullName;
+                                cv.Content = contentImg;
+                                cv.ContextMenu = context;
+                                cv.Selected += Cv_Selected;
+                                cv.Deselected += Cv_Deselected;
+                                cv.MouseDoubleClick += Cv_MouseDoubleClick;
+                                //-< source >- 
+                                BitmapImage src = new BitmapImage();
+                                src.BeginInit();
+                                src.UriSource = new Uri(file.FullName, UriKind.Absolute);
+                                //< thumbnail > 
+                                src.DecodePixelWidth = 160;
+                                src.CacheOption = BitmapCacheOption.OnLoad;
+                                //</ thumbnail > 
+
+                                src.EndInit();
+                                img.Source = src;
+                                //-</ source >- 
+
+                                img.Stretch = Stretch.Uniform;
+                                img.Height = 160;
+                                cover.Items.Add(cv);
+                            }
+                        }, DispatcherPriority.Background);
+
+                    }
+                }
+            }, ct);
+
+            await SearchTask;
         }
-
-        private void Cv_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            List<string> items = new List<string>();
-            foreach (var item in cover.Items.OfType<CoverViewItem>())
-                items.Add(item.Tag.ToString());
-
-            ImageViewer.Items = items;
-            new ImageViewer().ShowDialog();
-        }
+        #endregion
 
         #region Set as Desktop
         [DllImport("user32.dll", SetLastError = true)]
@@ -417,7 +404,7 @@ namespace ArtWork
                 if (!SystemParametersInfo(SPI_SETDESKWALLPAPER,
                     0, file_name, flags))
                 {
-                    MessageBox.Show("SystemParametersInfo failed.","Error");
+                    MessageBox.Show("SystemParametersInfo failed.", "Error");
                 }
             }
             catch (Exception)
@@ -428,6 +415,17 @@ namespace ArtWork
         #endregion
 
         #region Cover Items Events
+
+        private void Cv_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            List<string> items = new List<string>();
+            foreach (var item in cover.Items.OfType<CoverViewItem>())
+                items.Add(item.Tag.ToString());
+
+            ImageViewer.Items = items;
+            new ImageViewer().ShowDialog();
+        }
+
         private void Cv_Deselected(object sender, RoutedEventArgs e)
         {
             var item = sender as CoverViewItem;
@@ -448,7 +446,7 @@ namespace ArtWork
 
                 shTitle.Status = file.Properties.System.Title.Value;
                 shSubject.Status = file.Properties.System.Subject.Value;
-                shCountry.Status =country;
+                shCountry.Status = country;
                 shCity.Status = file.Properties.System.Keywords.Value[0];
                 shGallery.Status = file.Properties.System.Comment.Value;
                 shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
@@ -460,23 +458,7 @@ namespace ArtWork
         }
         #endregion
 
-        private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
-
-
-            //Initialize Search
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
-            view.Filter = UserFilter;
-        }
-
-        private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(txtSearch.Text)) return;
-
-            CollectionViewSource.GetDefaultView(listbox.ItemsSource).Refresh();
-        }
-
+        #region Nude Checked Button
         private void ButtonNude_Checked(object sender, RoutedEventArgs e)
         {
             setStyle((bool)ButtonNude.IsChecked);
@@ -494,13 +476,15 @@ namespace ArtWork
             ButtonNude.Style = style;
             
         }
+        #endregion
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        #region Menu Items
+        private void DownloaderMenu(object sender, RoutedEventArgs e)
         {
             new Downloader().Show();
         }
 
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        private void ChangePathMenu(object sender, RoutedEventArgs e)
         {
             var browserDialog = new CommonOpenFileDialog();
             browserDialog.IsFolderPicker = true;
@@ -514,10 +498,29 @@ namespace ArtWork
             }
         }
 
-        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        private void AboutMenu(object sender, RoutedEventArgs e)
         {
             new About().ShowDialog();
         }
+
+        private void ChangeLanguageMenu(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            if (item.Tag.Equals("Persian"))
+                GlobalData.Config.Lang = "fa-IR";
+            else
+                GlobalData.Config.Lang = "en-US";
+            GlobalData.Save();
+
+            System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
+            Environment.Exit(0);
+        }
+
+        private void CheckUpdateMenu(object sender, RoutedEventArgs e)
+        {
+            CheckUpdate();
+        }
+        #endregion
 
         #region Update App
         private void showGrowlNotification(bool isSuccess, params string[] param)
@@ -581,25 +584,69 @@ namespace ArtWork
             {
             }
         }
-        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
-        {
-            CheckUpdate();
-        }
+
         #endregion
 
-        private void MenuItem_Click_4(object sender, RoutedEventArgs e)
+        private void setFlowDirection()
         {
-            var item = sender as MenuItem;
-            if (item.Tag.Equals("Persian"))
-                GlobalData.Config.Lang = "fa-IR";
-            else
-                GlobalData.Config.Lang = "en-US";
-            GlobalData.Save();
-
-            System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
-            Environment.Exit(0);
+            var IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
+            if (IsRightToLeft)
+                main.FlowDirection = FlowDirection.RightToLeft;
         }
 
+        // show items to coverview
+        private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            switch (cmbFilter.SelectedIndex)
+            {
+                case 0:
+                    ts?.Cancel();
+                    getArtistArt();
+                    break;
+                case 1:
+
+                    var progressCity = new Progress<int>(percent =>
+                    {
+                        prg.Value = percent;
+                    });
+                    ts?.Cancel();
+                    ts = new CancellationTokenSource();
+                    await getArtsTaskAsync(progressCity, ts.Token, 0);
+                    break;
+
+                case 2:
+                    var progressCountry = new Progress<int>(percent =>
+                    {
+                        prg.Value = percent;
+                    });
+                    ts?.Cancel();
+                    ts = new CancellationTokenSource();
+                    await getArtsTaskAsync(progressCountry, ts.Token, 1);
+                    break;
+
+                case 3:
+                    var progressGallery = new Progress<int>(percent =>
+                    {
+                        prg.Value = percent;
+                    });
+                    ts?.Cancel();
+                    ts = new CancellationTokenSource();
+                    await getArtsTaskAsync(progressGallery, ts.Token, 2);
+                    break;
+            }
+        }
+
+        private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
+
+            //Initialize Search
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
+            view.Filter = UserFilter;
+        }
+
+        // load items to listbox
         private void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (cmbFilter.SelectedIndex)

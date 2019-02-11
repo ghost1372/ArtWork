@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ArtWork
 {
@@ -13,40 +8,13 @@ namespace ArtWork
         public static readonly string imagesBaseUrl = "https://kraken99.blob.core.windows.net/images4000xn/";
         public static readonly string jsonBaseUrl = "https://kraken99.blob.core.windows.net/tileinfo/";
 
+        #region Update Config
         public static string UpdateServer = "https://raw.githubusercontent.com/ghost1372/ArtWork/master/Updater.xml";
         public const string UpdateXmlTag = "ArtWork"; //Defined in Xml file
         public const string UpdateXmlChildTag = "AppVersion"; //Defined in Xml file
         public const string UpdateVersionTag = "version"; //Defined in Xml file
         public const string UpdateUrlTag = "url"; //Defined in Xml file
         public const string UpdateChangeLogTag = "changelog";
-
-        public static IEnumerable<string> GetFileList(string rootFolderPath)
-        {
-            Queue<string> pending = new Queue<string>();
-            pending.Enqueue(rootFolderPath);
-            string[] tmp;
-            while (pending.Count > 0)
-            {
-                rootFolderPath = pending.Dequeue();
-                try
-                {
-                    tmp = Directory.GetFiles(rootFolderPath);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    continue;
-                }
-                for (int i = 0; i < tmp.Length; i++)
-                {
-                    yield return tmp[i];
-                }
-                tmp = Directory.GetDirectories(rootFolderPath);
-                for (int i = 0; i < tmp.Length; i++)
-                {
-                    pending.Enqueue(tmp[i]);
-                }
-            }
-        }
 
         public static bool IsVersionLater(string newVersion, string oldVersion)
         {
@@ -96,5 +64,7 @@ namespace ArtWork
             }
             return (false);
         }
+
+        #endregion
     }
 }
