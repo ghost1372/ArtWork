@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -13,11 +14,20 @@ namespace ArtWork
     /// </summary>
     public partial class App : Application
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(App));
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            log4net.Config.XmlConfigurator.Configure();
+            log.Info("        =============  Started Logging  =============        ");
+            base.OnStartup(e);
+        }
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+
             GlobalData.Init();
             if (!System.IO.Directory.Exists(GlobalData.Config.DataPath))
-                GlobalData.Config.DataPath= Environment.CurrentDirectory + @"\data";
+                GlobalData.Config.DataPath = Environment.CurrentDirectory + @"\data";
 
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(GlobalData.Config.Lang);
             if (!System.IO.Directory.Exists(Environment.CurrentDirectory + @"\data"))

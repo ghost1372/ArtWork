@@ -1,5 +1,6 @@
 ﻿using HandyControl.Controls;
 using HandyControl.Data;
+using log4net;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
@@ -27,6 +28,8 @@ namespace ArtWork
     /// </summary>
     public partial class MainWindow
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         internal static MainWindow mainWindow; // for accessing func from another View
         int TotalItem = 0; // get Total items for progress report
 
@@ -56,11 +59,12 @@ namespace ArtWork
 
         IEnumerable<string> AllofItems;
 
-
         public MainWindow()
         {
             InitializeComponent();
-
+            log4net.Config.XmlConfigurator.Configure();
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
             this.DataContext = this;
             mainWindow = this;
 
@@ -94,10 +98,17 @@ namespace ArtWork
 
             #endregion            
             
-        }
-        #region load menu items
 
-        public ObservableCollection<string> SampleData
+        }
+
+    static void MyHandler(object sender, UnhandledExceptionEventArgs e)
+    {
+            log.Error(e.ExceptionObject);
+    }
+
+    #region load menu items
+
+    public ObservableCollection<string> SampleData
         {
             get
             {
@@ -621,7 +632,6 @@ namespace ArtWork
             //Initialize Search
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
             view.Filter = UserFilter;
-
         }
 
         // load items to listbox
