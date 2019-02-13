@@ -5,7 +5,8 @@
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
                      xmlns:interactivity="clr-namespace:HandyControl.Interactivity;assembly=HandyControl"
-                             xmlns:langs="clr-namespace:ArtWork.Properties.Langs"
+                     xmlns:langs="clr-namespace:ArtWork.Properties.Langs"
+                     xmlns:local="clr-namespace:ArtWork"
                      Style="{StaticResource WindowBlur}"
                      BorderThickness="1"
                      BorderBrush="#262e2f"
@@ -21,6 +22,9 @@
                      Name="main"
                      Icon="Resources\Img\logo.ico"
                      Title="{x:Static langs:Lang.ArtWork}" Height="650" Width="1200">
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
     <controls:Window.NonClientAreaContent>
         <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal">
             <Button Margin="4,0,0,0" Width="28" Height="29" Style="{StaticResource ButtonCustom}">
@@ -134,8 +138,14 @@
                     </controls:TextBox.Style>
                 </controls:TextBox>
             </StackPanel>
-          
-            <ListBox SelectedIndex="0" ItemsSource="{Binding SampleData}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,0,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged"/>
+
+            <ListBox ItemsSource="{Binding ArtistNames}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,0,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
         </Grid>
         <Grid Grid.Column="1">
@@ -152,7 +162,40 @@
                 <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
                 <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
             </StackPanel>
-            <controls:CoverView ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160"/>
+
+            <controls:CoverView Tag="{Binding Name}" ItemsSource="{Binding Images}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
+               
+                <controls:CoverView.ItemHeaderTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding ImageSource}">
+                            <Image.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Name="ss" Tag="{Binding Name}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.SetasDesktop}"/>
+                                    <MenuItem Tag="{Binding Name}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.GoToLoc}"/>
+                                </ContextMenu>
+                            </Image.ContextMenu>
+                        </Image>
+                    </DataTemplate>
+                    
+                </controls:CoverView.ItemHeaderTemplate>
+                <controls:CoverView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="10" Background="{DynamicResource SuccessBrush}">
+                            <Image Source="{Binding ImageSource}"/>
+                        </Border>
+                    </DataTemplate>
+                </controls:CoverView.ItemTemplate>
+
+                <controls:CoverView.ItemContainerStyle>
+                    <Style TargetType="controls:CoverViewItem">
+                        <EventSetter Event="Selected" Handler="Cv_Selected"/>
+                        <EventSetter Event="Deselected" Handler="Cv_Deselected"/>
+                        <EventSetter Event="MouseDoubleClick" Handler="Cv_MouseDoubleClick"/>
+                        <Setter Property="Tag"
+                            Value="{Binding Name}" />
+                    </Style>
+                </controls:CoverView.ItemContainerStyle>
+            </controls:CoverView>
             <ProgressBar FlowDirection="LeftToRight" Margin="0,0,5,0" Grid.Row="1" Value="0" Name="prg" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                 <ProgressBar.Style>
                     <Style BasedOn="{StaticResource ProgressBarInfo}" TargetType="ProgressBar">

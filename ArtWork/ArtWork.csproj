@@ -75,15 +75,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="About.xaml">
+    <Page Include="View\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Downloader.xaml">
+    <Page Include="View\Downloader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ImageViewer.xaml">
+    <Page Include="View\ImageViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -91,19 +91,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="About.xaml.cs">
+    <Compile Include="ViewModel\ViewModel.cs" />
+    <Compile Include="View\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AppVar.cs" />
-    <Compile Include="Downloader.xaml.cs">
+    <Compile Include="Config\AppVar.cs" />
+    <Compile Include="View\Downloader.xaml.cs">
       <DependentUpon>Downloader.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GlobalData.cs" />
-    <Compile Include="ImageViewer.xaml.cs">
+    <Compile Include="Config\GlobalData.cs" />
+    <Compile Include="View\ImageViewer.xaml.cs">
       <DependentUpon>ImageViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
@@ -218,5 +219,6 @@
       <Name>HandyControl</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

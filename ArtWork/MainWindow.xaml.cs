@@ -1,5 +1,6 @@
 ﻿using HandyControl.Controls;
 using HandyControl.Data;
+using HandyControl.Tools.Extension;
 using log4net;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
@@ -40,24 +41,10 @@ namespace ArtWork
         private string url = "";
         #endregion
 
-        #region ObservableCollection for get Items
-
-        ObservableCollection<string> sampleData = new ObservableCollection<string>(); // for artists items
-
-        ObservableCollection<string> nudeData = new ObservableCollection<string>(); // for Nude items
-        ObservableCollection<string> newnude = new ObservableCollection<string>(); // for Nude items
-
-        ObservableCollection<string> galleryData = new ObservableCollection<string>(); // for gallery items
-        ObservableCollection<string> cityData = new ObservableCollection<string>(); // for city items
-        ObservableCollection<string> countryData = new ObservableCollection<string>(); // for country items
-
-        #endregion
-
         ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang)); // resource manager for get resource language
 
         CancellationTokenSource ts = new CancellationTokenSource(); // cancel tasks token
 
-        IEnumerable<string> AllofItems;
 
         public MainWindow()
         {
@@ -65,99 +52,28 @@ namespace ArtWork
             log4net.Config.XmlConfigurator.Configure();
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
-            this.DataContext = this;
+
             mainWindow = this;
 
             setFlowDirection(); // set layout direction based on language to rtl
 
-            #region load menu items from resources
+            ((ViewModel)DataContext).loadArtists();
+            ((ViewModel)DataContext).loadNude();
 
-            //get nude items
-            var nudeResource = Properties.Resources.nudes;
-            var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var line in nudeItems)
-                nudeData.Add(line);
 
-            //get gallery items
-            var galleryResource = Properties.Resources.gallery;
-            var galleryItems = galleryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var item in galleryItems)
-                galleryData.Add(item);
-
-            //get city items
-            var cityResource = Properties.Resources.city;
-            var cityItems = cityResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var item in cityItems)
-                cityData.Add(item);
-
-            //get country items
-            var countryResource = Properties.Resources.country;
-            var countryItems = countryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var item in countryItems)
-                countryData.Add(item);
-
-            #endregion            
-            
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
+            view.Filter = UserFilter;
 
         }
-
-    static void MyHandler(object sender, UnhandledExceptionEventArgs e)
+       
+        static void MyHandler(object sender, UnhandledExceptionEventArgs e)
     {
             log.Error(e.ExceptionObject);
     }
 
-    #region load menu items
-
-    public ObservableCollection<string> SampleData
-        {
-            get
-            {
-                if (sampleData.Count < 1)
-                    loadArtists();
-
-                return sampleData;
-            }
-        }
-        private void loadArtists()
-        {
-            sampleData.Clear();
-            if (cover != null) cover.Items.Clear();
-            var items = System.IO.Directory.GetDirectories(GlobalData.Config.DataPath);
-            foreach (var line in items)
-                sampleData.Add(line.Replace(Path.GetDirectoryName(line) + Path.DirectorySeparatorChar, ""));            
-        }
-        private void loadGallery()
-        {
-            sampleData.Clear();
-            if (cover != null) cover.Items.Clear();
-            foreach (var line in galleryData)
-                sampleData.Add(line);
-        }
-        private void loadCity()
-        {
-            sampleData.Clear();
-            if (cover != null) cover.Items.Clear();
-            foreach (var line in cityData)
-                sampleData.Add(line);
-        }
-        private void loadCountry()
-        {
-            sampleData.Clear();
-            if (cover != null) cover.Items.Clear();
-            foreach (var line in countryData)
-                sampleData.Add(line);
-        }
-        #endregion
 
         #region ListBox Search
 
-        private bool UserFilter(object item)
-        {
-            if (String.IsNullOrEmpty(txtSearch.Text))
-                return true;
-            else
-                return ((item as object).ToString().IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
-        }
 
         private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -166,203 +82,12 @@ namespace ArtWork
             CollectionViewSource.GetDefaultView(listbox.ItemsSource).Refresh();
         }
 
-        #endregion
-
-        #region GetFileList
-
-        //get all jpg files exist in All Directory
-        private async Task<FileInfo[]> GetFileListAsync(string rootFolderPath)
+        private bool UserFilter(object item)
         {
-            FileInfo[] allfiles = null;
-            await Task.Run(() => {
-                var dir = new DirectoryInfo(rootFolderPath);
-                allfiles = dir.GetFiles("*.jpg*", SearchOption.AllDirectories);
-            });
-            TotalItem = allfiles.Count();
-            return allfiles;
-        }
-
-        // get all files exist in Directory and SubDirectory
-
-        public IEnumerable<string> GetFileList(string rootFolderPath)
-        {
-            Queue<string> pending = new Queue<string>();
-            pending.Enqueue(rootFolderPath);
-            string[] tmp;
-            while (pending.Count > 0)
-            {
-                rootFolderPath = pending.Dequeue();
-                try
-                {
-                    tmp = Directory.GetFiles(rootFolderPath);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    continue;
-                }
-                for (int i = 0; i < tmp.Length; i++)
-                {
-                    yield return tmp[i];
-                }
-                tmp = Directory.GetDirectories(rootFolderPath);
-                for (int i = 0; i < tmp.Length; i++)
-                {
-                    pending.Enqueue(tmp[i]);
-                }
-            }
-        }
-        #endregion
-
-        #region show Items in View
-        private void getArtistArt()
-        {
-            var CurrentIndex = listbox.SelectedIndex;
-            AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
-            //Fix for Load All Items when Search
-            if (AllofItems.Count() > 2000)
-                return;
-
-            //Check Nudes
-
-            if (ButtonNude.IsChecked == true)
-            {
-                foreach (var item in AllofItems)
-                {
-                    foreach (var itemx in nudeData)
-                    {
-                        if (itemx.Equals(Path.GetFileNameWithoutExtension(item)))
-                            newnude.Add(item.Replace(Path.GetFileName(item), itemx + ".jpg"));
-                    }
-                }
-                AllofItems = AllofItems.Except(newnude);
-            }
-            cover.Items.Clear();
-
-            foreach (var item in AllofItems)
-            {
-                Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    if (CurrentIndex != listbox.SelectedIndex)
-                        return;
-
-                    createControls(item);
-                   
-                    Task.Delay(50);
-                }), DispatcherPriority.Background);
-            }
-
-        }
-        private void createControls(string item)
-        {
-            // add the control.
-            var cv = new CoverViewItem();
-            var context = new ContextMenu();
-            var SetAsDesktopMenuItem = new MenuItem();
-            var GoToLocationMenuItem = new MenuItem();
-
-            SetAsDesktopMenuItem.Header = rm.GetString("SetasDesktop");
-            GoToLocationMenuItem.Header = rm.GetString("GoToLoc");
-
-            SetAsDesktopMenuItem.Click += delegate { SetDesktopWallpaper(item, true); };
-            GoToLocationMenuItem.Click += delegate { System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item + "\""); };
-            context.Items.Add(SetAsDesktopMenuItem);
-            context.Items.Add(GoToLocationMenuItem);
-
-            var contentImg = new Image();
-            contentImg.Stretch = Stretch.Uniform;
-            contentImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
-
-            var img = new Image();
-            img.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
-            cv.Header = img;
-            cv.Tag = item;
-            cv.Content = contentImg;
-            cv.ContextMenu = context;
-            cv.Selected += Cv_Selected;
-            cv.Deselected += Cv_Deselected;
-            cv.MouseDoubleClick += Cv_MouseDoubleClick;
-            //-< source >- 
-            BitmapImage src = new BitmapImage();
-            src.BeginInit();
-            src.UriSource = new Uri(item, UriKind.Absolute);
-            //< thumbnail > 
-            src.DecodePixelWidth = 160;
-            src.CacheOption = BitmapCacheOption.OnLoad;
-            //</ thumbnail > 
-
-            src.EndInit();
-            img.Source = src;
-            //-</ source >- 
-
-            img.Stretch = Stretch.Uniform;
-            img.Height = 160;
-
-            cover.Items.Add(cv);
-        }
-       
-
-        /// <summary>
-        /// getArtsTaskAsync for Searching based on Gallery, City, Country items
-        /// </summary>
-        /// <param name="progress">IProgress</param>
-        /// <param name="ct">Cancellation Token</param>
-        /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2]</param>
-        /// <returns>Await Task</returns>
-        public async Task getArtsTaskAsync(IProgress<int> progress, CancellationToken ct, int KeywordIndex)
-        {
-            if (listbox.SelectedIndex == -1) return;
-
-            var mprogress = 0; // integer variable for progress report
-            prg.Value = 0;
-            cover.Items.Clear();
-            dynamic check;
-            bool isNude = false;
-            var SearchTask = Task.Run(async () =>
-            {
-                foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
-                {
-                    isNude = false;
-                    mprogress += 1;
-                    progress.Report((mprogress * 100 / TotalItem));
-                    if (!ct.IsCancellationRequested)
-                    {
-                        var item = ShellFile.FromFilePath(file.FullName);
-                        await Dispatcher.InvokeAsync(() =>
-                        {
-                            if (ButtonNude.IsChecked == true)
-                            {
-                                foreach (var itemx in nudeData)
-                                {
-                                    if (itemx.Equals(Path.GetFileNameWithoutExtension(file.FullName)))
-                                    {
-                                        isNude = true;
-                                        break;
-                                    }
-
-                                }
-                            }
-
-                            if (isNude)
-                                return;
-
-                            // check if it is gallery or not
-                            if (KeywordIndex == 2)
-                                check = item.Properties.System.Comment.Value;
-                            else
-                                check = item.Properties.System.Keywords.Value[KeywordIndex];
-
-                            if (check.Equals(listbox.SelectedItem))
-                            {
-                                // add the control.
-                                createControls(file.FullName);
-                            }
-                        }, DispatcherPriority.Background);
-
-                    }
-                }
-            }, ct);
-
-            await SearchTask;
+            if (String.IsNullOrEmpty(txtSearch.Text))
+                return true;
+            else
+                return ((item as ArtistData).Name.IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
         #endregion
 
@@ -422,6 +147,7 @@ namespace ArtWork
 
         private void Cv_Selected(object sender, RoutedEventArgs e)
         {
+            //Todo: Fix null tag
             var item = sender as CoverViewItem;
             var file = ShellFile.FromFilePath(item.Tag.ToString());
             try
@@ -586,11 +312,14 @@ namespace ArtWork
         // show items to coverview
         private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (listbox.SelectedIndex == -1) return;
+
             switch (cmbFilter.SelectedIndex)
             {
                 case 0:
                     ts?.Cancel();
-                    getArtistArt();
+                    ts = new CancellationTokenSource();
+                    await ((ViewModel)DataContext).LoadFolder(ts.Token, listbox, cover, ButtonNude);
                     break;
                 case 1:
 
@@ -600,7 +329,7 @@ namespace ArtWork
                     });
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await getArtsTaskAsync(progressCity, ts.Token, 0);
+                    await ((ViewModel)DataContext).LoadCategoty(progressCity,ts.Token,0, prg,cover, listbox, ButtonNude);
                     break;
 
                 case 2:
@@ -610,7 +339,7 @@ namespace ArtWork
                     });
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await getArtsTaskAsync(progressCountry, ts.Token, 1);
+                    await ((ViewModel)DataContext).LoadCategoty(progressCountry, ts.Token, 1, prg, cover, listbox, ButtonNude);
                     break;
 
                 case 3:
@@ -620,46 +349,50 @@ namespace ArtWork
                     });
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await getArtsTaskAsync(progressGallery, ts.Token, 2);
+                    await ((ViewModel)DataContext).LoadCategoty(progressGallery, ts.Token, 2, prg, cover, listbox, ButtonNude);
                     break;
             }
         }
 
+
         private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            AllofItems = GetFileList(GlobalData.Config.DataPath + @"\" + listbox.SelectedItem).ToArray();
-
-            //Initialize Search
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
-            view.Filter = UserFilter;
+           
         }
 
         // load items to listbox
         private void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+
             if (txtSearch != null && !string.IsNullOrEmpty(txtSearch.Text)) txtSearch.Text = string.Empty;
 
             switch (cmbFilter.SelectedIndex)
             {
                 case 0:
-                    loadArtists();
+                    ((ViewModel)DataContext).loadArtists();
                     break;
                 case 1:
-                    loadCity();
+                    ((ViewModel)DataContext).loadCity();
                     break;
 
                 case 2:
-                    loadCountry();
+                    ((ViewModel)DataContext).loadCountry();
                     break;
 
                 case 3:
-                    loadGallery();
+                    ((ViewModel)DataContext).loadGallery();
                     break;
             }
         }
 
-        
+        private void CoverContextMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var info = sender as MenuItem;
+            if(info.Equals(rm.GetString("SetasDesktop")))
+                SetDesktopWallpaper(info.Tag.ToString(), true);
+            else
+                System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + info.Tag + "\"");
+        }
     }
-
+   
 }
