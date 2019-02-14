@@ -21,6 +21,7 @@
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
+            <local:ViewModel x:Key="MainViewModel" />
             <Style x:Key="ListBoxItemTransparent" BasedOn="{StaticResource ListBoxItemBaseStyle}" TargetType="ListBoxItem">
                 <Setter Property="Background" Value="Transparent"/>
             </Style>

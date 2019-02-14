@@ -32,7 +32,6 @@ namespace ArtWork
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         internal static MainWindow mainWindow; // for accessing func from another View
-        int TotalItem = 0; // get Total items for progress report
 
         #region Update App
         private string newVersion = string.Empty;
@@ -63,13 +62,12 @@ namespace ArtWork
 
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
             view.Filter = UserFilter;
-
         }
-       
+
         static void MyHandler(object sender, UnhandledExceptionEventArgs e)
-    {
+        {
             log.Error(e.ExceptionObject);
-    }
+        }
 
 
         #region ListBox Search
@@ -87,7 +85,7 @@ namespace ArtWork
             if (String.IsNullOrEmpty(txtSearch.Text))
                 return true;
             else
-                return ((item as ArtistData).Name.IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+                return ((item as ViewModel.ArtistData).Name.IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
         #endregion
 
@@ -125,49 +123,56 @@ namespace ArtWork
         #endregion
 
         #region Cover Items Events
-
         private void Cv_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            List<string> items = new List<string>();
-            foreach (var item in cover.Items.OfType<CoverViewItem>())
-                items.Add(item.Tag.ToString());
-
+            ObservableCollection<ViewModel.ImageData> items = cover.ItemsSource as ObservableCollection<ViewModel.ImageData>;
             ImageViewer.Items = items;
             new ImageViewer().ShowDialog();
         }
 
-        private void Cv_Deselected(object sender, RoutedEventArgs e)
+        private childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
         {
-            var item = sender as CoverViewItem;
-            item.Content = null;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
         }
-
         private void Cv_Selected(object sender, RoutedEventArgs e)
         {
-            //Todo: Fix null tag
+            var selectedCover = sender as CoverViewItem;
+            ContentPresenter myContentPresenter = FindVisualChild<ContentPresenter>(selectedCover);
 
-            var item = sender as CoverViewItem;
-            MessageBox.Error(item.Tag.ToString());
-            //var file = ShellFile.FromFilePath(item.Tag.ToString());
-            //try
-            //{
-            //    var country = string.Empty;
-            //    if (file.Properties.System.Keywords.Value[1].Equals("Empty"))
-            //        country = "Location Unknown";
-            //    else
-            //        country = file.Properties.System.Keywords.Value[1];
+            DataTemplate myDataTemplate = myContentPresenter.ContentTemplate;
+            Image selectedImg = (Image)myDataTemplate.FindName("ImageHeader", myContentPresenter);
+            var file = ShellFile.FromFilePath(selectedImg.Tag.ToString());
+            try
+            {
+                var country = string.Empty;
+                if (file.Properties.System.Keywords.Value[1].Equals("Empty"))
+                    country = "Location Unknown";
+                else
+                    country = file.Properties.System.Keywords.Value[1];
 
-            //    shTitle.Status = file.Properties.System.Title.Value;
-            //    shSubject.Status = file.Properties.System.Subject.Value;
-            //    shCountry.Status = country;
-            //    shCity.Status = file.Properties.System.Keywords.Value[0];
-            //    shGallery.Status = file.Properties.System.Comment.Value;
-            //    shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
-            //}
-            //catch (IndexOutOfRangeException)
-            //{
+                shTitle.Status = file.Properties.System.Title.Value;
+                shSubject.Status = file.Properties.System.Subject.Value;
+                shCountry.Status = country;
+                shCity.Status = file.Properties.System.Keywords.Value[0];
+                shGallery.Status = file.Properties.System.Comment.Value;
+                shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
+            }
+            catch (IndexOutOfRangeException)
+            {
 
-            //}
+            }
         }
 
         #endregion
@@ -313,15 +318,17 @@ namespace ArtWork
         private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (listbox.SelectedIndex == -1) return;
-
             switch (cmbFilter.SelectedIndex)
             {
                 case 0:
+                    GC.Collect();
+
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
                     await ((ViewModel)DataContext).LoadFolder(ts.Token, listbox, cover, ButtonNude);
                     break;
                 case 1:
+                    GC.Collect();
 
                     var progressCity = new Progress<int>(percent =>
                     {
@@ -333,6 +340,8 @@ namespace ArtWork
                     break;
 
                 case 2:
+                    GC.Collect();
+
                     var progressCountry = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
@@ -343,6 +352,8 @@ namespace ArtWork
                     break;
 
                 case 3:
+                    GC.Collect();
+
                     var progressGallery = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
@@ -352,12 +363,6 @@ namespace ArtWork
                     await ((ViewModel)DataContext).LoadCategoty(progressGallery, ts.Token, 2, prg, cover, listbox, ButtonNude);
                     break;
             }
-        }
-
-
-        private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-           
         }
 
         // load items to listbox
@@ -388,10 +393,28 @@ namespace ArtWork
         private void CoverContextMenu_Click(object sender, RoutedEventArgs e)
         {
             var info = sender as MenuItem;
-            if(info.Equals(rm.GetString("SetasDesktop")))
+            if (info.Equals(rm.GetString("SetasDesktop")))
                 SetDesktopWallpaper(info.Tag.ToString(), true);
-            else
+            else if (info.Equals(rm.GetString("GoToLoc")))
                 System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + info.Tag + "\"");
+            else
+            {
+                var imgBrowser = new ImageBrowser(new Uri(info.Tag.ToString(), UriKind.Absolute));
+                imgBrowser.ResizeMode = ResizeMode.CanResize;
+                imgBrowser.Show();
+
+            }
+        }
+
+        private void CancelTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            ts?.Cancel();
+            Growl.Info(new GrowlInfo
+            {
+                Message = rm.GetString("TaskCanceled"),
+                ShowDateTime = false,
+                ShowCloseButton = false
+            });
         }
     }
    

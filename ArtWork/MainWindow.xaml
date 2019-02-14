@@ -17,14 +17,12 @@
                      OtherButtonHoverForeground="White"
                      OtherButtonForeground="White"
                      ShowTitle="True"
-                     Loaded="BlurWindow_Loaded"
                      mc:Ignorable="d"
                      Name="main"
+                     DataContext="{StaticResource MainViewModel}"
                      Icon="Resources\Img\logo.ico"
                      Title="{x:Static langs:Lang.ArtWork}" Height="650" Width="1200">
-    <Window.DataContext>
-        <local:ViewModel/>
-    </Window.DataContext>
+
     <controls:Window.NonClientAreaContent>
         <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal">
             <Button Margin="4,0,0,0" Width="28" Height="29" Style="{StaticResource ButtonCustom}">
@@ -161,36 +159,55 @@
                 <controls:Shield Name="shCountry" Subject="{x:Static langs:Lang.Country}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
                 <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
                 <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
+                <Button Width="120" Click="CancelTaskButton_Click" Margin="4,0,0,0" Name="cancelTaskButton" Content="{x:Static langs:Lang.CancelTask}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ButtonDanger}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <!-- Here is how we bind to another control's property -->
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="1">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="2">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="3">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
 
-            <controls:CoverView ItemsSource="{Binding Images}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
+            <controls:CoverView Tag="{Binding TagName}" ItemsSource="{Binding Images}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
                 <controls:CoverView.ItemHeaderTemplate>
                     <DataTemplate>
-                        <Image Tag="{Binding Name}" Source="{Binding ImageSource}">
+                        <Image Name="ImageHeader" Tag="{Binding TagName}" Source="{Binding ImageSource}">
                             <Image.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Tag="{Binding Name}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.SetasDesktop}"/>
-                                    <MenuItem Tag="{Binding Name}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.GoToLoc}"/>
+                                    <MenuItem Name="xcv" Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.SetasDesktop}"/>
+                                    <MenuItem Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.GoToLoc}"/>
+                                    <MenuItem Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.FullScreenSee}"/>
                                 </ContextMenu>
                             </Image.ContextMenu>
                         </Image>
                     </DataTemplate>
                 </controls:CoverView.ItemHeaderTemplate>
-                <controls:CoverView.ItemTemplate>
+                <!--<controls:CoverView.ItemTemplate>
                     <DataTemplate>
                         <Border Margin="10">
-                            <Image Source="{Binding ImageSource}"/>
+                            <Image Stretch="Uniform" Source="{Binding ImageSource}"/>
                         </Border>
                     </DataTemplate>
-                </controls:CoverView.ItemTemplate>
+                </controls:CoverView.ItemTemplate>-->
                 <controls:CoverView.ItemContainerStyle>
-                    <Style TargetType="controls:CoverViewItem">
-                        <Setter Property="Tag"
-                            Value="{Binding Name}" />
+                    <Style TargetType="controls:CoverViewItem" BasedOn="{StaticResource CoverViewItemBaseStyle}">
                         <EventSetter Event="Selected" Handler="Cv_Selected"/>
-                        <EventSetter Event="Deselected" Handler="Cv_Deselected"/>
                         <EventSetter Event="MouseDoubleClick" Handler="Cv_MouseDoubleClick"/>
-                       
                     </Style>
                 </controls:CoverView.ItemContainerStyle>
             </controls:CoverView>

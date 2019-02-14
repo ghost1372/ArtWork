@@ -237,4 +237,13 @@
   <data name="SearchInGallery" xml:space="preserve">
     <value>Search in Museum Gallery...</value>
   </data>
+  <data name="CancelTask" xml:space="preserve">
+    <value>Cancel Task</value>
+  </data>
+  <data name="TaskCanceled" xml:space="preserve">
+    <value>All tasks were canceled</value>
+  </data>
+  <data name="FullScreenSee" xml:space="preserve">
+    <value>View with original quality</value>
+  </data>
 </root>

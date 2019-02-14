@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -15,7 +16,7 @@ namespace ArtWork
     /// </summary>
     public partial class ImageViewer
     {
-        public static List<string> Items;
+        public static ObservableCollection<ViewModel.ImageData> Items;
         public ImageViewer()
         {
             InitializeComponent();
@@ -24,13 +25,13 @@ namespace ArtWork
             foreach (var item in Items)
             {
                 var slidImg = new Image();
-                using (var imageStream = File.OpenRead(item))
+                using (var imageStream = File.OpenRead(item.TagName))
                 {
                     var decoder = BitmapDecoder.Create(imageStream, BitmapCreateOptions.IgnoreColorProfile,
                         BitmapCacheOption.Default);
                     var width = decoder.Frames[0].PixelWidth;
-                    slidImg.Tag = item;
-                    slidImg.Source = new BitmapImage(new Uri(item, UriKind.Absolute));
+                    slidImg.Tag = item.TagName;
+                    slidImg.Source = new BitmapImage(new Uri(item.TagName, UriKind.Absolute));
                     slidImg.Stretch = Stretch.Uniform;
                     slidImg.Width = width;
                 }

@@ -237,4 +237,13 @@
   <data name="SearchInGallery" xml:space="preserve">
     <value>جستجو در گالری موزه ها...</value>
   </data>
+  <data name="CancelTask" xml:space="preserve">
+    <value>توقف فعالیت</value>
+  </data>
+  <data name="TaskCanceled" xml:space="preserve">
+    <value>تمام وظایف لغو شد</value>
+  </data>
+  <data name="FullScreenSee" xml:space="preserve">
+    <value>مشاهده با کیفیت اصلی</value>
+  </data>
 </root>

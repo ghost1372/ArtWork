@@ -1,4 +1,5 @@
 ﻿using HandyControl.Controls;
+using log4net;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,22 @@ using System.Windows.Threading;
 
 namespace ArtWork
 {
-    public class ImageData
-    {
-        public string Name { get; set; }
-        public ImageSource ImageSource { get; set; }
-    }
-    public class ArtistData
-    {
-        public string Name { get; set; }
-    }
+    
     public class ViewModel
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public class ImageData
+        {
+            public string TagName { get; set; }
+            public ImageSource ImageSource { get; set; }
+        }
+
+        public class ArtistData
+        {
+            public string Name { get; set; }
+        }
+
         ObservableCollection<string> nudeData = new ObservableCollection<string>(); // for Nude items
 
         public ObservableCollection<ImageData> Images { get; }
@@ -39,40 +45,55 @@ namespace ArtWork
 
         public async Task LoadFolder(CancellationToken ct, ListBox listbox, CoverView cover, ToggleButton ButtonNude)
         {
-            cover.Items.Clear();
-            Images.Clear();
-
-            bool isNude = false;
-            dynamic selectedItem = listbox.SelectedItems[0];
-            foreach (var path in Directory.EnumerateFiles(GlobalData.Config.DataPath + @"\" + selectedItem.Name, "*.jpg"))
+            try
             {
-                isNude = false;
-                if (!ct.IsCancellationRequested)
+                cover.Items.Clear();
+                Images.Clear();
+
+                bool isNude = false;
+                dynamic selectedItem = listbox.SelectedItems[0];
+                foreach (var path in Directory.EnumerateFiles(GlobalData.Config.DataPath + @"\" + selectedItem.Name, "*.jpg"))
                 {
-                    if (ButtonNude.IsChecked == true)
+                    isNude = false;
+                    if (!ct.IsCancellationRequested)
                     {
-                        foreach (var itemx in nudeData)
+                        if (ButtonNude.IsChecked == true)
                         {
-                            Console.WriteLine(itemx);
-                            if (itemx.Equals(Path.GetFileNameWithoutExtension(path)))
+                            foreach (var itemx in nudeData)
                             {
-                                isNude = true;
-                                break;
+                                Console.WriteLine(itemx);
+                                if (itemx.Equals(Path.GetFileNameWithoutExtension(path)))
+                                {
+                                    isNude = true;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (isNude)
-                        return;
+                        if (isNude)
+                            return;
 
-                    Images.Add(new ImageData
-                    {
-                        Name = path,
-                        ImageSource = await LoadImage(path)
-                    });
-                   //await Task.Delay(10);
+                        await Dispatcher.CurrentDispatcher.InvokeAsync(async () =>
+                        {
+                            Images.Add(new ImageData
+                            {
+                                TagName = path,
+                                ImageSource = await LoadImage(path)
+                            });
+
+                        }, DispatcherPriority.Background);
+                        
+                    }
+
                 }
-                    
             }
+            catch (NullReferenceException e) {
+                log.Error("LoadFolder " + Environment.NewLine + e.Message);
+            }
+            catch (Exception ex)
+            {
+                log.Error("LoadFolder " + Environment.NewLine + ex.Message);
+            }
+            
         }
 
         public Task<BitmapImage> LoadImage(string path)
@@ -84,7 +105,7 @@ namespace ArtWork
                 using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
                     bitmap.BeginInit();
-                    bitmap.DecodePixelHeight = 100;
+                    bitmap.DecodePixelHeight = 300;
                     bitmap.CacheOption = BitmapCacheOption.OnLoad;
                     bitmap.StreamSource = stream;
                     bitmap.EndInit();
@@ -104,74 +125,85 @@ namespace ArtWork
         /// <param name="progress">IProgress</param>
         /// <param name="ct">Cancellation Token</param>
         /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2]</param>
-        /// <param name="prg"></param>
-        /// <param name="cover"></param>
-        /// <param name="listbox"></param>
-        /// <param name="ButtonNude"></param>
+        /// <param name="prg">Progressbar that you want to be Update</param>
+        /// <param name="cover">CoverView Control</param>
+        /// <param name="listbox">ListBox Control</param>
+        /// <param name="ButtonNude">Button Nude Filter</param>
         /// <returns></returns>
         public async Task LoadCategoty(IProgress<int> progress, CancellationToken ct, int KeywordIndex, ProgressBar prg, CoverView cover, ListBox listbox, ToggleButton ButtonNude)
         {
-            cover.Items.Clear();
-            Images.Clear();
-
-            var mprogress = 0; // integer variable for progress report
-            prg.Value = 0;
-            dynamic check;
-            bool isNude = false;
-           
-            foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
+            try
             {
-                dynamic selectedItem = listbox.SelectedItems[0];
+                cover.Items.Clear();
+                Images.Clear();
 
-                isNude = false;
-                mprogress += 1;
-                progress.Report((mprogress * 100 / TotalItem));
-                if (!ct.IsCancellationRequested)
+                var mprogress = 0; // integer variable for progress report
+                prg.Value = 0;
+                dynamic check;
+                bool isNude = false;
+
+                foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
                 {
-                    var item = ShellFile.FromFilePath(file.FullName);
-                    if (ButtonNude.IsChecked == true)
+                    dynamic selectedItem = listbox.SelectedItems[0];
+
+                    isNude = false;
+                    mprogress += 1;
+                    progress.Report((mprogress * 100 / TotalItem));
+                    if (!ct.IsCancellationRequested)
                     {
-                        foreach (var itemx in nudeData)
+                        var item = ShellFile.FromFilePath(file.FullName);
+                        if (ButtonNude.IsChecked == true)
                         {
-                            if (itemx.Equals(Path.GetFileNameWithoutExtension(file.FullName)))
+                            foreach (var itemx in nudeData)
                             {
-                                isNude = true;
-                                break;
+                                if (itemx.Equals(Path.GetFileNameWithoutExtension(file.FullName)))
+                                {
+                                    isNude = true;
+                                    break;
+                                }
+
+                            }
+                        }
+
+                        if (isNude)
+                            return;
+
+                        // check if it is gallery or not
+                        if (KeywordIndex == 2)
+                            check = item.Properties.System.Comment.Value;
+                        else
+                            check = item.Properties.System.Keywords.Value[KeywordIndex];
+
+                        await Dispatcher.CurrentDispatcher.InvokeAsync(async () =>
+                        {
+                            if (check.Equals(selectedItem.Name))
+                            {
+                                Images.Add(new ImageData
+                                {
+                                    TagName = file.FullName,
+                                    ImageSource = await LoadImage(file.FullName)
+                                });
                             }
 
-                        }
+                        }, DispatcherPriority.Background);
                     }
-
-                    if (isNude)
-                        return;
-
-                    // check if it is gallery or not
-                    if (KeywordIndex == 2)
-                        check = item.Properties.System.Comment.Value;
-                    else
-                        check = item.Properties.System.Keywords.Value[KeywordIndex];
-
-                    if (check.Equals(selectedItem.Name))
-                    {
-                        Images.Add(new ImageData
-                        {
-                            Name = file.FullName,
-                            ImageSource = await LoadImage(file.FullName)
-                        });
-                    }
-
                 }
-                else
-                {
-                    MessageBox.Error("adad", "adad");
-                }
-
             }
+            catch (NullReferenceException e)
+            {
+                log.Error("LoadCategoty " + Environment.NewLine + e.Message);
+            }
+            catch (Exception ex)
+            {
+                log.Error("LoadCategoty " + Environment.NewLine + ex.Message);
+            }
+           
         }
         private async Task<FileInfo[]> GetFileListAsync(string rootFolderPath)
         {
             FileInfo[] allfiles = null;
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 var dir = new DirectoryInfo(rootFolderPath);
                 allfiles = dir.GetFiles("*.jpg*", SearchOption.AllDirectories);
             });
@@ -222,6 +254,8 @@ namespace ArtWork
 
         public void loadNude()
         {
+            nudeData.Clear();
+
             var nudeResource = Properties.Resources.nudes;
             var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in nudeItems)

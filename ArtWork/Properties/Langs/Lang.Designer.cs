@@ -106,6 +106,15 @@ namespace ArtWork.Properties.Langs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to توقف فعالیت.
+        /// </summary>
+        public static string CancelTask {
+            get {
+                return ResourceManager.GetString("CancelTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to تغییر پوشه.
         /// </summary>
         public static string ChangeDirectory {
@@ -183,6 +192,15 @@ namespace ArtWork.Properties.Langs {
         public static string Downloading {
             get {
                 return ResourceManager.GetString("Downloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مشاهده با کیفیت اصلی.
+        /// </summary>
+        public static string FullScreenSee {
+            get {
+                return ResourceManager.GetString("FullScreenSee", resourceCulture);
             }
         }
         
@@ -390,6 +408,15 @@ namespace ArtWork.Properties.Langs {
         public static string SetasDesktop {
             get {
                 return ResourceManager.GetString("SetasDesktop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تمام وظایف لغو شد.
+        /// </summary>
+        public static string TaskCanceled {
+            get {
+                return ResourceManager.GetString("TaskCanceled", resourceCulture);
             }
         }
         
