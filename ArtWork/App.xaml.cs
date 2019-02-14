@@ -34,6 +34,10 @@ namespace ArtWork
             if (!GetFileList(GlobalData.Config.DataPath).Any())
                 new Downloader().ShowDialog();
 
+            var junkFiles = Directory.EnumerateFiles(GlobalData.Config.DataPath);
+            foreach (var file in junkFiles)
+                File.Delete(file);
+
             base.OnStartup(e);
         }
 

@@ -169,9 +169,11 @@ namespace ArtWork
 
                         // check if it is gallery or not
                         if (KeywordIndex == 2)
-                            check = item.Properties.System.Comment.Value;
+                            check = item?.Properties.System.Comment.Value ?? "null";
                         else
-                            check = item.Properties.System.Keywords.Value[KeywordIndex];
+                            check = item?.Properties.System.Keywords.Value?[KeywordIndex] ?? "null";
+
+
 
                         await Dispatcher.CurrentDispatcher.InvokeAsync(async () =>
                         {
@@ -196,7 +198,6 @@ namespace ArtWork
             {
                 log.Error("LoadCategoty " + Environment.NewLine + ex.Message);
             }
-           
         }
         private async Task<FileInfo[]> GetFileListAsync(string rootFolderPath)
         {

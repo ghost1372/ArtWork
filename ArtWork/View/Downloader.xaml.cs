@@ -179,12 +179,12 @@ namespace ArtWork
         {
             if (e.Error != null)
             {
-                // handle error scenario
-                throw e.Error;
+                HandyControl.Controls.MessageBox.Error("Error");
+                
             }
             if (e.Cancelled)
             {
-                // handle cancelled scenario
+                HandyControl.Controls.MessageBox.Warning("Download Canceled");
             }
             shDownloadedItem.Status = Convert.ToInt32(shDownloadedItem.Status) + 1;
             // Handle Rename 
