@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using HandyControl.Controls;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-
 namespace ArtWork
 {
     /// <summary>
@@ -17,15 +17,13 @@ namespace ArtWork
         private static readonly ILog log = LogManager.GetLogger(typeof(App));
         protected override void OnStartup(StartupEventArgs e)
         {
+            GlobalData.Init();
+
+            BlurWindow.SystemVersionInfo = CommonHelper.GetSystemVersionInfo();
+
             log4net.Config.XmlConfigurator.Configure();
             log.Info("        =============  Started Logging  =============        ");
-            base.OnStartup(e);
-        }
 
-        private void Application_Startup(object sender, StartupEventArgs e)
-        {
-
-            GlobalData.Init();
             if (!System.IO.Directory.Exists(GlobalData.Config.DataPath))
                 GlobalData.Config.DataPath = Environment.CurrentDirectory + @"\data";
 
@@ -35,6 +33,8 @@ namespace ArtWork
 
             if (!GetFileList(GlobalData.Config.DataPath).Any())
                 new Downloader().ShowDialog();
+
+            base.OnStartup(e);
         }
 
         // get all files exist in Directory and SubDirectory
@@ -66,5 +66,6 @@ namespace ArtWork
                 }
             }
         }
+
     }
 }

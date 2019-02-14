@@ -121,9 +121,6 @@ namespace ArtWork
                 MessageBox.Show("Error displaying picture ", "Error");
             }
         }
-
-        //todo: fix lockscreen 
-        // based on this answer https://stackoverflow.com/questions/51781921/programmatically-change-windows-10-lock-screen-background-on-desktop/51785687
         
         #endregion
 
@@ -148,28 +145,31 @@ namespace ArtWork
         private void Cv_Selected(object sender, RoutedEventArgs e)
         {
             //Todo: Fix null tag
+
             var item = sender as CoverViewItem;
-            var file = ShellFile.FromFilePath(item.Tag.ToString());
-            try
-            {
-                var country = string.Empty;
-                if (file.Properties.System.Keywords.Value[1].Equals("Empty"))
-                    country = "Location Unknown";
-                else
-                    country = file.Properties.System.Keywords.Value[1];
+            MessageBox.Error(item.Tag.ToString());
+            //var file = ShellFile.FromFilePath(item.Tag.ToString());
+            //try
+            //{
+            //    var country = string.Empty;
+            //    if (file.Properties.System.Keywords.Value[1].Equals("Empty"))
+            //        country = "Location Unknown";
+            //    else
+            //        country = file.Properties.System.Keywords.Value[1];
 
-                shTitle.Status = file.Properties.System.Title.Value;
-                shSubject.Status = file.Properties.System.Subject.Value;
-                shCountry.Status = country;
-                shCity.Status = file.Properties.System.Keywords.Value[0];
-                shGallery.Status = file.Properties.System.Comment.Value;
-                shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
-            }
-            catch (IndexOutOfRangeException)
-            {
+            //    shTitle.Status = file.Properties.System.Title.Value;
+            //    shSubject.Status = file.Properties.System.Subject.Value;
+            //    shCountry.Status = country;
+            //    shCity.Status = file.Properties.System.Keywords.Value[0];
+            //    shGallery.Status = file.Properties.System.Comment.Value;
+            //    shDate.Status = file.Properties.System.Keywords.Value[9] ?? file.Properties.System.Keywords.Value[8];
+            //}
+            //catch (IndexOutOfRangeException)
+            //{
 
-            }
+            //}
         }
+
         #endregion
 
         #region Nude Checked Button

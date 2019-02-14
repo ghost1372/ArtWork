@@ -163,36 +163,34 @@
                 <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
             </StackPanel>
 
-            <controls:CoverView Tag="{Binding Name}" ItemsSource="{Binding Images}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
-               
+            <controls:CoverView ItemsSource="{Binding Images}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
                 <controls:CoverView.ItemHeaderTemplate>
                     <DataTemplate>
-                        <Image Source="{Binding ImageSource}">
+                        <Image Tag="{Binding Name}" Source="{Binding ImageSource}">
                             <Image.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Name="ss" Tag="{Binding Name}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.SetasDesktop}"/>
+                                    <MenuItem Tag="{Binding Name}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.SetasDesktop}"/>
                                     <MenuItem Tag="{Binding Name}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.GoToLoc}"/>
                                 </ContextMenu>
                             </Image.ContextMenu>
                         </Image>
                     </DataTemplate>
-                    
                 </controls:CoverView.ItemHeaderTemplate>
                 <controls:CoverView.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="10" Background="{DynamicResource SuccessBrush}">
+                        <Border Margin="10">
                             <Image Source="{Binding ImageSource}"/>
                         </Border>
                     </DataTemplate>
                 </controls:CoverView.ItemTemplate>
-
                 <controls:CoverView.ItemContainerStyle>
                     <Style TargetType="controls:CoverViewItem">
+                        <Setter Property="Tag"
+                            Value="{Binding Name}" />
                         <EventSetter Event="Selected" Handler="Cv_Selected"/>
                         <EventSetter Event="Deselected" Handler="Cv_Deselected"/>
                         <EventSetter Event="MouseDoubleClick" Handler="Cv_MouseDoubleClick"/>
-                        <Setter Property="Tag"
-                            Value="{Binding Name}" />
+                       
                     </Style>
                 </controls:CoverView.ItemContainerStyle>
             </controls:CoverView>
