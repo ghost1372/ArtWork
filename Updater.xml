@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArtWork>
   <AppVersion>
-    <version>1.2.0.0</version>
+    <version>1.3.1.1</version>
     <url>http://s8.picofile.com/file/8351690884/ArtWork.rar.html</url>
     <changelog>
-Add Advanced Search based on Gallery, City, Country
-      اضافه شدن جستجوی پیشرفته بر اساس گالری موزه، شهر و کشور
+Fixed Bugs and Improvment
+     حل مشکلات و بهبود کلی
     </changelog>
   </AppVersion>
 </ArtWork>
