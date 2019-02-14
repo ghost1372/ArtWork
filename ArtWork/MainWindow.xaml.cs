@@ -1,25 +1,19 @@
 ﻿using HandyControl.Controls;
 using HandyControl.Data;
-using HandyControl.Tools.Extension;
 using log4net;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using System.Xml.Linq;
 using MessageBox = HandyControl.Controls.MessageBox;
 namespace ArtWork

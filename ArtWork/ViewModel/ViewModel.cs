@@ -61,7 +61,6 @@ namespace ArtWork
                         {
                             foreach (var itemx in nudeData)
                             {
-                                Console.WriteLine(itemx);
                                 if (itemx.Equals(Path.GetFileNameWithoutExtension(path)))
                                 {
                                     isNude = true;
