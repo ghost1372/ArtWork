@@ -36,12 +36,12 @@ namespace ArtWork
             if (!System.IO.Directory.Exists(Environment.CurrentDirectory + @"\data"))
                 System.IO.Directory.CreateDirectory(Environment.CurrentDirectory + @"\data");
 
+            var junkFiles = System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath);
+            foreach (var file in junkFiles)
+                System.IO.File.Delete(file);
+
             if (!GetFileList(GlobalData.Config.DataPath).Any())
                 new Downloader().ShowDialog();
-
-            var junkFiles = Directory.EnumerateFiles(GlobalData.Config.DataPath);
-            foreach (var file in junkFiles)
-                File.Delete(file);
 
             base.OnStartup(e);
         }

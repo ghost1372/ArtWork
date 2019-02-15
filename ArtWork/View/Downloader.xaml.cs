@@ -240,13 +240,22 @@ namespace ArtWork
             {
                 log.Error("Set Attribute" + Environment.NewLine + ex.Message);
             }
-            var wikiart = wikiartist ?? "Unknown Artist";
-            string cleanFileName = String.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
-            if (!Directory.Exists(GlobalData.Config.DataPath + @"\" + cleanFileName))
+            try
             {
-                Directory.CreateDirectory(GlobalData.Config.DataPath + @"\" + cleanFileName);
+                var wikiart = wikiartist ?? "Unknown Artist";
+                string cleanFileName = String.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
+                if (!Directory.Exists(GlobalData.Config.DataPath + @"\" + cleanFileName))
+                {
+                    Directory.CreateDirectory(GlobalData.Config.DataPath + @"\" + cleanFileName);
+                }
+                File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName + @"\" + System.IO.Path.GetFileName(@Imagepath));
             }
-            File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName + @"\" + System.IO.Path.GetFileName(@Imagepath));
+            catch (Exception exm)
+            {
+
+                log.Error("Move To Directory" + Environment.NewLine + exm.Message);
+            }
+
 
             //
 
