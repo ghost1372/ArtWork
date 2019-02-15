@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using log4net;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using Newtonsoft.Json;
@@ -18,7 +19,8 @@ namespace ArtWork
     /// </summary>
     public partial class Downloader
     {
-        
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private Queue<string> _downloadUrls = new Queue<string>();
 
         ObservableCollection<string> generatedLinks = new ObservableCollection<string>();
@@ -38,6 +40,10 @@ namespace ArtWork
         {
             InitializeComponent();
 
+            log4net.Config.XmlConfigurator.Configure();
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
+
             // Generate All Items
             for (int i = 1; i < AppVar.NumberOfAllItemExist; i++)
             {
@@ -55,7 +61,10 @@ namespace ArtWork
 
             }
         }
-
+        static void MyHandler(object sender, UnhandledExceptionEventArgs e)
+        {
+            log.Error(e.ExceptionObject);
+        }
 
         // 1-Get all items number ====================> Done
         // 2-Get all folders and subfolders files ====> Done
@@ -163,11 +172,13 @@ namespace ArtWork
                     return;
 
                 }
-                catch (System.Net.WebException) {
+                catch (System.Net.WebException ex) {
                     DownloadFile();
+                    log.Error("System.NET.WEBEXCEPTION PART1" + Environment.NewLine + ex.Message);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    log.Error("Exception PART 2" + Environment.NewLine + e.Message);
                 }
             }
 
@@ -177,10 +188,12 @@ namespace ArtWork
         private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             if (e.Error != null)
-            {                
+            {
+                log.Error("DownloadFileCompleted Error" + Environment.NewLine + e.Error);
             }
             if (e.Cancelled)
             {
+                log.Error("DownloadFileCompleted Canceled" + Environment.NewLine + e.Error);
             }
             shDownloadedItem.Status = Convert.ToInt32(shDownloadedItem.Status) + 1;
             // Handle Rename 
@@ -223,8 +236,9 @@ namespace ArtWork
 
                 propertyWriter.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                log.Error("Set Attribute" + Environment.NewLine + ex.Message);
             }
             var wikiart = wikiartist ?? "Unknown Artist";
             string cleanFileName = String.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
