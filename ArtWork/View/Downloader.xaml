@@ -34,7 +34,7 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" />
                 <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}"/>
-                <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.TotalItems}" Status="9272" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
+                <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.TotalItems}" Status="9329" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
                 <controls:Shield Name="shDownloadedItem" Subject="{x:Static langs:Lang.ItemsDownloaded}" Status="0" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
             </StackPanel>
             <ProgressBar Value="{Binding ElementName=prgButton, Path=Progress}" Name="prgBar" Margin="5"/>
