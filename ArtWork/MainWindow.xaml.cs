@@ -34,8 +34,6 @@ namespace ArtWork
         private string url = "";
         #endregion
 
-        ResourceManager rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang)); // resource manager for get resource language
-
         CancellationTokenSource ts = new CancellationTokenSource(); // cancel tasks token
 
 
@@ -220,14 +218,24 @@ namespace ArtWork
         private void ChangeLanguageMenu(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            if (item.Tag.Equals("Persian"))
-                GlobalData.Config.Lang = "fa-IR";
-            else
-                GlobalData.Config.Lang = "en-US";
-            GlobalData.Save();
+            Growl.Ask(new GrowlInfo {
+                Message = Properties.Langs.Lang.ChangeLangAsk,
+                ShowDateTime = false,
+                CancelStr = Properties.Langs.Lang.Cancel,
+                ConfirmStr = Properties.Langs.Lang.Confirm,
+                ActionBeforeClose = isConfirm =>
+                {
+                    if (isConfirm)
+                    {
+                        GlobalData.Config.Lang = item.Tag.ToString();
+                        GlobalData.Save();
+                        System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
+                        Environment.Exit(0);
+                    }
 
-            System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
-            Environment.Exit(0);
+                    return true;
+                }
+            });
         }
 
         private void CheckUpdateMenu(object sender, RoutedEventArgs e)
@@ -243,9 +251,9 @@ namespace ArtWork
             {
                 Growl.Info(new GrowlInfo
                 {
-                    Message = string.Format(rm.GetString("NewVersionFind"),param[0]) + Environment.NewLine + ChangeLog,
-                    CancelStr = rm.GetString("Cancel"),
-                    ConfirmStr = rm.GetString("Download"),
+                    Message = string.Format(Properties.Langs.Lang.NewVersionFind,param[0]) + Environment.NewLine + ChangeLog,
+                    CancelStr = Properties.Langs.Lang.Cancel,
+                    ConfirmStr = Properties.Langs.Lang.Download,
                     ShowDateTime = false,
                     ActionBeforeClose = isConfirm =>
                     {
@@ -258,7 +266,7 @@ namespace ArtWork
             }
             else
             {
-                Growl.Error(new GrowlInfo { Message = string.Format(rm.GetString("CurrentIsLastVersion"),Assembly.GetExecutingAssembly().GetName().Version.ToString()), ShowDateTime = false });
+                Growl.Error(new GrowlInfo { Message = string.Format(Properties.Langs.Lang.CurrentIsLastVersion,Assembly.GetExecutingAssembly().GetName().Version.ToString()), ShowDateTime = false });
             }
 
         }
@@ -387,9 +395,9 @@ namespace ArtWork
         private void CoverContextMenu_Click(object sender, RoutedEventArgs e)
         {
             var info = sender as MenuItem;
-            if (info.Equals(rm.GetString("SetasDesktop")))
+            if (info.Equals(Properties.Langs.Lang.SetasDesktop))
                 SetDesktopWallpaper(info.Tag.ToString(), true);
-            else if (info.Equals(rm.GetString("GoToLoc")))
+            else if (info.Equals(Properties.Langs.Lang.GoToLoc))
                 System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + info.Tag + "\"");
             else
             {
@@ -405,10 +413,52 @@ namespace ArtWork
             ts?.Cancel();
             Growl.Info(new GrowlInfo
             {
-                Message = rm.GetString("TaskCanceled"),
+                Message = Properties.Langs.Lang.TaskCanceled,
                 ShowDateTime = false,
                 ShowCloseButton = false
             });
+        }
+
+        private void ButtonLangs_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is Button button && button.Tag is string tag)
+            {
+                PopupConfig.IsOpen = false;
+                if (tag.Equals(GlobalData.Config.Lang)) return;
+                Growl.Ask(new GrowlInfo
+                {
+                    Message = Properties.Langs.Lang.ChangeLangAsk,
+                    ShowDateTime = false,
+                    CancelStr = Properties.Langs.Lang.Cancel,
+                    ConfirmStr = Properties.Langs.Lang.Confirm,
+                    ActionBeforeClose = isConfirm =>
+                    {
+                        if (isConfirm)
+                        {
+                            GlobalData.Config.Lang = tag;
+                            GlobalData.Save();
+                            System.Diagnostics.Process.Start(Assembly.GetExecutingAssembly().Location);
+                            Environment.Exit(0);
+                        }
+
+                        return true;
+                    }
+                });
+            }
+        }
+
+        private void ButtonConfig_OnClick(object sender, RoutedEventArgs e) => PopupConfig.IsOpen = true;
+
+        private void ButtonSkins_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is Button button && button.Tag is SkinType tag)
+            {
+                PopupConfig.IsOpen = false;
+                if (tag.Equals(GlobalData.Config.Skin)) return;
+                GlobalData.Config.Skin = tag;
+                GlobalData.Save();
+                ((App)Application.Current).UpdateSkin(tag);
+            }
         }
     }
    

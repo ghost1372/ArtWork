@@ -246,4 +246,10 @@
   <data name="FullScreenSee" xml:space="preserve">
     <value>مشاهده با کیفیت اصلی</value>
   </data>
+  <data name="ChangeLangAsk" xml:space="preserve">
+    <value>بعد از تغییر زبان باید برنامه را مجددا راه اندازی کنید ادامه می دهید؟</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>بله</value>
+  </data>
 </root>

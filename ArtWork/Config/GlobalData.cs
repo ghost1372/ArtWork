@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using HandyControl.Data;
 using Newtonsoft.Json;
 
 namespace ArtWork
@@ -40,6 +41,7 @@ namespace ArtWork
 
             public string DataPath { get; set; } = Environment.CurrentDirectory + @"\data";
             public string Lang { get; set; } = "fa-IR";
+            public SkinType Skin { get; set; }
         }
     }
 }

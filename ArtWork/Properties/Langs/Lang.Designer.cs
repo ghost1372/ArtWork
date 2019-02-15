@@ -124,6 +124,15 @@ namespace ArtWork.Properties.Langs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to بعد از تغییر زبان باید برنامه را مجددا راه اندازی کنید ادامه می دهید؟.
+        /// </summary>
+        public static string ChangeLangAsk {
+            get {
+                return ResourceManager.GetString("ChangeLangAsk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to شهر.
         /// </summary>
         public static string City {
@@ -138,6 +147,15 @@ namespace ArtWork.Properties.Langs {
         public static string ComboSearchItem {
             get {
                 return ResourceManager.GetString("ComboSearchItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to بله.
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
             }
         }
         

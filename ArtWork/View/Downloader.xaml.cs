@@ -100,8 +100,7 @@ namespace ArtWork
         {
             prgButton.IsEnabled = false;
            
-            var rm = new ResourceManager(typeof(ArtWork.Properties.Langs.Lang));
-            prgButton.Content = rm.GetString("Downloading");
+            prgButton.Content = Properties.Langs.Lang.Downloading;
             downloadFile(generatedLinks);
         }
 
@@ -178,13 +177,10 @@ namespace ArtWork
         private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             if (e.Error != null)
-            {
-                HandyControl.Controls.MessageBox.Error("Error");
-                
+            {                
             }
             if (e.Cancelled)
             {
-                HandyControl.Controls.MessageBox.Warning("Download Canceled");
             }
             shDownloadedItem.Status = Convert.ToInt32(shDownloadedItem.Status) + 1;
             // Handle Rename 

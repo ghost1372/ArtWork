@@ -246,4 +246,10 @@
   <data name="FullScreenSee" xml:space="preserve">
     <value>View with original quality</value>
   </data>
+  <data name="ChangeLangAsk" xml:space="preserve">
+    <value>Whether to restart to change the language?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
 </root>

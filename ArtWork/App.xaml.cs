@@ -1,4 +1,6 @@
 ﻿using HandyControl.Controls;
+using HandyControl.Data;
+using HandyControl.Tools;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -24,6 +26,9 @@ namespace ArtWork
             log4net.Config.XmlConfigurator.Configure();
             log.Info("        =============  Started Logging  =============        ");
 
+            if (GlobalData.Config.Skin != SkinType.Default)
+                UpdateSkin(GlobalData.Config.Skin);
+
             if (!System.IO.Directory.Exists(GlobalData.Config.DataPath))
                 GlobalData.Config.DataPath = Environment.CurrentDirectory + @"\data";
 
@@ -40,7 +45,25 @@ namespace ArtWork
 
             base.OnStartup(e);
         }
+        internal void UpdateSkin(SkinType skin)
+        {
+            var skins0 = Resources.MergedDictionaries[0];
+            skins0.MergedDictionaries.Clear();
+            skins0.MergedDictionaries.Add(ResourceHelper.GetSkin(skin));
+            skins0.MergedDictionaries.Add(ResourceHelper.GetSkin(typeof(App).Assembly, "Resources/Themes", skin));
 
+            var skins1 = Resources.MergedDictionaries[1];
+            skins1.MergedDictionaries.Clear();
+            skins1.MergedDictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri("pack://application:,,,/HandyControl;component/Themes/Theme.xaml")
+            });
+            skins1.MergedDictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri("pack://application:,,,/ArtWork;component/Resources/Themes/Theme.xaml")
+            });
+            Current.MainWindow?.OnApplyTemplate();
+        }
         // get all files exist in Directory and SubDirectory
 
         public IEnumerable<string> GetFileList(string rootFolderPath)
