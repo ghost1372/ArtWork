@@ -252,4 +252,7 @@
   <data name="Confirm" xml:space="preserve">
     <value>بله</value>
   </data>
+  <data name="SearchInTitle" xml:space="preserve">
+    <value>جستجوی نام اثر...</value>
+  </data>
 </root>

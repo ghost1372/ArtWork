@@ -252,4 +252,7 @@
   <data name="Confirm" xml:space="preserve">
     <value>Confirm</value>
   </data>
+  <data name="SearchInTitle" xml:space="preserve">
+    <value>Search Art Title...</value>
+  </data>
 </root>

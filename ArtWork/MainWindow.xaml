@@ -144,6 +144,7 @@
                     <ComboBoxItem Content="{x:Static langs:Lang.City}"/>
                     <ComboBoxItem Content="{x:Static langs:Lang.Country}"/>
                     <ComboBoxItem Content="{x:Static langs:Lang.Gallery}"/>
+                    <ComboBoxItem Content="{x:Static langs:Lang.Title}" Visibility="Collapsed"/>
                 </ComboBox>
                 <controls:TextBox Height="35" Background="Transparent" TextChanged="TxtSearch_TextChanged" Margin="0,5,0,0" Name="txtSearch" HorizontalAlignment="Stretch">
                     <controls:TextBox.Style>
@@ -163,6 +164,9 @@
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="3">
                                     <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInGallery}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="4">
+                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInTitle}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -208,6 +212,9 @@
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="3">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="4">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>

@@ -123,7 +123,7 @@ namespace ArtWork
         /// </summary>
         /// <param name="progress">IProgress</param>
         /// <param name="ct">Cancellation Token</param>
-        /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2]</param>
+        /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2], Title = [3]</param>
         /// <param name="prg">Progressbar that you want to be Update</param>
         /// <param name="cover">CoverView Control</param>
         /// <param name="listbox">ListBox Control</param>
@@ -170,10 +170,10 @@ namespace ArtWork
                         // check if it is gallery or not
                         if (KeywordIndex == 2)
                             check = item?.Properties.System.Comment.Value ?? "null";
+                        else if (KeywordIndex == 3)
+                            check = item?.Properties.System.Title.Value ?? "null";
                         else
                             check = item?.Properties.System.Keywords.Value?[KeywordIndex] ?? "null";
-
-
 
                         await Dispatcher.CurrentDispatcher.InvokeAsync(async () =>
                         {

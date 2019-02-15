@@ -421,6 +421,15 @@ namespace ArtWork.Properties.Langs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to جستجوی نام اثر....
+        /// </summary>
+        public static string SearchInTitle {
+            get {
+                return ResourceManager.GetString("SearchInTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to تنظیم به عنوان پس زمینه.
         /// </summary>
         public static string SetasDesktop {
