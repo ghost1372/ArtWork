@@ -293,9 +293,10 @@ namespace ArtWork
             var mprogress = 0; // integer variable for progress report
             prg.Value = 0;
             int totalFiles = System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories).Count();
-            if (!ct.IsCancellationRequested)
+            
+            foreach (var line in System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories))
             {
-                foreach (var line in System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories))
+                if (!ct.IsCancellationRequested)
                 {
                     mprogress += 1;
                     progress.Report((mprogress * 100 / totalFiles));
@@ -309,7 +310,6 @@ namespace ArtWork
                     await Task.Delay(5);
                 }
             }
-            
         }
         public void loadNude()
         {

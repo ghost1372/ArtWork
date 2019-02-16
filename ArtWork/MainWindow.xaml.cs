@@ -393,7 +393,6 @@ namespace ArtWork
                     break;
                 case 4:
                     GC.Collect();
-
                     var progressTitle = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
@@ -420,7 +419,6 @@ namespace ArtWork
 
             }
         }
-
         private void CancelTaskButton_Click(object sender, RoutedEventArgs e)
         {
             ts?.Cancel();
