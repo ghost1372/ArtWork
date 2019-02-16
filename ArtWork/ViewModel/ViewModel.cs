@@ -2,23 +2,20 @@
 using log4net;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace ArtWork
 {
-    
+
     public class ViewModel
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -32,6 +29,7 @@ namespace ArtWork
         public class ArtistData
         {
             public string Name { get; set; }
+            public string Tag { get; set; }
         }
 
         ObservableCollection<string> nudeData = new ObservableCollection<string>(); // for Nude items
@@ -94,7 +92,46 @@ namespace ArtWork
             }
             
         }
+        public async Task LoadFolder(string FilePath,ListBox listbox, CoverView cover, ToggleButton ButtonNude)
+        {
+            try
+            {
+                cover.Items.Clear();
+                Images.Clear();
 
+                bool isNude = false;
+                dynamic selectedItem = listbox.SelectedItems[0];
+                isNude = false;
+                if (ButtonNude.IsChecked == true)
+                {
+                    foreach (var itemx in nudeData)
+                    {
+                        if (itemx.Equals(Path.GetFileNameWithoutExtension(FilePath)))
+                        {
+                            isNude = true;
+                            break;
+                        }
+                    }
+                }
+                if (isNude)
+                    return;
+
+                Images.Add(new ImageData
+                {
+                    TagName = FilePath,
+                    ImageSource = await LoadImage(FilePath)
+                });
+            }
+            catch (NullReferenceException e)
+            {
+                log.Error("LoadFolderTitle " + Environment.NewLine + e.Message);
+            }
+            catch (Exception ex)
+            {
+                log.Error("LoadFolderTitle " + Environment.NewLine + ex.Message);
+            }
+
+        }
         public Task<BitmapImage> LoadImage(string path)
         {
             return Task.Run(() =>
@@ -123,7 +160,7 @@ namespace ArtWork
         /// </summary>
         /// <param name="progress">IProgress</param>
         /// <param name="ct">Cancellation Token</param>
-        /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2], Title = [3]</param>
+        /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2]</param>
         /// <param name="prg">Progressbar that you want to be Update</param>
         /// <param name="cover">CoverView Control</param>
         /// <param name="listbox">ListBox Control</param>
@@ -170,8 +207,6 @@ namespace ArtWork
                         // check if it is gallery or not
                         if (KeywordIndex == 2)
                             check = item?.Properties.System.Comment.Value ?? "null";
-                        else if (KeywordIndex == 3)
-                            check = item?.Properties.System.Title.Value ?? "null";
                         else
                             check = item?.Properties.System.Keywords.Value?[KeywordIndex] ?? "null";
 
@@ -252,6 +287,30 @@ namespace ArtWork
                 ArtistNames.Add(new ArtistData { Name = item });
         }
 
+        public async Task loadTitles(IProgress<int> progress, CancellationToken ct, ProgressBar prg)
+        {
+            ArtistNames.Clear();
+            var mprogress = 0; // integer variable for progress report
+            prg.Value = 0;
+            int totalFiles = System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories).Count();
+            if (!ct.IsCancellationRequested)
+            {
+                foreach (var line in System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories))
+                {
+                    mprogress += 1;
+                    progress.Report((mprogress * 100 / totalFiles));
+                    var item = ShellFile.FromFilePath(line);
+
+                    ArtistNames.Add(new ArtistData
+                    {
+                        Name = item.Properties.System.Title.Value,
+                        Tag = line
+                    });
+                    await Task.Delay(5);
+                }
+            }
+            
+        }
         public void loadNude()
         {
             nudeData.Clear();
