@@ -7,7 +7,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Resources;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
@@ -364,13 +363,16 @@ namespace ArtWork
                     ts = new CancellationTokenSource();
                     await ((ViewModel)DataContext).LoadCategoty(progressGallery, ts.Token, 2, prg, cover, listbox, ButtonNude);
                     break;
+                case 4:
+                    dynamic selectedItem = listbox.SelectedItems[0];
+                    await ((ViewModel)DataContext).LoadFolder(selectedItem.Tag, listbox, cover, ButtonNude);
+                    break;
             }
         }
 
         // load items to listbox
-        private void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             if (txtSearch != null && !string.IsNullOrEmpty(txtSearch.Text)) txtSearch.Text = string.Empty;
 
             switch (cmbFilter.SelectedIndex)
@@ -388,6 +390,17 @@ namespace ArtWork
 
                 case 3:
                     ((ViewModel)DataContext).loadGallery();
+                    break;
+                case 4:
+                    GC.Collect();
+
+                    var progressTitle = new Progress<int>(percent =>
+                    {
+                        prg.Value = percent;
+                    });
+                    ts?.Cancel();
+                    ts = new CancellationTokenSource();
+                    await ((ViewModel)DataContext).loadTitles(progressTitle, ts.Token, prg);
                     break;
             }
         }

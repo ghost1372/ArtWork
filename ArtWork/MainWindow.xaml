@@ -22,7 +22,7 @@
                      Name="main"
                      DataContext="{StaticResource MainViewModel}"
                      Icon="Resources\Img\logo.ico"
-                     Title="{x:Static langs:Lang.ArtWork}" Height="650" Width="1200">
+                     Title="{x:Static langs:Lang.ArtWork}" Height="650" Width="1250">
 
     <controls:Window.NonClientAreaContent>
         <Grid>
@@ -144,7 +144,7 @@
                     <ComboBoxItem Content="{x:Static langs:Lang.City}"/>
                     <ComboBoxItem Content="{x:Static langs:Lang.Country}"/>
                     <ComboBoxItem Content="{x:Static langs:Lang.Gallery}"/>
-                    <ComboBoxItem Content="{x:Static langs:Lang.Title}" Visibility="Collapsed"/>
+                    <ComboBoxItem Content="{x:Static langs:Lang.Title}"/>
                 </ComboBox>
                 <controls:TextBox Height="35" Background="Transparent" TextChanged="TxtSearch_TextChanged" Margin="0,5,0,0" Name="txtSearch" HorizontalAlignment="Stretch">
                     <controls:TextBox.Style>
@@ -174,10 +174,13 @@
                 </controls:TextBox>
             </StackPanel>
 
-            <ListBox ItemsSource="{Binding ArtistNames}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,0,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged">
+            <ListBox FlowDirection="LeftToRight" ItemsSource="{Binding ArtistNames}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,0,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}" />
+                        <Grid>
+                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Visibility="Collapsed" Text="{Binding Tag}" />
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
