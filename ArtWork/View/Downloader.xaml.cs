@@ -9,7 +9,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Resources;
 using System.Windows;
 
 namespace ArtWork
@@ -51,11 +50,12 @@ namespace ArtWork
             }
 
             //Get Exist Items
-            var existItems = GetFileList(GlobalData.Config.DataPath);
-            shDownloadedItem.Status = existItems.Count();
+            var files = Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories);
+
+            shDownloadedItem.Status = files.Count();
 
             //Remove Exist Item From Generated Links
-            foreach (var item in existItems)
+            foreach (var item in files)
             {
                 generatedLinks.Remove(AppVar.imagesBaseUrl + System.IO.Path.GetFileName(item));
 
@@ -77,33 +77,6 @@ namespace ArtWork
         // Check Nudus ===============================> Fixed
         // 8-Write Properties ========================> Fixed
         // 9-Put in Directory ========================> Fixed
-        public IEnumerable<string> GetFileList(string rootFolderPath)
-        {
-            Queue<string> pending = new Queue<string>();
-            pending.Enqueue(rootFolderPath);
-            string[] tmp;
-            while (pending.Count > 0)
-            {
-                rootFolderPath = pending.Dequeue();
-                try
-                {
-                    tmp = Directory.GetFiles(rootFolderPath);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    continue;
-                }
-                for (int i = 0; i < tmp.Length; i++)
-                {
-                    yield return tmp[i];
-                }
-                tmp = Directory.GetDirectories(rootFolderPath);
-                for (int i = 0; i < tmp.Length; i++)
-                {
-                    pending.Enqueue(tmp[i]);
-                }
-            }
-        }
      
         private void Button_Click(object sender, RoutedEventArgs e)
         {
