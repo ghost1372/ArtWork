@@ -197,14 +197,14 @@ namespace ArtWork
             {
                 //Set Attrib
                 ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
-                propertyWriter.WriteProperty(SystemProperties.System.Title, title ?? "Empty");
-                propertyWriter.WriteProperty(SystemProperties.System.Subject, sig ?? "Empty");
-                propertyWriter.WriteProperty(SystemProperties.System.Comment, gal ?? "Empty");
-                propertyWriter.WriteProperty(SystemProperties.System.Author, wikiartist ?? "Unknown Artist");
+                propertyWriter.WriteProperty(SystemProperties.System.Title, FixInvalidCharacter(title) ?? "Empty");
+                propertyWriter.WriteProperty(SystemProperties.System.Subject, FixInvalidCharacter(sig) ?? "Empty");
+                propertyWriter.WriteProperty(SystemProperties.System.Comment, FixInvalidCharacter(gal) ?? "Empty");
+                propertyWriter.WriteProperty(SystemProperties.System.Author, FixInvalidCharacter(wikiartist) ?? "Unknown Artist");
                 propertyWriter.WriteProperty(SystemProperties.System.Keywords, new string[] {
-                   city ?? "Location Unknown", country ?? "Location Unknown", lat.ToString() ?? "Empty",
-                   @long.ToString() ?? "Empty", sig ?? "Empty", title ?? "Empty",
-                   wikiartist ?? "Empty", gal ?? "Empty", isNude ?? "Empty", date ?? "Empty"
+                   FixInvalidCharacter(city) ?? "Location Unknown", FixInvalidCharacter(country) ?? "Location Unknown", FixInvalidCharacter(lat.ToString()) ?? "Empty",
+                   FixInvalidCharacter(@long.ToString()) ?? "Empty", FixInvalidCharacter(sig) ?? "Empty", FixInvalidCharacter(title) ?? "Empty",
+                   FixInvalidCharacter(wikiartist) ?? "Empty", FixInvalidCharacter(gal) ?? "Empty", isNude ?? "Empty", FixInvalidCharacter(date) ?? "Empty"
                 });
 
                 propertyWriter.Close();
@@ -229,10 +229,11 @@ namespace ArtWork
                 log.Error("Move To Directory" + Environment.NewLine + exm.Message);
             }
 
-
-            //
-
             DownloadFile();
+        }
+        private string FixInvalidCharacter(string Character)
+        {
+            return Character.Replace(";", " ");
         }
         private static bool DomainExists(string domain)
         {
