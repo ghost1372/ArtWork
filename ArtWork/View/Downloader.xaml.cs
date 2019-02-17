@@ -36,6 +36,8 @@ namespace ArtWork
         public string @JsonPath { get; set; }
         public string wikiartist { get; set; }
 
+        string DEBUG_LINK_INFO = string.Empty;
+
         public Downloader()
         {
             InitializeComponent();
@@ -114,20 +116,26 @@ namespace ArtWork
         {
             if (_downloadUrls.Any())
             {
-               
 
+               
                 try
                 {
                     client = new WebClient();
                     client.DownloadProgressChanged += Client_DownloadProgressChanged; ;
                     client.DownloadFileCompleted += Client_DownloadFileCompleted; ;
-                    
+
                     var url = _downloadUrls.Dequeue();
+                    DEBUG_LINK_INFO = url;
                     string FileName = url.Substring(url.LastIndexOf("/") + 1,
                                 (url.Length - url.LastIndexOf("/") - 1));
 
                     var json = client.DownloadString(AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
-                    var root = JsonConvert.DeserializeObject<RootObject>(json);
+                    var fixJson = json;
+
+                    //Fix for Json 8271
+                    if (fixJson.Contains("\"Sunflowers\""))
+                        fixJson = fixJson.Replace("\"Sunflowers\"", "Sunflowers");
+                    var root = JsonConvert.DeserializeObject<RootObject>(fixJson);
                     shTitle.Status = root.title;
                     shSubject.Status = root.sig;
 
@@ -146,12 +154,15 @@ namespace ArtWork
 
                 }
                 catch (System.Net.WebException ex) {
-                    DownloadFile();
-                    log.Error("System.NET.WEBEXCEPTION PART1" + Environment.NewLine + ex.Message);
+                    if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.NotFound)
+                    {
+                        DownloadFile();
+                    }
+                    log.Error("System.NET.WEBEXCEPTION PART1" + Environment.NewLine+ DEBUG_LINK_INFO +Environment.NewLine + ex.Message);
                 }
                 catch (Exception e)
                 {
-                    log.Error("Exception PART 2" + Environment.NewLine + e.Message);
+                    log.Error("Exception PART 2" + Environment.NewLine + DEBUG_LINK_INFO + Environment.NewLine + e.Message);
                 }
             }
 
