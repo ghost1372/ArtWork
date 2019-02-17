@@ -27,7 +27,8 @@
         <StackPanel Grid.Row="1" Margin="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <controls:ProgressButton Margin="5,0" Width="140" Style="{DynamicResource ProgressButtonPrimary}" Content="{x:Static langs:Lang.Download}" Name="prgButton" Click="Button_Click"/>
-                <controls:ProgressButton Margin="5,0" Width="140" Style="{DynamicResource ProgressButtonWarning}" Content="{x:Static langs:Lang.ChangeDirectory}" Name="prgDirectory" Click="PrgDirectory_Click"/>
+                <Button Content="{x:Static langs:Lang.Cancel}" IsEnabled="{Binding ElementName=prgButton, Path=IsChecked}" Margin="5,0" Width="140" Name="prgCancel" Click="PrgCancel_Click"/>
+                <controls:ProgressButton IsEnabled="{Binding ElementName=prgButton, Path=IsEnabled}" Margin="5,0" Width="140" Style="{DynamicResource ProgressButtonWarning}" Content="{x:Static langs:Lang.ChangeDirectory}" Name="prgDirectory" Click="PrgDirectory_Click"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Margin="10" Grid.Row="0">

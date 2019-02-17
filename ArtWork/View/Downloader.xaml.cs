@@ -23,6 +23,7 @@ namespace ArtWork
         private Queue<string> _downloadUrls = new Queue<string>();
 
         ObservableCollection<string> generatedLinks = new ObservableCollection<string>();
+        WebClient client = new WebClient();
 
         public string title { get; set; }
         public string sig { get; set; }
@@ -81,7 +82,6 @@ namespace ArtWork
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             prgButton.IsEnabled = false;
-            prgDirectory.IsEnabled = false;
             prgButton.Content = Properties.Langs.Lang.Downloading;
             downloadFile(generatedLinks);
         }
@@ -118,10 +118,10 @@ namespace ArtWork
 
                 try
                 {
-                    WebClient client = new WebClient();
+                    client = new WebClient();
                     client.DownloadProgressChanged += Client_DownloadProgressChanged; ;
                     client.DownloadFileCompleted += Client_DownloadFileCompleted; ;
-
+                    
                     var url = _downloadUrls.Dequeue();
                     string FileName = url.Substring(url.LastIndexOf("/") + 1,
                                 (url.Length - url.LastIndexOf("/") - 1));
@@ -160,78 +160,71 @@ namespace ArtWork
 
         private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            if (e.Error != null)
-            {
-                log.Error("DownloadFileCompleted Error" + Environment.NewLine + e.Error);
-            }
             if (e.Cancelled)
             {
+                HandyControl.Controls.MessageBox.Error("Download Canceled!");
                 log.Error("DownloadFileCompleted Canceled" + Environment.NewLine + e.Error);
-            }
-            shDownloadedItem.Status = Convert.ToInt32(shDownloadedItem.Status) + 1;
-            // Handle Rename 
-
-            var file = ShellFile.FromFilePath(@Imagepath);
-
-            string isNude = "NOTNUDE";
-
-          
-            //Check Nud
-
-            if (DomainExists(System.IO.Path.GetFileNameWithoutExtension(@JsonPath)))
-            {
-                isNude = "ITSNUDE";
-
             }
             else
             {
-                isNude = "NOTNUDE";
+                shDownloadedItem.Status = Convert.ToInt32(shDownloadedItem.Status) + 1;
+                // Handle Rename 
 
-            }
+                var file = ShellFile.FromFilePath(@Imagepath);
+
+                string isNude = "NOTNUDE";
 
 
-            var date = sig.Substring(sig.LastIndexOf(',') + 1);
+                //Check Nud
 
+                if (DomainExists(System.IO.Path.GetFileNameWithoutExtension(@JsonPath)))
+                    isNude = "ITSNUDE";
+                else
+                    isNude = "NOTNUDE";
 
-            try
-            {
-                //Set Attrib
-                ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
-                propertyWriter.WriteProperty(SystemProperties.System.Title, FixInvalidCharacter(title) ?? "Empty");
-                propertyWriter.WriteProperty(SystemProperties.System.Subject, FixInvalidCharacter(sig) ?? "Empty");
-                propertyWriter.WriteProperty(SystemProperties.System.Comment, FixInvalidCharacter(gal) ?? "Empty");
-                propertyWriter.WriteProperty(SystemProperties.System.Author, FixInvalidCharacter(wikiartist) ?? "Unknown Artist");
-                propertyWriter.WriteProperty(SystemProperties.System.Keywords, new string[] {
+                var date = sig.Substring(sig.LastIndexOf(',') + 1);
+
+                try
+                {
+                    //Set Attrib
+                    ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
+                    propertyWriter.WriteProperty(SystemProperties.System.Title, FixInvalidCharacter(title) ?? "Empty");
+                    propertyWriter.WriteProperty(SystemProperties.System.Subject, FixInvalidCharacter(sig) ?? "Empty");
+                    propertyWriter.WriteProperty(SystemProperties.System.Comment, FixInvalidCharacter(gal) ?? "Empty");
+                    propertyWriter.WriteProperty(SystemProperties.System.Author, FixInvalidCharacter(wikiartist) ?? "Unknown Artist");
+                    propertyWriter.WriteProperty(SystemProperties.System.Keywords, new string[] {
                    FixInvalidCharacter(city) ?? "Location Unknown", FixInvalidCharacter(country) ?? "Location Unknown", FixInvalidCharacter(lat.ToString()) ?? "Empty",
                    FixInvalidCharacter(@long.ToString()) ?? "Empty", FixInvalidCharacter(sig) ?? "Empty", FixInvalidCharacter(title) ?? "Empty",
                    FixInvalidCharacter(wikiartist) ?? "Empty", FixInvalidCharacter(gal) ?? "Empty", isNude ?? "Empty", FixInvalidCharacter(date) ?? "Empty"
                 });
 
-                propertyWriter.Close();
-            }
-            catch (Exception ex)
-            {
-                log.Error("Set Attribute" + Environment.NewLine + ex.Message);
-            }
-
-            
-            try
-            {
-                var wikiart = wikiartist ?? "Unknown Artist";
-                string cleanFileName = String.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
-                if (!Directory.Exists(GlobalData.Config.DataPath + @"\" + cleanFileName))
-                {
-                    Directory.CreateDirectory(GlobalData.Config.DataPath + @"\" + cleanFileName);
+                    propertyWriter.Close();
                 }
-                File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName.Trim() + @"\" + System.IO.Path.GetFileName(@Imagepath));
-            }
-            catch (Exception exm)
-            {
+                catch (Exception ex)
+                {
+                    log.Error("Set Attribute" + Environment.NewLine + ex.Message);
+                }
 
-                log.Error("Move To Directory" + Environment.NewLine + exm.Message);
-            }
 
-            DownloadFile();
+                try
+                {
+                    var wikiart = wikiartist ?? "Unknown Artist";
+                    string cleanFileName = String.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
+                    if (!Directory.Exists(GlobalData.Config.DataPath + @"\" + cleanFileName))
+                    {
+                        Directory.CreateDirectory(GlobalData.Config.DataPath + @"\" + cleanFileName);
+                    }
+                    File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName.Trim() + @"\" + System.IO.Path.GetFileName(@Imagepath));
+                }
+                catch (Exception exm)
+                {
+
+                    log.Error("Move To Directory" + Environment.NewLine + exm.Message);
+                }
+
+                DownloadFile();
+            }
+           
         }
         private string FixInvalidCharacter(string Character)
         {
@@ -267,6 +260,15 @@ namespace ArtWork
                 GlobalData.Config.DataPath = browserDialog.FileName;
                 GlobalData.Save();
             }
+        }
+
+        private void PrgCancel_Click(object sender, RoutedEventArgs e)
+        {
+            client.CancelAsync();
+            prgButton.IsEnabled = true;
+            prgButton.IsChecked = false;
+            prgButton.Progress = 0;
+            prgButton.Content = Properties.Langs.Lang.Download;
         }
     }
 }
