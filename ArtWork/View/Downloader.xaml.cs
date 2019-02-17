@@ -81,7 +81,7 @@ namespace ArtWork
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             prgButton.IsEnabled = false;
-           
+            prgDirectory.IsEnabled = false;
             prgButton.Content = Properties.Langs.Lang.Downloading;
             downloadFile(generatedLinks);
         }
@@ -191,7 +191,7 @@ namespace ArtWork
 
 
             var date = sig.Substring(sig.LastIndexOf(',') + 1);
-            
+
 
             try
             {
@@ -213,6 +213,8 @@ namespace ArtWork
             {
                 log.Error("Set Attribute" + Environment.NewLine + ex.Message);
             }
+
+            
             try
             {
                 var wikiart = wikiartist ?? "Unknown Artist";
@@ -221,7 +223,7 @@ namespace ArtWork
                 {
                     Directory.CreateDirectory(GlobalData.Config.DataPath + @"\" + cleanFileName);
                 }
-                File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName + @"\" + System.IO.Path.GetFileName(@Imagepath));
+                File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName.Trim() + @"\" + System.IO.Path.GetFileName(@Imagepath));
             }
             catch (Exception exm)
             {

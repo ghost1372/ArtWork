@@ -40,7 +40,7 @@ namespace ArtWork
             foreach (var file in junkFiles)
                 System.IO.File.Delete(file);
 
-            if (!GetFileList(GlobalData.Config.DataPath).Any())
+            //if (!GetFileList(GlobalData.Config.DataPath).Any())
                 new Downloader().ShowDialog();
 
             base.OnStartup(e);
