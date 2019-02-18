@@ -195,6 +195,8 @@ namespace ArtWork
 
                 var date = sig.Substring(sig.LastIndexOf(',') + 1);
 
+
+                
                 try
                 {
                     //Set Attrib
@@ -215,7 +217,6 @@ namespace ArtWork
                 {
                     log.Error("Set Attribute" + Environment.NewLine + ex.Message);
                 }
-
 
                 try
                 {
@@ -239,7 +240,9 @@ namespace ArtWork
         }
         private string FixInvalidCharacter(string Character)
         {
-            return Character.Replace(";", " ");
+            if (Character != null && Character.Contains(";"))
+                Character = Character.Replace(";", " ");
+            return Character;
         }
         private static bool DomainExists(string domain)
         {
