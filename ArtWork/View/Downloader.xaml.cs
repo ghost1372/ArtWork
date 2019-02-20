@@ -212,14 +212,7 @@ namespace ArtWork
                 });
 
                     propertyWriter.Close();
-                }
-                catch (Exception ex)
-                {
-                    log.Error("Set Attribute" + Environment.NewLine + ex.Message);
-                }
 
-                try
-                {
                     var wikiart = wikiartist ?? "Unknown Artist";
                     string cleanFileName = String.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
                     if (!Directory.Exists(GlobalData.Config.DataPath + @"\" + cleanFileName))
@@ -228,10 +221,9 @@ namespace ArtWork
                     }
                     File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName.Trim() + @"\" + System.IO.Path.GetFileName(@Imagepath));
                 }
-                catch (Exception exm)
+                catch (Exception ex)
                 {
-
-                    log.Error("Move To Directory" + Environment.NewLine + exm.Message);
+                    log.Error("Set Attribute" + Environment.NewLine + ex.Message);
                 }
 
                 DownloadFile();

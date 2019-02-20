@@ -7,6 +7,7 @@ namespace ArtWork
         public static readonly int NumberOfAllItemExist = 9360;
         public static readonly string imagesBaseUrl = "https://kraken99.blob.core.windows.net/images4000xn/";
         public static readonly string jsonBaseUrl = "https://kraken99.blob.core.windows.net/tileinfo/";
+        public static readonly string FavoriteFilePath = "Fav.txt";
 
         #region Update Config
         public static string UpdateServer = "https://raw.githubusercontent.com/ghost1372/ArtWork/master/Updater.xml";

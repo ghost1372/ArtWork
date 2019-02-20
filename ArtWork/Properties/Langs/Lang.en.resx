@@ -255,4 +255,19 @@
   <data name="SearchInTitle" xml:space="preserve">
     <value>Search Art Title...</value>
   </data>
+  <data name="TabFav" xml:space="preserve">
+    <value>Favorites</value>
+  </data>
+  <data name="TabMain" xml:space="preserve">
+    <value>Explore ArtWorks</value>
+  </data>
+  <data name="Fav" xml:space="preserve">
+    <value>Add To Favorite List</value>
+  </data>
+  <data name="AddedToFav" xml:space="preserve">
+    <value>Added To Favorite List</value>
+  </data>
+  <data name="ExistFav" xml:space="preserve">
+    <value>This Art Added To Favorite List Before</value>
+  </data>
 </root>

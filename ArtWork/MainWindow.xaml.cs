@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using MessageBox = HandyControl.Controls.MessageBox;
 namespace ArtWork
 {
+    //Todo: HandyControl CoverView Must be Disbale for popup, TabControl CapsolSolid Background to TemplateBinding
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -411,12 +412,35 @@ namespace ArtWork
                 SetDesktopWallpaper(info.Tag.ToString(), true);
             else if (info.Equals(Properties.Langs.Lang.GoToLoc))
                 System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + info.Tag + "\"");
-            else
+            else if (info.Equals(Properties.Langs.Lang.FullScreenSee))
             {
                 var imgBrowser = new ImageBrowser(new Uri(info.Tag.ToString(), UriKind.Absolute));
                 imgBrowser.ResizeMode = ResizeMode.CanResize;
                 imgBrowser.Show();
 
+            }
+            else
+            {
+                if (!System.IO.File.Exists(AppVar.FavoriteFilePath))
+                    System.IO.File.AppendText(AppVar.FavoriteFilePath);
+                var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath).Any(x=>x.Equals(info.Tag.ToString().Trim()));
+                if (!lines)
+                {
+                    System.IO.File.AppendAllText(AppVar.FavoriteFilePath, info.Tag.ToString().Trim() + Environment.NewLine);
+                    Growl.Info(new GrowlInfo {
+                        Message = Properties.Langs.Lang.AddedToFav, ConfirmStr = Properties.Langs.Lang.Confirm,
+                        ShowDateTime = false
+                    });
+                }
+                else
+                {
+                    Growl.Warning(new GrowlInfo
+                    {
+                        Message = Properties.Langs.Lang.ExistFav,
+                        ConfirmStr = Properties.Langs.Lang.Confirm,
+                        ShowDateTime = false
+                    });
+                }
             }
         }
         private void CancelTaskButton_Click(object sender, RoutedEventArgs e)
@@ -469,6 +493,16 @@ namespace ArtWork
                 GlobalData.Config.Skin = tag;
                 GlobalData.Save();
                 ((App)Application.Current).UpdateSkin(tag);
+            }
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GC.Collect();
+            ts?.Cancel();
+            if(tab.SelectedIndex == 1)
+            {
+
             }
         }
     }

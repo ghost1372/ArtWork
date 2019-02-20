@@ -255,4 +255,19 @@
   <data name="SearchInTitle" xml:space="preserve">
     <value>جستجوی نام اثر...</value>
   </data>
+  <data name="TabFav" xml:space="preserve">
+    <value>موردعلاقه ها</value>
+  </data>
+  <data name="TabMain" xml:space="preserve">
+    <value>منوی آثار</value>
+  </data>
+  <data name="Fav" xml:space="preserve">
+    <value>افزودن به لیست موردعلاقه</value>
+  </data>
+  <data name="AddedToFav" xml:space="preserve">
+    <value>به لیست موردعلاقه ها اضافه شد</value>
+  </data>
+  <data name="ExistFav" xml:space="preserve">
+    <value>این اثر قبلا به لیست موردعلاقه ها اضافه شده است</value>
+  </data>
 </root>

@@ -70,6 +70,15 @@ namespace ArtWork.Properties.Langs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to به لیست موردعلاقه ها اضافه شد.
+        /// </summary>
+        public static string AddedToFav {
+            get {
+                return ResourceManager.GetString("AddedToFav", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to هنرمند.
         /// </summary>
         public static string Artist {
@@ -210,6 +219,24 @@ namespace ArtWork.Properties.Langs {
         public static string Downloading {
             get {
                 return ResourceManager.GetString("Downloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to این اثر قبلا به لیست موردعلاقه ها اضافه شده است.
+        /// </summary>
+        public static string ExistFav {
+            get {
+                return ResourceManager.GetString("ExistFav", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to افزودن به لیست موردعلاقه.
+        /// </summary>
+        public static string Fav {
+            get {
+                return ResourceManager.GetString("Fav", resourceCulture);
             }
         }
         
@@ -435,6 +462,24 @@ namespace ArtWork.Properties.Langs {
         public static string SetasDesktop {
             get {
                 return ResourceManager.GetString("SetasDesktop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to موردعلاقه ها.
+        /// </summary>
+        public static string TabFav {
+            get {
+                return ResourceManager.GetString("TabFav", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to منوی آثار.
+        /// </summary>
+        public static string TabMain {
+            get {
+                return ResourceManager.GetString("TabMain", resourceCulture);
             }
         }
         

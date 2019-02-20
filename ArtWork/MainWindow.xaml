@@ -124,151 +124,159 @@
         </Grid>
     </controls:Window.NonClientAreaContent>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
+    <TabControl Name="tab" SelectionChanged="TabControl_SelectionChanged" Margin="0,10" Style="{StaticResource TabControlCapsuleSolid}" Background="Transparent">
+        <TabItem Background="Transparent" Header="{x:Static langs:Lang.TabMain}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
 
-        <GridSplitter Grid.Column="0" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
+                <GridSplitter Grid.Column="0" IsEnabled="False" HorizontalAlignment="Right" Width="5" Background="Transparent" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource BorderBrush}"/>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="120"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <StackPanel Margin="5,5,10,0" Grid.Row="0">
-                <ToggleButton Style="{DynamicResource ToggleButtonPrimary}" Checked="ButtonNude_Checked" Unchecked="ButtonNude_Checked" Name="ButtonNude" Content="{x:Static langs:Lang.NudeFilter}" Margin="0,5,0,0" HorizontalAlignment="Stretch"/>
-                <ComboBox SelectionChanged="CmbFilter_SelectionChanged" Style="{StaticResource ComboBoxExtend}" Name="cmbFilter" SelectedIndex="0" controls:InfoElement.Placeholder="{x:Static langs:Lang.ComboSearchItem}" Background="Transparent" Margin="0,5,0,0">
-                    <ComboBoxItem Content="{x:Static langs:Lang.Artist}"/>
-                    <ComboBoxItem Content="{x:Static langs:Lang.City}"/>
-                    <ComboBoxItem Content="{x:Static langs:Lang.Country}"/>
-                    <ComboBoxItem Content="{x:Static langs:Lang.Gallery}"/>
-                    <ComboBoxItem Content="{x:Static langs:Lang.Title}"/>
-                </ComboBox>
-                <controls:TextBox Height="35" Background="Transparent" TextChanged="TxtSearch_TextChanged" Margin="0,5,0,0" Name="txtSearch" HorizontalAlignment="Stretch">
-                    <controls:TextBox.Style>
-                        <Style BasedOn="{StaticResource TextBoxExtend}" TargetType="controls:TextBox">
-                            <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInArtists}" />
-                            <!-- Here is the 'normal' content -->
-                            <Style.Triggers>
-                                <!-- Here is how we bind to another control's property -->
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="0">
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="120"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Margin="5,5,10,0" Grid.Row="0">
+                        <ToggleButton Style="{DynamicResource ToggleButtonPrimary}" Checked="ButtonNude_Checked" Unchecked="ButtonNude_Checked" Name="ButtonNude" Content="{x:Static langs:Lang.NudeFilter}" Margin="0,5,0,0" HorizontalAlignment="Stretch"/>
+                        <ComboBox SelectionChanged="CmbFilter_SelectionChanged" Style="{StaticResource ComboBoxExtend}" Name="cmbFilter" SelectedIndex="0" controls:InfoElement.Placeholder="{x:Static langs:Lang.ComboSearchItem}" Background="Transparent" Margin="0,5,0,0">
+                            <ComboBoxItem Content="{x:Static langs:Lang.Artist}"/>
+                            <ComboBoxItem Content="{x:Static langs:Lang.City}"/>
+                            <ComboBoxItem Content="{x:Static langs:Lang.Country}"/>
+                            <ComboBoxItem Content="{x:Static langs:Lang.Gallery}"/>
+                            <ComboBoxItem Content="{x:Static langs:Lang.Title}"/>
+                        </ComboBox>
+                        <controls:TextBox Height="35" Background="Transparent" TextChanged="TxtSearch_TextChanged" Margin="0,5,0,0" Name="txtSearch" HorizontalAlignment="Stretch">
+                            <controls:TextBox.Style>
+                                <Style BasedOn="{StaticResource TextBoxExtend}" TargetType="controls:TextBox">
                                     <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInArtists}" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="1">
-                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInCity}" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="2">
-                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInCountry}" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="3">
-                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInGallery}" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="4">
-                                    <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInTitle}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </controls:TextBox.Style>
-                </controls:TextBox>
-            </StackPanel>
+                                    <!-- Here is the 'normal' content -->
+                                    <Style.Triggers>
+                                        <!-- Here is how we bind to another control's property -->
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="0">
+                                            <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInArtists}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="1">
+                                            <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInCity}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="2">
+                                            <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInCountry}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="3">
+                                            <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInGallery}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="4">
+                                            <Setter Property="controls:InfoElement.Placeholder" Value="{x:Static langs:Lang.SearchInTitle}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:TextBox.Style>
+                        </controls:TextBox>
+                    </StackPanel>
 
-            <ListBox FlowDirection="LeftToRight" ItemsSource="{Binding ArtistNames}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,0,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <TextBlock Text="{Binding Name}" />
-                            <TextBlock Visibility="Collapsed" Text="{Binding Tag}" />
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    <ListBox FlowDirection="LeftToRight" ItemsSource="{Binding ArtistNames}" Style="{StaticResource ListBoxTransparent}" BorderThickness="0" Margin="0,0,5,0" Grid.Row="1" Name="listbox" SelectionMode="Single" SelectionChanged="Listbox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Visibility="Collapsed" Text="{Binding Tag}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
-        </Grid>
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="0">
-                <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-                <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-                <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-                <controls:Shield Name="shCity" Subject="{x:Static langs:Lang.City}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
-                <controls:Shield Name="shCountry" Subject="{x:Static langs:Lang.Country}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
-                <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
-                <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
-                <Button Width="120" Click="CancelTaskButton_Click" Margin="4,0,0,0" Name="cancelTaskButton" Content="{x:Static langs:Lang.CancelTask}">
-                    <Button.Style>
-                        <Style TargetType="Button" BasedOn="{StaticResource ButtonDanger}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <!-- Here is how we bind to another control's property -->
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="0">
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="0">
+                        <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                        <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                        <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                        <controls:Shield Name="shCity" Subject="{x:Static langs:Lang.City}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
+                        <controls:Shield Name="shCountry" Subject="{x:Static langs:Lang.Country}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
+                        <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
+                        <controls:Shield Name="shItems" Subject="{x:Static langs:Lang.NumberOfItems}" Status="{Binding ElementName=cover,Path=Items.Count}" Margin="4,0,0,0" Color="{DynamicResource PrimaryBrush}"/>
+                        <Button Width="120" Click="CancelTaskButton_Click" Margin="4,0,0,0" Name="cancelTaskButton" Content="{x:Static langs:Lang.CancelTask}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ButtonDanger}">
                                     <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="1">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="2">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="3">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="4">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </StackPanel>
+                                    <Style.Triggers>
+                                        <!-- Here is how we bind to another control's property -->
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="1">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="2">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="3">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="4">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
 
-            <controls:CoverView Tag="{Binding TagName}" ItemsSource="{Binding Images}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
-                <controls:CoverView.ItemHeaderTemplate>
-                    <DataTemplate>
-                        <Image Name="ImageHeader" Tag="{Binding TagName}" Source="{Binding ImageSource}">
-                            <Image.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Name="xcv" Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.SetasDesktop}"/>
-                                    <MenuItem Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.GoToLoc}"/>
-                                    <MenuItem Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.FullScreenSee}"/>
-                                </ContextMenu>
-                            </Image.ContextMenu>
-                        </Image>
-                    </DataTemplate>
-                </controls:CoverView.ItemHeaderTemplate>
-                <!--<controls:CoverView.ItemTemplate>
+                    <controls:CoverView Tag="{Binding TagName}" ItemsSource="{Binding Images}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
+                        <controls:CoverView.ItemHeaderTemplate>
+                            <DataTemplate>
+                                <Image Name="ImageHeader" Tag="{Binding TagName}" Source="{Binding ImageSource}">
+                                    <Image.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Name="xcv" Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.SetasDesktop}"/>
+                                            <MenuItem Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.GoToLoc}"/>
+                                            <MenuItem Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.FullScreenSee}"/>
+                                            <MenuItem Tag="{Binding TagName}" Click="CoverContextMenu_Click" Header="{x:Static langs:Lang.Fav}"/>
+                                        </ContextMenu>
+                                    </Image.ContextMenu>
+                                </Image>
+                            </DataTemplate>
+                        </controls:CoverView.ItemHeaderTemplate>
+                        <!--<controls:CoverView.ItemTemplate>
                     <DataTemplate>
                         <Border Margin="10">
                             <Image Stretch="Uniform" Source="{Binding ImageSource}"/>
                         </Border>
                     </DataTemplate>
                 </controls:CoverView.ItemTemplate>-->
-                <controls:CoverView.ItemContainerStyle>
-                    <Style TargetType="controls:CoverViewItem" BasedOn="{StaticResource CoverViewItemBaseStyle}">
-                        <EventSetter Event="Selected" Handler="Cv_Selected"/>
-                        <EventSetter Event="MouseDoubleClick" Handler="Cv_MouseDoubleClick"/>
-                    </Style>
-                </controls:CoverView.ItemContainerStyle>
-            </controls:CoverView>
-            <ProgressBar FlowDirection="LeftToRight" Margin="0,0,5,0" Grid.Row="1" Value="0" Name="prg" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-                <ProgressBar.Style>
-                    <Style BasedOn="{StaticResource ProgressBarInfo}" TargetType="ProgressBar">
-                        <Setter Property="Visibility" Value="Visible" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="0">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ProgressBar.Style>
-            </ProgressBar>
-            <controls:ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
-                <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
-            </controls:ScrollViewer>
-        </Grid>
-    </Grid>
+                        <controls:CoverView.ItemContainerStyle>
+                            <Style TargetType="controls:CoverViewItem" BasedOn="{StaticResource CoverViewItemBaseStyle}">
+                                <EventSetter Event="Selected" Handler="Cv_Selected"/>
+                                <EventSetter Event="MouseDoubleClick" Handler="Cv_MouseDoubleClick"/>
+                            </Style>
+                        </controls:CoverView.ItemContainerStyle>
+                    </controls:CoverView>
+                    <ProgressBar FlowDirection="LeftToRight" Margin="0,0,5,0" Grid.Row="1" Value="0" Name="prg" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                        <ProgressBar.Style>
+                            <Style BasedOn="{StaticResource ProgressBarInfo}" TargetType="ProgressBar">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=cmbFilter}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ProgressBar.Style>
+                    </ProgressBar>
+                    <controls:ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
+                        <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
+                    </controls:ScrollViewer>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Background="Transparent" Header="{x:Static langs:Lang.TabFav}">
+           
+        </TabItem>
+    </TabControl>
 </controls:BlurWindow>
