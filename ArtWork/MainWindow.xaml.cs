@@ -423,25 +423,28 @@ namespace ArtWork
             }
             else if (info.Header.Equals(Properties.Langs.Lang.Fav))
             {
-                if (!System.IO.File.Exists(AppVar.FavoriteFilePath))
-                    System.IO.File.AppendText(AppVar.FavoriteFilePath);
-                var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath).Any(x=>x.Equals(info.Tag.ToString().Trim()));
-                if (!lines)
+                if (System.IO.File.Exists(AppVar.FavoriteFilePath))
                 {
-                    System.IO.File.AppendAllText(AppVar.FavoriteFilePath, info.Tag.ToString().Trim() + Environment.NewLine);
-                    Growl.Info(new GrowlInfo {
-                        Message = Properties.Langs.Lang.AddedToFav, ConfirmStr = Properties.Langs.Lang.Confirm,
-                        ShowDateTime = false
-                    });
-                }
-                else
-                {
-                    Growl.Warning(new GrowlInfo
+                    var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath).Any(x => x.Equals(info.Tag.ToString().Trim()));
+                    if (!lines)
                     {
-                        Message = Properties.Langs.Lang.ExistFav,
-                        ConfirmStr = Properties.Langs.Lang.Confirm,
-                        ShowDateTime = false
-                    });
+                        System.IO.File.AppendAllText(AppVar.FavoriteFilePath, info.Tag.ToString().Trim() + Environment.NewLine);
+                        Growl.Info(new GrowlInfo
+                        {
+                            Message = Properties.Langs.Lang.AddedToFav,
+                            ConfirmStr = Properties.Langs.Lang.Confirm,
+                            ShowDateTime = false
+                        });
+                    }
+                    else
+                    {
+                        Growl.Warning(new GrowlInfo
+                        {
+                            Message = Properties.Langs.Lang.ExistFav,
+                            ConfirmStr = Properties.Langs.Lang.Confirm,
+                            ShowDateTime = false
+                        });
+                    }
                 }
             }
             else if (info.Header.Equals(Properties.Langs.Lang.RemoveFromFav))

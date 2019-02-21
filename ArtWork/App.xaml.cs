@@ -36,6 +36,9 @@ namespace ArtWork
             if (!System.IO.Directory.Exists(Environment.CurrentDirectory + @"\data"))
                 System.IO.Directory.CreateDirectory(Environment.CurrentDirectory + @"\data");
 
+            if (!System.IO.File.Exists(AppVar.FavoriteFilePath))
+                System.IO.File.AppendText(AppVar.FavoriteFilePath);
+
             var junkFiles = System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath);
             foreach (var file in junkFiles)
                 System.IO.File.Delete(file);
