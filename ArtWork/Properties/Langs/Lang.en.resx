@@ -270,4 +270,10 @@
   <data name="ExistFav" xml:space="preserve">
     <value>This Art Added To Favorite List Before</value>
   </data>
+  <data name="RemoveFromFav" xml:space="preserve">
+    <value>Remove From Favorite List</value>
+  </data>
+  <data name="SetDesktopRandom" xml:space="preserve">
+    <value>Set As Desktop (Selected Arts)</value>
+  </data>
 </root>

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:interactivity="clr-namespace:HandyControl.Interactivity;assembly=HandyControl"
         xmlns:langs="clr-namespace:ArtWork.Properties.Langs"
+                      FontFamily="{StaticResource ArtWork.Fonts.IRANSans}"
         mc:Ignorable="d"
                      Name="main"
                      WindowState="Maximized"

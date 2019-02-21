@@ -8,6 +8,7 @@
                                       xmlns:interactivity="clr-namespace:HandyControl.Interactivity;assembly=HandyControl"
                  mc:Ignorable="d"
                  Title="About"
+                  FontFamily="{StaticResource ArtWork.Fonts.IRANSans}"
                  ShowTitle="True"
                  BorderThickness="1"
                  BorderBrush="#262e2f"
@@ -22,7 +23,7 @@
                  WindowStartupLocation="CenterOwner"
                  Width="480"
                  Name="main"
-                 Height="280">
+                 Height="300">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
             <TextBlock Text="{x:Static langs:Lang.ArtWork}" FontSize="30" Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Top" HorizontalAlignment="Center"/>

@@ -4,6 +4,7 @@ using log4net;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
@@ -11,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Xml.Linq;
@@ -408,18 +410,18 @@ namespace ArtWork
         private void CoverContextMenu_Click(object sender, RoutedEventArgs e)
         {
             var info = sender as MenuItem;
-            if (info.Equals(Properties.Langs.Lang.SetasDesktop))
+            if (info.Header.Equals(Properties.Langs.Lang.SetasDesktop))
                 SetDesktopWallpaper(info.Tag.ToString(), true);
-            else if (info.Equals(Properties.Langs.Lang.GoToLoc))
+            else if (info.Header.Equals(Properties.Langs.Lang.GoToLoc))
                 System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + info.Tag + "\"");
-            else if (info.Equals(Properties.Langs.Lang.FullScreenSee))
+            else if (info.Header.Equals(Properties.Langs.Lang.FullScreenSee))
             {
                 var imgBrowser = new ImageBrowser(new Uri(info.Tag.ToString(), UriKind.Absolute));
                 imgBrowser.ResizeMode = ResizeMode.CanResize;
                 imgBrowser.Show();
 
             }
-            else
+            else if (info.Header.Equals(Properties.Langs.Lang.Fav))
             {
                 if (!System.IO.File.Exists(AppVar.FavoriteFilePath))
                     System.IO.File.AppendText(AppVar.FavoriteFilePath);
@@ -441,6 +443,12 @@ namespace ArtWork
                         ShowDateTime = false
                     });
                 }
+            }
+            else if (info.Header.Equals(Properties.Langs.Lang.RemoveFromFav))
+            {
+                var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath).ToList();
+                lines.Remove(info.Tag.ToString().Trim());
+                System.IO.File.WriteAllLines(AppVar.FavoriteFilePath, lines.ToArray());
             }
         }
         private void CancelTaskButton_Click(object sender, RoutedEventArgs e)
@@ -496,14 +504,47 @@ namespace ArtWork
             }
         }
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        List<string> list = new List<string>();
+
+        private async void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GC.Collect();
-            ts?.Cancel();
             if(tab.SelectedIndex == 1)
             {
-
+                list.Clear();
+                GC.Collect();
+                ts?.Cancel();
+                ts = new CancellationTokenSource();
+                await ((ViewModel)DataContext).LoadFavorite(ts.Token, coverFav);
             }
+        }
+        private void SetAsDesktopRandom_Click(object sender, RoutedEventArgs e)
+        {
+            //Todo: add
+            if(list != null)
+            {
+                //set as desktop for list
+            }
+            else
+            {
+                //set as dekstop all
+            }
+        }
+
+        private void CoverViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ObservableCollection<ViewModel.ImageData> items = coverFav.ItemsSource as ObservableCollection<ViewModel.ImageData>;
+            ImageViewer.Items = items;
+            new ImageViewer().ShowDialog();
+        }
+
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var item = sender as ToggleButton;
+            if(item.IsChecked == true)
+                list.Add(item.Tag.ToString().Trim());
+            else
+                list.Remove(item.Tag.ToString().Trim());
+
         }
     }
    

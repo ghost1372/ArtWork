@@ -9,6 +9,7 @@
                      ResizeMode="CanMinimize"
                      Style="{StaticResource WindowBlur}"
         BorderThickness="1"
+                      FontFamily="{StaticResource ArtWork.Fonts.IRANSans}"
                      BorderBrush="#262e2f"
                  CloseButtonForeground="{StaticResource DangerBrush}"
                      NonClientAreaBackground="#262e2f"

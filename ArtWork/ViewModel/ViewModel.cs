@@ -3,6 +3,7 @@ using log4net;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,7 +17,7 @@ using System.Windows.Threading;
 namespace ArtWork
 {
 
-    public class ViewModel
+    public class ViewModel 
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -40,7 +41,26 @@ namespace ArtWork
         public ObservableCollection<ArtistData> ArtistNames { get; }
             = new ObservableCollection<ArtistData>(); // for artists items
 
+        public ObservableCollection<ImageData> FavoriteImages { get; }
+            = new ObservableCollection<ImageData>();
 
+        public async Task LoadFavorite(CancellationToken ct, CoverView cover)
+        {
+            cover.Items.Clear();
+            FavoriteImages.Clear();
+            var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath);
+            foreach (var item in lines)
+            {
+                if (!ct.IsCancellationRequested)
+                {
+                    FavoriteImages.Add(new ImageData
+                    {
+                        TagName = item,
+                        ImageSource = await LoadImage(item)
+                    });
+                }
+            }
+        }
         public async Task LoadFolder(CancellationToken ct, ListBox listbox, CoverView cover, ToggleButton ButtonNude)
         {
             try
@@ -320,5 +340,7 @@ namespace ArtWork
             foreach (var line in nudeItems)
                 nudeData.Add(line);
         }
+
+      
     }
 }

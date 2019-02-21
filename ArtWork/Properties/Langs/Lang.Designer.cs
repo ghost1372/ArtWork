@@ -403,6 +403,15 @@ namespace ArtWork.Properties.Langs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to حذف از لیست موردعلاقه ها.
+        /// </summary>
+        public static string RemoveFromFav {
+            get {
+                return ResourceManager.GetString("RemoveFromFav", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to جستجو در هنرمندان....
         /// </summary>
         public static string SearchInArtists {
@@ -462,6 +471,15 @@ namespace ArtWork.Properties.Langs {
         public static string SetasDesktop {
             get {
                 return ResourceManager.GetString("SetasDesktop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تنظیم به عنوان پس زمینه (انتخاب شده).
+        /// </summary>
+        public static string SetDesktopRandom {
+            get {
+                return ResourceManager.GetString("SetDesktopRandom", resourceCulture);
             }
         }
         

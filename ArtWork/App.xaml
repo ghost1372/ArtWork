@@ -19,6 +19,7 @@
                         <ResourceDictionary Source="Resources/Themes/Theme.xaml"/>
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/ArtWork;component/Resources/Fonts/FontsDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <local:ViewModel x:Key="MainViewModel" />
