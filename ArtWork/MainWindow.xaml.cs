@@ -19,7 +19,7 @@ using System.Xml.Linq;
 using MessageBox = HandyControl.Controls.MessageBox;
 namespace ArtWork
 {
-    //Todo: HandyControl CoverView Must be Disbale for popup, TabControl CapsolSolid Background to TemplateBinding
+    //Todo: HandyControl CoverView Must be Disbale for popup
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>

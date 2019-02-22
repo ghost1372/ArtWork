@@ -320,6 +320,9 @@
                 </Grid>
 
             </TabItem>
+            <TabControl.Resources>
+                <SolidColorBrush x:Key="RegionBrush" Color="Transparent" />
+            </TabControl.Resources>
         </TabControl>
         <controls:ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
             <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
