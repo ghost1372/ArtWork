@@ -329,7 +329,7 @@ namespace ArtWork
 
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await ((ViewModel)DataContext).LoadFolder(ts.Token, listbox, cover, ButtonNude);
+                    await ((ViewModel)DataContext).LoadFolder(ts.Token, listbox, ButtonNude);
                     break;
                 case 1:
                     GC.Collect();
@@ -340,7 +340,7 @@ namespace ArtWork
                     });
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await ((ViewModel)DataContext).LoadCategoty(progressCity,ts.Token,0, prg,cover, listbox, ButtonNude);
+                    await ((ViewModel)DataContext).LoadCategoty(progressCity,ts.Token,0, prg, listbox, ButtonNude);
                     break;
 
                 case 2:
@@ -352,7 +352,7 @@ namespace ArtWork
                     });
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await ((ViewModel)DataContext).LoadCategoty(progressCountry, ts.Token, 1, prg, cover, listbox, ButtonNude);
+                    await ((ViewModel)DataContext).LoadCategoty(progressCountry, ts.Token, 1, prg, listbox, ButtonNude);
                     break;
 
                 case 3:
@@ -364,11 +364,11 @@ namespace ArtWork
                     });
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await ((ViewModel)DataContext).LoadCategoty(progressGallery, ts.Token, 2, prg, cover, listbox, ButtonNude);
+                    await ((ViewModel)DataContext).LoadCategoty(progressGallery, ts.Token, 2, prg, listbox, ButtonNude);
                     break;
                 case 4:
                     dynamic selectedItem = listbox.SelectedItems[0];
-                    await ((ViewModel)DataContext).LoadFolder(selectedItem.Tag, listbox, cover, ButtonNude);
+                    await ((ViewModel)DataContext).LoadFolder(selectedItem.Tag, listbox, ButtonNude);
                     break;
             }
         }
@@ -517,7 +517,7 @@ namespace ArtWork
                 GC.Collect();
                 ts?.Cancel();
                 ts = new CancellationTokenSource();
-                await ((ViewModel)DataContext).LoadFavorite(ts.Token, coverFav);
+                await ((ViewModel)DataContext).LoadFavorite(ts.Token);
             }
         }
         private void SetAsDesktopRandom_Click(object sender, RoutedEventArgs e)

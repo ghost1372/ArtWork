@@ -44,9 +44,8 @@ namespace ArtWork
         public ObservableCollection<ImageData> FavoriteImages { get; }
             = new ObservableCollection<ImageData>();
 
-        public async Task LoadFavorite(CancellationToken ct, CoverView cover)
+        public async Task LoadFavorite(CancellationToken ct)
         {
-            cover.Items.Clear();
             FavoriteImages.Clear();
             var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath);
             foreach (var item in lines)
@@ -61,11 +60,10 @@ namespace ArtWork
                 }
             }
         }
-        public async Task LoadFolder(CancellationToken ct, ListBox listbox, CoverView cover, ToggleButton ButtonNude)
+        public async Task LoadFolder(CancellationToken ct, ListBox listbox, ToggleButton ButtonNude)
         {
             try
             {
-                cover.Items.Clear();
                 Images.Clear();
 
                 bool isNude = false;
@@ -112,11 +110,10 @@ namespace ArtWork
             }
             
         }
-        public async Task LoadFolder(string FilePath,ListBox listbox, CoverView cover, ToggleButton ButtonNude)
+        public async Task LoadFolder(string FilePath,ListBox listbox, ToggleButton ButtonNude)
         {
             try
             {
-                cover.Items.Clear();
                 Images.Clear();
 
                 bool isNude = false;
@@ -182,15 +179,13 @@ namespace ArtWork
         /// <param name="ct">Cancellation Token</param>
         /// <param name="KeywordIndex">City = [0], Country = [1], Gallery = [2]</param>
         /// <param name="prg">Progressbar that you want to be Update</param>
-        /// <param name="cover">CoverView Control</param>
         /// <param name="listbox">ListBox Control</param>
         /// <param name="ButtonNude">Button Nude Filter</param>
         /// <returns></returns>
-        public async Task LoadCategoty(IProgress<int> progress, CancellationToken ct, int KeywordIndex, ProgressBar prg, CoverView cover, ListBox listbox, ToggleButton ButtonNude)
+        public async Task LoadCategoty(IProgress<int> progress, CancellationToken ct, int KeywordIndex, ProgressBar prg, ListBox listbox, ToggleButton ButtonNude)
         {
             try
             {
-                cover.Items.Clear();
                 Images.Clear();
 
                 var mprogress = 0; // integer variable for progress report
