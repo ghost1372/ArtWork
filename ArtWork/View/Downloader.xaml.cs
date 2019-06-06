@@ -32,11 +32,15 @@ namespace ArtWork
         public string @JsonPath { get; set; }
         public string wikiartist { get; set; }
 
-        private string DEBUG_LINK_INFO = string.Empty;
+        public int TotalItem { get; set; }
 
         public Downloader()
         {
             InitializeComponent();
+
+            DataContext = this;
+
+            TotalItem = AppVar.NumberOfAllItemCurrected;
 
             // Generate All Items
             for (int i = 1; i < AppVar.NumberOfAllItemExist; i++)
@@ -113,7 +117,6 @@ namespace ArtWork
                     client.DownloadFileCompleted += Client_DownloadFileCompleted; ;
 
                     string url = _downloadUrls.Dequeue();
-                    DEBUG_LINK_INFO = url;
                     string FileName = url.Substring(url.LastIndexOf("/") + 1,
                                 (url.Length - url.LastIndexOf("/") - 1));
 
