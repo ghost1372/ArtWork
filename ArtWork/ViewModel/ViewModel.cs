@@ -1,5 +1,4 @@
 ﻿using HandyControl.Controls;
-using log4net;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.ObjectModel;
@@ -19,8 +18,6 @@ namespace ArtWork
 
     public class ViewModel 
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         public class ImageData
         {
             public string TagName { get; set; }
@@ -47,16 +44,19 @@ namespace ArtWork
         public async Task LoadFavorite(CancellationToken ct)
         {
             FavoriteImages.Clear();
-            var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath);
-            foreach (var item in lines)
+            if(File.Exists(AppVar.FavoriteFilePath))
             {
-                if (!ct.IsCancellationRequested)
+                var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath);
+                foreach (var item in lines)
                 {
-                    FavoriteImages.Add(new ImageData
+                    if (!ct.IsCancellationRequested)
                     {
-                        TagName = item,
-                        ImageSource = await LoadImage(item)
-                    });
+                        FavoriteImages.Add(new ImageData
+                        {
+                            TagName = item,
+                            ImageSource = await LoadImage(item)
+                        });
+                    }
                 }
             }
         }
@@ -102,11 +102,9 @@ namespace ArtWork
                 }
             }
             catch (NullReferenceException e) {
-                log.Error("LoadFolder " + Environment.NewLine + e.Message);
             }
             catch (Exception ex)
             {
-                log.Error("LoadFolder " + Environment.NewLine + ex.Message);
             }
             
         }
@@ -141,11 +139,9 @@ namespace ArtWork
             }
             catch (NullReferenceException e)
             {
-                log.Error("LoadFolderTitle " + Environment.NewLine + e.Message);
             }
             catch (Exception ex)
             {
-                log.Error("LoadFolderTitle " + Environment.NewLine + ex.Message);
             }
 
         }
@@ -164,7 +160,6 @@ namespace ArtWork
                     bitmap.EndInit();
                     bitmap.Freeze();
                 }
-
                 return bitmap;
             });
         }
@@ -242,11 +237,9 @@ namespace ArtWork
             }
             catch (NullReferenceException e)
             {
-                log.Error("LoadCategoty " + Environment.NewLine + e.Message);
             }
             catch (Exception ex)
             {
-                log.Error("LoadCategoty " + Environment.NewLine + ex.Message);
             }
         }
         private async Task<FileInfo[]> GetFileListAsync(string rootFolderPath)

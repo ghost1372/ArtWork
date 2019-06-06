@@ -1,6 +1,5 @@
 ﻿using HandyControl.Controls;
 using HandyControl.Data;
-using log4net;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using System;
@@ -25,8 +24,6 @@ namespace ArtWork
     /// </summary>
     public partial class MainWindow
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         internal static MainWindow mainWindow; // for accessing func from another View
 
         #region Update App
@@ -42,10 +39,6 @@ namespace ArtWork
         public MainWindow()
         {
             InitializeComponent();
-            log4net.Config.XmlConfigurator.Configure();
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
-
             mainWindow = this;
 
             setFlowDirection(); // set layout direction based on language to rtl
@@ -57,12 +50,6 @@ namespace ArtWork
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(listbox.ItemsSource);
             view.Filter = UserFilter;
         }
-
-        static void MyHandler(object sender, UnhandledExceptionEventArgs e)
-        {
-            log.Error(e.ExceptionObject);
-        }
-
 
         #region ListBox Search
 
@@ -195,7 +182,7 @@ namespace ArtWork
 
         private void DownloaderMenu(object sender, RoutedEventArgs e)
         {
-            new Downloader().Show();
+            new Downloader().ShowDialog();
         }
 
         private void ChangePathMenu(object sender, RoutedEventArgs e)

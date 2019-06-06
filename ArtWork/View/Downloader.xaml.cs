@@ -1,5 +1,4 @@
-﻿using log4net;
-using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using Newtonsoft.Json;
@@ -18,8 +17,6 @@ namespace ArtWork
     /// </summary>
     public partial class Downloader
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private Queue<string> _downloadUrls = new Queue<string>();
 
         ObservableCollection<string> generatedLinks = new ObservableCollection<string>();
@@ -42,10 +39,6 @@ namespace ArtWork
         {
             InitializeComponent();
 
-            log4net.Config.XmlConfigurator.Configure();
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
-
             // Generate All Items
             for (int i = 1; i < AppVar.NumberOfAllItemExist; i++)
             {
@@ -63,10 +56,6 @@ namespace ArtWork
                 generatedLinks.Remove(AppVar.imagesBaseUrl + System.IO.Path.GetFileName(item));
 
             }
-        }
-        static void MyHandler(object sender, UnhandledExceptionEventArgs e)
-        {
-            log.Error(e.ExceptionObject);
         }
 
         // 1-Get all items number ====================> Done
@@ -158,11 +147,9 @@ namespace ArtWork
                     {
                         DownloadFile();
                     }
-                    log.Error("System.NET.WEBEXCEPTION PART1" + Environment.NewLine+ DEBUG_LINK_INFO +Environment.NewLine + ex.Message);
                 }
                 catch (Exception e)
                 {
-                    log.Error("Exception PART 2" + Environment.NewLine + DEBUG_LINK_INFO + Environment.NewLine + e.Message);
                 }
             }
 
@@ -174,7 +161,6 @@ namespace ArtWork
             if (e.Cancelled)
             {
                 HandyControl.Controls.MessageBox.Error("Download Canceled!");
-                log.Error("DownloadFileCompleted Canceled" + Environment.NewLine + e.Error);
             }
             else
             {
@@ -223,7 +209,6 @@ namespace ArtWork
                 }
                 catch (Exception ex)
                 {
-                    log.Error("Set Attribute" + Environment.NewLine + ex.Message);
                 }
 
                 DownloadFile();
