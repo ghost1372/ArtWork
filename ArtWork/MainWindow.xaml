@@ -229,7 +229,7 @@
                                 </Button>
                             </StackPanel>
 
-                            <controls:CoverView Tag="{Binding TagName}" ItemsSource="{Binding Images}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
+                            <controls:CoverView Tag="{Binding TagName}" ItemsSource="{Binding Images}" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
                                 <controls:CoverView.ItemHeaderTemplate>
                                     <DataTemplate>
                                         <Image Name="ImageHeader" Tag="{Binding TagName}" Source="{Binding ImageSource}">
@@ -273,7 +273,7 @@
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem Background="Transparent" Header="{x:Static langs:Lang.TabFav}">
+                <TabItem Header="{x:Static langs:Lang.TabFav}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>

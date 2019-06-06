@@ -37,12 +37,12 @@ namespace HandyControl.Controls
                 {
                     item.IsSelected = true;
                     _selectedItem = item;
-                    if (_viewContent != null)
-                    {
-                        _viewContent.Content = item.Content;
-                        _viewContent.ContentTemplate = ItemTemplate;
-                        UpdateCoverViewContent(true);
-                    }
+                    // if (_viewContent != null)
+                    // {
+                    //     _viewContent.Content = item.Content;
+                    //     _viewContent.ContentTemplate = ItemTemplate;
+                    //     UpdateCoverViewContent(true);
+                    // }
 
                     return;
                 }
@@ -52,11 +52,11 @@ namespace HandyControl.Controls
                     _selectedItem.IsSelected = false;
                     item.IsSelected = true;
                     _selectedItem = item;
-                    if (_viewContent != null)
-                    {
-                        _viewContent.Content = item.Content;
-                        UpdateCoverViewContent(true);
-                    }
+                    // if (_viewContent != null)
+                    // {
+                    //     _viewContent.Content = item.Content;
+                    //     UpdateCoverViewContent(true);
+                    // }
 
                     return;
                 }
