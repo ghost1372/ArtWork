@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArtWork>
   <AppVersion>
-    <version>1.6.5.8</version>
+    <version>1.7.5.8</version>
     <url>http://s8.picofile.com/file/8351690884/ArtWork.rar.html</url>
     <changelog>
-Added Font
-      Added Favorite
-      افزودن فونت
-      افزودن موردعلاقه ها
+    added new arts
     </changelog>
   </AppVersion>
 </ArtWork>

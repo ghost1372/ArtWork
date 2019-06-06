@@ -3,13 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                      xmlns:interactivity="clr-namespace:HandyControl.Interactivity;assembly=HandyControl"
         xmlns:langs="clr-namespace:ArtWork.Properties.Langs"
                       FontFamily="{StaticResource ArtWork.Fonts.IRANSans}"
         mc:Ignorable="d"
                      Name="main"
                      WindowState="Maximized"
-         xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
+         xmlns:controls="https://handyorg.github.io/handycontrol"
         Style="{StaticResource WindowBlur}"
         BorderThickness="1"
                      BorderBrush="#262e2f"
@@ -34,9 +33,9 @@
                     <Button Click="SetDesktopWallpaper_Click" Margin="5,0" Content="{x:Static langs:Lang.SetasDesktop}"/>
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-                    <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
-                    <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="interactivity:ControlCommands.OpenLink" controls:LinkElement.Link="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                    <controls:Shield Name="shTitle" Subject="{x:Static langs:Lang.Title}" Margin="4,0,0,0" Color="{DynamicResource DarkPrimaryBrush}" Command="controls:ControlCommands.OpenLink" CommandParameter="{Binding ElementName=shTitle, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                    <controls:Shield Name="shSubject" Subject="{x:Static langs:Lang.Artist}" Margin="4,0,0,0" Color="{DynamicResource DarkSuccessBrush}" Command="controls:ControlCommands.OpenLink" CommandParameter="{Binding ElementName=shSubject, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
+                    <controls:Shield Name="shGallery" Subject="{x:Static langs:Lang.Gallery}" Margin="4,0,0,0" Color="{DynamicResource DarkWarningBrush}" Command="controls:ControlCommands.OpenLink" CommandParameter="{Binding ElementName=shGallery, Path=Status, StringFormat='https://google.com/search?q=  {0:N}'}"/>
                     <controls:Shield Name="shCity" Subject="{x:Static langs:Lang.City}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
                     <controls:Shield Name="shCountry" Subject="{x:Static langs:Lang.Country}" Margin="4,0,0,0" Color="{DynamicResource InfoBrush}"/>
                     <controls:Shield Name="shDate" Subject="{x:Static langs:Lang.Date}" Margin="4,0,0,0" Color="{DynamicResource DangerBrush}"/>
