@@ -15,7 +15,7 @@ namespace ArtWork
             InitializeComponent();
             DataContext = this;
             setFlowDirection();
-            var versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location);
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location);
             CopyRight = versionInfo.LegalCopyright;
             Version = $"v {versionInfo.FileVersion}";
         }
@@ -40,9 +40,11 @@ namespace ArtWork
 
         private void setFlowDirection()
         {
-            var IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
+            bool IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
             if (IsRightToLeft)
+            {
                 main.FlowDirection = FlowDirection.RightToLeft;
+            }
         }
     }
 }

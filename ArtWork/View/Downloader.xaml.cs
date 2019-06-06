@@ -17,10 +17,9 @@ namespace ArtWork
     /// </summary>
     public partial class Downloader
     {
-        private Queue<string> _downloadUrls = new Queue<string>();
-
-        ObservableCollection<string> generatedLinks = new ObservableCollection<string>();
-        WebClient client = new WebClient();
+        private readonly Queue<string> _downloadUrls = new Queue<string>();
+        private readonly ObservableCollection<string> generatedLinks = new ObservableCollection<string>();
+        private WebClient client = new WebClient();
 
         public string title { get; set; }
         public string sig { get; set; }
@@ -33,7 +32,7 @@ namespace ArtWork
         public string @JsonPath { get; set; }
         public string wikiartist { get; set; }
 
-        string DEBUG_LINK_INFO = string.Empty;
+        private string DEBUG_LINK_INFO = string.Empty;
 
         public Downloader()
         {
@@ -46,12 +45,12 @@ namespace ArtWork
             }
 
             //Get Exist Items
-            var files = Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories);
+            IEnumerable<string> files = Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories);
 
             shDownloadedItem.Status = files.Count();
 
             //Remove Exist Item From Generated Links
-            foreach (var item in files)
+            foreach (string item in files)
             {
                 generatedLinks.Remove(AppVar.imagesBaseUrl + System.IO.Path.GetFileName(item));
 
@@ -69,7 +68,7 @@ namespace ArtWork
         // Check Nudus ===============================> Fixed
         // 8-Write Properties ========================> Fixed
         // 9-Put in Directory ========================> Fixed
-     
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             prgButton.IsEnabled = false;
@@ -92,13 +91,13 @@ namespace ArtWork
 
         private void downloadFile(IEnumerable<string> urls)
         {
-            foreach (var url in urls)
+            foreach (string url in urls)
             {
                 _downloadUrls.Enqueue(url);
             }
 
             // Starts the download
-            
+
             DownloadFile();
         }
         private void DownloadFile()
@@ -106,25 +105,28 @@ namespace ArtWork
             if (_downloadUrls.Any())
             {
 
-               
+
                 try
                 {
                     client = new WebClient();
                     client.DownloadProgressChanged += Client_DownloadProgressChanged; ;
                     client.DownloadFileCompleted += Client_DownloadFileCompleted; ;
 
-                    var url = _downloadUrls.Dequeue();
+                    string url = _downloadUrls.Dequeue();
                     DEBUG_LINK_INFO = url;
                     string FileName = url.Substring(url.LastIndexOf("/") + 1,
                                 (url.Length - url.LastIndexOf("/") - 1));
 
-                    var json = client.DownloadString(AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
-                    var fixJson = json;
+                    string json = client.DownloadString(AppVar.jsonBaseUrl + System.IO.Path.GetFileNameWithoutExtension(url) + ".json");
+                    string fixJson = json;
 
                     //Fix for Json 8271
                     if (fixJson.Contains("\"Sunflowers\""))
+                    {
                         fixJson = fixJson.Replace("\"Sunflowers\"", "Sunflowers");
-                    var root = JsonConvert.DeserializeObject<RootObject>(fixJson);
+                    }
+
+                    RootObject root = JsonConvert.DeserializeObject<RootObject>(fixJson);
                     shTitle.Status = root.title;
                     shSubject.Status = root.sig;
 
@@ -142,13 +144,14 @@ namespace ArtWork
                     return;
 
                 }
-                catch (System.Net.WebException ex) {
+                catch (System.Net.WebException ex)
+                {
                     if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.NotFound)
                     {
                         DownloadFile();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -167,7 +170,7 @@ namespace ArtWork
                 shDownloadedItem.Status = Convert.ToInt32(shDownloadedItem.Status) + 1;
                 // Handle Rename 
 
-                var file = ShellFile.FromFilePath(@Imagepath);
+                ShellFile file = ShellFile.FromFilePath(@Imagepath);
 
                 string isNude = "NOTNUDE";
 
@@ -175,14 +178,18 @@ namespace ArtWork
                 //Check Nud
 
                 if (DomainExists(System.IO.Path.GetFileNameWithoutExtension(@JsonPath)))
+                {
                     isNude = "ITSNUDE";
+                }
                 else
+                {
                     isNude = "NOTNUDE";
+                }
 
-                var date = sig.Substring(sig.LastIndexOf(',') + 1);
+                string date = sig.Substring(sig.LastIndexOf(',') + 1);
 
 
-                
+
                 try
                 {
                     //Set Attrib
@@ -199,35 +206,42 @@ namespace ArtWork
 
                     propertyWriter.Close();
 
-                    var wikiart = wikiartist ?? "Unknown Artist";
-                    string cleanFileName = String.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
+                    string wikiart = wikiartist ?? "Unknown Artist";
+                    string cleanFileName = string.Join("", wikiart.Split(System.IO.Path.GetInvalidFileNameChars()));
                     if (!Directory.Exists(GlobalData.Config.DataPath + @"\" + cleanFileName))
                     {
                         Directory.CreateDirectory(GlobalData.Config.DataPath + @"\" + cleanFileName);
                     }
                     File.Move(@Imagepath, GlobalData.Config.DataPath + @"\" + cleanFileName.Trim() + @"\" + System.IO.Path.GetFileName(@Imagepath));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
 
                 DownloadFile();
             }
-           
+
         }
         private string FixInvalidCharacter(string Character)
         {
             if (Character != null && Character.Contains(";"))
+            {
                 Character = Character.Replace(";", " ");
+            }
+
             return Character;
         }
         private static bool DomainExists(string domain)
         {
-            var nudeResource = Properties.Resources.nudes;
-            var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            string nudeResource = Properties.Resources.nudes;
+            string[] nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in nudeItems)
+            {
                 if (domain == line)
+                {
                     return true; // and stop reading lines
+                }
+            }
 
             return false;
         }
@@ -241,10 +255,12 @@ namespace ArtWork
 
         private void PrgDirectory_Click(object sender, RoutedEventArgs e)
         {
-            var browserDialog = new CommonOpenFileDialog();
-            browserDialog.IsFolderPicker = true;
-            browserDialog.Title = Title;
-            browserDialog.InitialDirectory = GlobalData.Config.DataPath;
+            CommonOpenFileDialog browserDialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                Title = Title,
+                InitialDirectory = GlobalData.Config.DataPath
+            };
 
             if (browserDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {

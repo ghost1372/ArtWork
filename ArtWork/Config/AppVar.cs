@@ -32,7 +32,7 @@ namespace ArtWork
             // skip non digits
             foreach (string n in cur)
             {
-                if (!Int32.TryParse(n, out vs[idx]))
+                if (!int.TryParse(n, out vs[idx]))
                 {
                     vs[idx] = -999; // mark for skip later
                 }
@@ -41,7 +41,7 @@ namespace ArtWork
             idx = 0;
             foreach (string n in cmp)
             {
-                if (!Int32.TryParse(n, out cs[idx]))
+                if (!int.TryParse(n, out cs[idx]))
                 {
                     cs[idx] = -999; // mark for skip later
                 }

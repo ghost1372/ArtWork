@@ -1,5 +1,4 @@
-﻿using HandyControl.Controls;
-using HandyControl.Data;
+﻿using HandyControl.Data;
 using HandyControl.Tools;
 using System;
 using System.Collections.Generic;
@@ -23,24 +22,36 @@ namespace ArtWork
 
 
             if (GlobalData.Config.Skin != SkinType.Default)
+            {
                 UpdateSkin(GlobalData.Config.Skin);
+            }
 
             if (!System.IO.Directory.Exists(GlobalData.Config.DataPath))
+            {
                 GlobalData.Config.DataPath = Environment.CurrentDirectory + @"\data";
+            }
 
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(GlobalData.Config.Lang);
             if (!System.IO.Directory.Exists(Environment.CurrentDirectory + @"\data"))
+            {
                 System.IO.Directory.CreateDirectory(Environment.CurrentDirectory + @"\data");
+            }
 
             if (!System.IO.File.Exists(AppVar.FavoriteFilePath))
+            {
                 System.IO.File.AppendText(AppVar.FavoriteFilePath);
+            }
 
-            var junkFiles = System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath);
-            foreach (var file in junkFiles)
+            IEnumerable<string> junkFiles = System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath);
+            foreach (string file in junkFiles)
+            {
                 System.IO.File.Delete(file);
+            }
 
             if (!GetFileList(GlobalData.Config.DataPath).Any())
+            {
                 new Downloader().ShowDialog();
+            }
 
             base.OnStartup(e);
         }

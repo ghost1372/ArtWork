@@ -33,7 +33,7 @@ namespace ArtWork
         private string url = "";
         #endregion
 
-        CancellationTokenSource ts = new CancellationTokenSource(); // cancel tasks token
+        private CancellationTokenSource ts = new CancellationTokenSource(); // cancel tasks token
 
 
         public MainWindow()
@@ -56,24 +56,31 @@ namespace ArtWork
 
         private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtSearch.Text)) return;
+            if (string.IsNullOrEmpty(txtSearch.Text))
+            {
+                return;
+            }
 
             CollectionViewSource.GetDefaultView(listbox.ItemsSource).Refresh();
         }
 
         private bool UserFilter(object item)
         {
-            if (String.IsNullOrEmpty(txtSearch.Text))
+            if (string.IsNullOrEmpty(txtSearch.Text))
+            {
                 return true;
+            }
             else
+            {
                 return ((item as ViewModel.ArtistData).Name.IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
         }
         #endregion
 
         #region Set as Wallpaper
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SystemParametersInfo(uint uiAction, uint uiParam, String pvParam, uint fWinIni);
+        private static bool SystemParametersInfo(uint uiAction, uint uiParam, string pvParam, uint fWinIni);
 
         private const uint SPI_SETDESKWALLPAPER = 0x14;
         private const uint SPIF_UPDATEINIFILE = 0x1;
@@ -86,7 +93,9 @@ namespace ArtWork
                 // set the appropriate flags.
                 uint flags = 0;
                 if (update_registry)
+                {
                     flags = SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE;
+                }
 
                 // Set the desktop background to this file.
                 if (!SystemParametersInfo(SPI_SETDESKWALLPAPER,
@@ -100,7 +109,7 @@ namespace ArtWork
                 MessageBox.Show("Error displaying picture ", "Error");
             }
         }
-        
+
         #endregion
 
         #region Cover Items Events
@@ -117,31 +126,39 @@ namespace ArtWork
             {
                 DependencyObject child = VisualTreeHelper.GetChild(obj, i);
                 if (child != null && child is childItem)
+                {
                     return (childItem)child;
+                }
                 else
                 {
                     childItem childOfChild = FindVisualChild<childItem>(child);
                     if (childOfChild != null)
+                    {
                         return childOfChild;
+                    }
                 }
             }
             return null;
         }
         private void Cv_Selected(object sender, RoutedEventArgs e)
         {
-            var selectedCover = sender as CoverViewItem;
+            CoverViewItem selectedCover = sender as CoverViewItem;
             ContentPresenter myContentPresenter = FindVisualChild<ContentPresenter>(selectedCover);
 
             DataTemplate myDataTemplate = myContentPresenter.ContentTemplate;
             Image selectedImg = (Image)myDataTemplate.FindName("ImageHeader", myContentPresenter);
-            var file = ShellFile.FromFilePath(selectedImg.Tag.ToString());
+            ShellFile file = ShellFile.FromFilePath(selectedImg.Tag.ToString());
             try
             {
-                var country = string.Empty;
+                string country = string.Empty;
                 if (file.Properties.System.Keywords.Value[1].Equals("Empty"))
+                {
                     country = "Location Unknown";
+                }
                 else
+                {
                     country = file.Properties.System.Keywords.Value[1];
+                }
 
                 shTitle.Status = file.Properties.System.Title.Value;
                 shSubject.Status = file.Properties.System.Subject.Value;
@@ -169,12 +186,16 @@ namespace ArtWork
             Style style;
 
             if (isChecked)
-                style = this.FindResource("ToggleButtonDanger") as Style;
+            {
+                style = FindResource("ToggleButtonDanger") as Style;
+            }
             else
-                style = this.FindResource("ToggleButtonPrimary") as Style;
-            
+            {
+                style = FindResource("ToggleButtonPrimary") as Style;
+            }
+
             ButtonNude.Style = style;
-            
+
         }
         #endregion
 
@@ -187,10 +208,12 @@ namespace ArtWork
 
         private void ChangePathMenu(object sender, RoutedEventArgs e)
         {
-            var browserDialog = new CommonOpenFileDialog();
-            browserDialog.IsFolderPicker = true;
-            browserDialog.Title = Title;
-            browserDialog.InitialDirectory = GlobalData.Config.DataPath;
+            CommonOpenFileDialog browserDialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                Title = Title,
+                InitialDirectory = GlobalData.Config.DataPath
+            };
 
             if (browserDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
@@ -206,8 +229,9 @@ namespace ArtWork
 
         private void ChangeLanguageMenu(object sender, RoutedEventArgs e)
         {
-            var item = sender as MenuItem;
-            Growl.Ask(new GrowlInfo {
+            MenuItem item = sender as MenuItem;
+            Growl.Ask(new GrowlInfo
+            {
                 Message = Properties.Langs.Lang.ChangeLangAsk,
                 ShowDateTime = false,
                 CancelStr = Properties.Langs.Lang.Cancel,
@@ -240,14 +264,16 @@ namespace ArtWork
             {
                 Growl.Info(new GrowlInfo
                 {
-                    Message = string.Format(Properties.Langs.Lang.NewVersionFind,param[0]) + Environment.NewLine + ChangeLog,
+                    Message = string.Format(Properties.Langs.Lang.NewVersionFind, param[0]) + Environment.NewLine + ChangeLog,
                     CancelStr = Properties.Langs.Lang.Cancel,
                     ConfirmStr = Properties.Langs.Lang.Download,
                     ShowDateTime = false,
                     ActionBeforeClose = isConfirm =>
                     {
                         if (isConfirm)
+                        {
                             System.Diagnostics.Process.Start(param[1]);
+                        }
 
                         return true;
                     }
@@ -255,7 +281,7 @@ namespace ArtWork
             }
             else
             {
-                Growl.Error(new GrowlInfo { Message = string.Format(Properties.Langs.Lang.CurrentIsLastVersion,Assembly.GetExecutingAssembly().GetName().Version.ToString()), ShowDateTime = false });
+                Growl.Error(new GrowlInfo { Message = string.Format(Properties.Langs.Lang.CurrentIsLastVersion, Assembly.GetExecutingAssembly().GetName().Version.ToString()), ShowDateTime = false });
             }
 
         }
@@ -279,12 +305,12 @@ namespace ArtWork
                 url = "";
 
                 XDocument doc = XDocument.Load(AppVar.UpdateServer);
-                var items = doc
+                IEnumerable<XElement> items = doc
                     .Element(XName.Get(AppVar.UpdateXmlTag))
                     .Elements(XName.Get(AppVar.UpdateXmlChildTag));
-                var versionItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateVersionTag)).Value);
-                var urlItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateUrlTag)).Value);
-                var changelogItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateChangeLogTag)).Value);
+                IEnumerable<string> versionItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateVersionTag)).Value);
+                IEnumerable<string> urlItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateUrlTag)).Value);
+                IEnumerable<string> changelogItem = items.Select(ele => ele.Element(XName.Get(AppVar.UpdateChangeLogTag)).Value);
 
                 newVersion = versionItem.FirstOrDefault();
                 url = urlItem.FirstOrDefault();
@@ -300,15 +326,21 @@ namespace ArtWork
 
         private void setFlowDirection()
         {
-            var IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
+            bool IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
             if (IsRightToLeft)
+            {
                 main.FlowDirection = FlowDirection.RightToLeft;
+            }
         }
 
         // show items to coverview
         private async void Listbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (listbox.SelectedIndex == -1) return;
+            if (listbox.SelectedIndex == -1)
+            {
+                return;
+            }
+
             switch (cmbFilter.SelectedIndex)
             {
                 case 0:
@@ -321,19 +353,19 @@ namespace ArtWork
                 case 1:
                     GC.Collect();
 
-                    var progressCity = new Progress<int>(percent =>
+                    Progress<int> progressCity = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
                     });
                     ts?.Cancel();
                     ts = new CancellationTokenSource();
-                    await ((ViewModel)DataContext).LoadCategoty(progressCity,ts.Token,0, prg, listbox, ButtonNude);
+                    await ((ViewModel)DataContext).LoadCategoty(progressCity, ts.Token, 0, prg, listbox, ButtonNude);
                     break;
 
                 case 2:
                     GC.Collect();
 
-                    var progressCountry = new Progress<int>(percent =>
+                    Progress<int> progressCountry = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
                     });
@@ -345,7 +377,7 @@ namespace ArtWork
                 case 3:
                     GC.Collect();
 
-                    var progressGallery = new Progress<int>(percent =>
+                    Progress<int> progressGallery = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
                     });
@@ -363,7 +395,10 @@ namespace ArtWork
         // load items to listbox
         private async void CmbFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (txtSearch != null && !string.IsNullOrEmpty(txtSearch.Text)) txtSearch.Text = string.Empty;
+            if (txtSearch != null && !string.IsNullOrEmpty(txtSearch.Text))
+            {
+                txtSearch.Text = string.Empty;
+            }
 
             switch (cmbFilter.SelectedIndex)
             {
@@ -383,7 +418,7 @@ namespace ArtWork
                     break;
                 case 4:
                     GC.Collect();
-                    var progressTitle = new Progress<int>(percent =>
+                    Progress<int> progressTitle = new Progress<int>(percent =>
                     {
                         prg.Value = percent;
                     });
@@ -396,15 +431,21 @@ namespace ArtWork
 
         private void CoverContextMenu_Click(object sender, RoutedEventArgs e)
         {
-            var info = sender as MenuItem;
+            MenuItem info = sender as MenuItem;
             if (info.Header.Equals(Properties.Langs.Lang.SetasDesktop))
+            {
                 SetDesktopWallpaper(info.Tag.ToString(), true);
+            }
             else if (info.Header.Equals(Properties.Langs.Lang.GoToLoc))
+            {
                 System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + info.Tag + "\"");
+            }
             else if (info.Header.Equals(Properties.Langs.Lang.FullScreenSee))
             {
-                var imgBrowser = new ImageBrowser(new Uri(info.Tag.ToString(), UriKind.Absolute));
-                imgBrowser.ResizeMode = ResizeMode.CanResize;
+                ImageBrowser imgBrowser = new ImageBrowser(new Uri(info.Tag.ToString(), UriKind.Absolute))
+                {
+                    ResizeMode = ResizeMode.CanResize
+                };
                 imgBrowser.Show();
 
             }
@@ -412,7 +453,7 @@ namespace ArtWork
             {
                 if (System.IO.File.Exists(AppVar.FavoriteFilePath))
                 {
-                    var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath).Any(x => x.Equals(info.Tag.ToString().Trim()));
+                    bool lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath).Any(x => x.Equals(info.Tag.ToString().Trim()));
                     if (!lines)
                     {
                         System.IO.File.AppendAllText(AppVar.FavoriteFilePath, info.Tag.ToString().Trim() + Environment.NewLine);
@@ -436,7 +477,7 @@ namespace ArtWork
             }
             else if (info.Header.Equals(Properties.Langs.Lang.RemoveFromFav))
             {
-                var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath).ToList();
+                List<string> lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath).ToList();
                 lines.Remove(info.Tag.ToString().Trim());
                 System.IO.File.WriteAllLines(AppVar.FavoriteFilePath, lines.ToArray());
             }
@@ -457,7 +498,11 @@ namespace ArtWork
             if (e.OriginalSource is Button button && button.Tag is string tag)
             {
                 PopupConfig.IsOpen = false;
-                if (tag.Equals(GlobalData.Config.Lang)) return;
+                if (tag.Equals(GlobalData.Config.Lang))
+                {
+                    return;
+                }
+
                 Growl.Ask(new GrowlInfo
                 {
                     Message = Properties.Langs.Lang.ChangeLangAsk,
@@ -480,25 +525,32 @@ namespace ArtWork
             }
         }
 
-        private void ButtonConfig_OnClick(object sender, RoutedEventArgs e) => PopupConfig.IsOpen = true;
+        private void ButtonConfig_OnClick(object sender, RoutedEventArgs e)
+        {
+            PopupConfig.IsOpen = true;
+        }
 
         private void ButtonSkins_OnClick(object sender, RoutedEventArgs e)
         {
             if (e.OriginalSource is Button button && button.Tag is SkinType tag)
             {
                 PopupConfig.IsOpen = false;
-                if (tag.Equals(GlobalData.Config.Skin)) return;
+                if (tag.Equals(GlobalData.Config.Skin))
+                {
+                    return;
+                }
+
                 GlobalData.Config.Skin = tag;
                 GlobalData.Save();
                 ((App)Application.Current).UpdateSkin(tag);
             }
         }
 
-        List<string> list = new List<string>();
+        private readonly List<string> list = new List<string>();
 
         private async void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(tab.SelectedIndex == 1)
+            if (tab.SelectedIndex == 1)
             {
                 list.Clear();
                 GC.Collect();
@@ -510,7 +562,7 @@ namespace ArtWork
         private void SetAsDesktopRandom_Click(object sender, RoutedEventArgs e)
         {
             //Todo: add
-            if(list != null)
+            if (list != null)
             {
                 //set as desktop for list
             }
@@ -529,13 +581,16 @@ namespace ArtWork
 
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            var item = sender as ToggleButton;
-            if(item.IsChecked == true)
+            ToggleButton item = sender as ToggleButton;
+            if (item.IsChecked == true)
+            {
                 list.Add(item.Tag.ToString().Trim());
+            }
             else
+            {
                 list.Remove(item.Tag.ToString().Trim());
-
+            }
         }
     }
-   
+
 }

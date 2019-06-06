@@ -1,8 +1,6 @@
-﻿using HandyControl.Controls;
-using Microsoft.WindowsAPICodePack.Shell;
+﻿using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,7 +14,7 @@ using System.Windows.Threading;
 namespace ArtWork
 {
 
-    public class ViewModel 
+    public class ViewModel
     {
         public class ImageData
         {
@@ -30,7 +28,7 @@ namespace ArtWork
             public string Tag { get; set; }
         }
 
-        ObservableCollection<string> nudeData = new ObservableCollection<string>(); // for Nude items
+        private readonly ObservableCollection<string> nudeData = new ObservableCollection<string>(); // for Nude items
 
         public ObservableCollection<ImageData> Images { get; }
             = new ObservableCollection<ImageData>();
@@ -44,10 +42,10 @@ namespace ArtWork
         public async Task LoadFavorite(CancellationToken ct)
         {
             FavoriteImages.Clear();
-            if(File.Exists(AppVar.FavoriteFilePath))
+            if (File.Exists(AppVar.FavoriteFilePath))
             {
-                var lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath);
-                foreach (var item in lines)
+                string[] lines = System.IO.File.ReadAllLines(AppVar.FavoriteFilePath);
+                foreach (string item in lines)
                 {
                     if (!ct.IsCancellationRequested)
                     {
@@ -68,14 +66,14 @@ namespace ArtWork
 
                 bool isNude = false;
                 dynamic selectedItem = listbox.SelectedItems[0];
-                foreach (var path in Directory.EnumerateFiles(GlobalData.Config.DataPath + @"\" + selectedItem.Name, "*.jpg"))
+                foreach (dynamic path in Directory.EnumerateFiles(GlobalData.Config.DataPath + @"\" + selectedItem.Name, "*.jpg"))
                 {
                     isNude = false;
                     if (!ct.IsCancellationRequested)
                     {
                         if (ButtonNude.IsChecked == true)
                         {
-                            foreach (var itemx in nudeData)
+                            foreach (string itemx in nudeData)
                             {
                                 if (itemx.Equals(Path.GetFileNameWithoutExtension(path)))
                                 {
@@ -85,7 +83,9 @@ namespace ArtWork
                             }
                         }
                         if (isNude)
+                        {
                             return;
+                        }
 
                         await Dispatcher.CurrentDispatcher.InvokeAsync(async () =>
                         {
@@ -96,19 +96,20 @@ namespace ArtWork
                             });
 
                         }, DispatcherPriority.Background);
-                        
+
                     }
 
                 }
             }
-            catch (NullReferenceException e) {
-            }
-            catch (Exception ex)
+            catch (NullReferenceException)
             {
             }
-            
+            catch (Exception)
+            {
+            }
+
         }
-        public async Task LoadFolder(string FilePath,ListBox listbox, ToggleButton ButtonNude)
+        public async Task LoadFolder(string FilePath, ListBox listbox, ToggleButton ButtonNude)
         {
             try
             {
@@ -119,7 +120,7 @@ namespace ArtWork
                 isNude = false;
                 if (ButtonNude.IsChecked == true)
                 {
-                    foreach (var itemx in nudeData)
+                    foreach (string itemx in nudeData)
                     {
                         if (itemx.Equals(Path.GetFileNameWithoutExtension(FilePath)))
                         {
@@ -129,7 +130,9 @@ namespace ArtWork
                     }
                 }
                 if (isNude)
+                {
                     return;
+                }
 
                 Images.Add(new ImageData
                 {
@@ -137,10 +140,10 @@ namespace ArtWork
                     ImageSource = await LoadImage(FilePath)
                 });
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
@@ -149,9 +152,9 @@ namespace ArtWork
         {
             return Task.Run(() =>
             {
-                var bitmap = new BitmapImage();
+                BitmapImage bitmap = new BitmapImage();
 
-                using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
                     bitmap.BeginInit();
                     bitmap.DecodePixelHeight = 300;
@@ -164,8 +167,7 @@ namespace ArtWork
             });
         }
 
-
-        int TotalItem = 0;
+        private int TotalItem = 0;
 
         /// <summary>
         /// 
@@ -183,12 +185,12 @@ namespace ArtWork
             {
                 Images.Clear();
 
-                var mprogress = 0; // integer variable for progress report
+                int mprogress = 0; // integer variable for progress report
                 prg.Value = 0;
                 dynamic check;
                 bool isNude = false;
 
-                foreach (var file in await GetFileListAsync(GlobalData.Config.DataPath))
+                foreach (FileInfo file in await GetFileListAsync(GlobalData.Config.DataPath))
                 {
                     dynamic selectedItem = listbox.SelectedItems[0];
 
@@ -197,10 +199,10 @@ namespace ArtWork
                     progress.Report((mprogress * 100 / TotalItem));
                     if (!ct.IsCancellationRequested)
                     {
-                        var item = ShellFile.FromFilePath(file.FullName);
+                        ShellFile item = ShellFile.FromFilePath(file.FullName);
                         if (ButtonNude.IsChecked == true)
                         {
-                            foreach (var itemx in nudeData)
+                            foreach (string itemx in nudeData)
                             {
                                 if (itemx.Equals(Path.GetFileNameWithoutExtension(file.FullName)))
                                 {
@@ -212,13 +214,19 @@ namespace ArtWork
                         }
 
                         if (isNude)
+                        {
                             return;
+                        }
 
                         // check if it is gallery or not
                         if (KeywordIndex == 2)
+                        {
                             check = item?.Properties.System.Comment.Value ?? "null";
+                        }
                         else
+                        {
                             check = item?.Properties.System.Keywords.Value?[KeywordIndex] ?? "null";
+                        }
 
                         await Dispatcher.CurrentDispatcher.InvokeAsync(async () =>
                         {
@@ -235,10 +243,10 @@ namespace ArtWork
                     }
                 }
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -247,7 +255,7 @@ namespace ArtWork
             FileInfo[] allfiles = null;
             await Task.Run(() =>
             {
-                var dir = new DirectoryInfo(rootFolderPath);
+                DirectoryInfo dir = new DirectoryInfo(rootFolderPath);
                 allfiles = dir.GetFiles("*.jpg*", SearchOption.AllDirectories);
             });
             TotalItem = allfiles.Count();
@@ -258,7 +266,7 @@ namespace ArtWork
         {
             ArtistNames.Clear();
 
-            foreach (var line in System.IO.Directory.EnumerateDirectories(GlobalData.Config.DataPath))
+            foreach (string line in System.IO.Directory.EnumerateDirectories(GlobalData.Config.DataPath))
             {
                 ArtistNames.Add(new ArtistData
                 {
@@ -270,45 +278,51 @@ namespace ArtWork
         {
             ArtistNames.Clear();
 
-            var cityResource = Properties.Resources.city;
-            var cityItems = cityResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var item in cityItems)
+            string cityResource = Properties.Resources.city;
+            string[] cityItems = cityResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string item in cityItems)
+            {
                 ArtistNames.Add(new ArtistData { Name = item });
+            }
         }
 
         public void loadCountry()
         {
             ArtistNames.Clear();
 
-            var countryResource = Properties.Resources.country;
-            var countryItems = countryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var item in countryItems)
+            string countryResource = Properties.Resources.country;
+            string[] countryItems = countryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string item in countryItems)
+            {
                 ArtistNames.Add(new ArtistData { Name = item });
+            }
         }
         public void loadGallery()
         {
             ArtistNames.Clear();
 
-            var galleryResource = Properties.Resources.gallery;
-            var galleryItems = galleryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var item in galleryItems)
+            string galleryResource = Properties.Resources.gallery;
+            string[] galleryItems = galleryResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string item in galleryItems)
+            {
                 ArtistNames.Add(new ArtistData { Name = item });
+            }
         }
 
         public async Task loadTitles(IProgress<int> progress, CancellationToken ct, ProgressBar prg)
         {
             ArtistNames.Clear();
-            var mprogress = 0; // integer variable for progress report
+            int mprogress = 0; // integer variable for progress report
             prg.Value = 0;
             int totalFiles = System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories).Count();
-            
-            foreach (var line in System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories))
+
+            foreach (string line in System.IO.Directory.EnumerateFiles(GlobalData.Config.DataPath, "*.jpg", SearchOption.AllDirectories))
             {
                 if (!ct.IsCancellationRequested)
                 {
                     mprogress += 1;
                     progress.Report((mprogress * 100 / totalFiles));
-                    var item = ShellFile.FromFilePath(line);
+                    ShellFile item = ShellFile.FromFilePath(line);
 
                     ArtistNames.Add(new ArtistData
                     {
@@ -323,12 +337,14 @@ namespace ArtWork
         {
             nudeData.Clear();
 
-            var nudeResource = Properties.Resources.nudes;
-            var nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var line in nudeItems)
+            string nudeResource = Properties.Resources.nudes;
+            string[] nudeItems = nudeResource.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in nudeItems)
+            {
                 nudeData.Add(line);
+            }
         }
 
-      
+
     }
 }

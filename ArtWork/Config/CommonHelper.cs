@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using HandyControl.Data;
+using System.Linq;
 using System.Management;
-using HandyControl.Data;
 
 namespace ArtWork
 {
@@ -8,14 +8,14 @@ namespace ArtWork
     {
         public static SystemVersionInfo GetSystemVersionInfo()
         {
-            var managementClass = new ManagementClass("Win32_OperatingSystem");
-            var instances = managementClass.GetInstances();
-            foreach (var instance in instances)
+            ManagementClass managementClass = new ManagementClass("Win32_OperatingSystem");
+            ManagementObjectCollection instances = managementClass.GetInstances();
+            foreach (ManagementBaseObject instance in instances)
             {
                 if (instance["Version"] is string version)
                 {
-                    var nums = version.Split('.').Select(int.Parse).ToList();
-                    var info = new SystemVersionInfo(nums[0], nums[1], nums[2]);
+                    System.Collections.Generic.List<int> nums = version.Split('.').Select(int.Parse).ToList();
+                    SystemVersionInfo info = new SystemVersionInfo(nums[0], nums[1], nums[2]);
                     return info;
                 }
             }

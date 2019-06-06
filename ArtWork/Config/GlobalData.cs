@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
-using HandyControl.Data;
+﻿using HandyControl.Data;
 using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace ArtWork
 {
@@ -13,7 +13,7 @@ namespace ArtWork
             {
                 try
                 {
-                    var json = File.ReadAllText(AppConfig.SavePath);
+                    string json = File.ReadAllText(AppConfig.SavePath);
                     Config = JsonConvert.DeserializeObject<AppConfig>(json);
                 }
                 catch
@@ -29,7 +29,7 @@ namespace ArtWork
 
         public static void Save()
         {
-            var json = JsonConvert.SerializeObject(Config);
+            string json = JsonConvert.SerializeObject(Config);
             File.WriteAllText(AppConfig.SavePath, json);
         }
 

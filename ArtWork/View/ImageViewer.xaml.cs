@@ -21,14 +21,14 @@ namespace ArtWork
             InitializeComponent();
 
             setFlowDirection();
-            foreach (var item in Items)
+            foreach (ViewModel.ImageData item in Items)
             {
-                var slidImg = new Image();
-                using (var imageStream = File.OpenRead(item.TagName))
+                Image slidImg = new Image();
+                using (FileStream imageStream = File.OpenRead(item.TagName))
                 {
-                    var decoder = BitmapDecoder.Create(imageStream, BitmapCreateOptions.IgnoreColorProfile,
+                    BitmapDecoder decoder = BitmapDecoder.Create(imageStream, BitmapCreateOptions.IgnoreColorProfile,
                         BitmapCacheOption.Default);
-                    var width = decoder.Frames[0].PixelWidth;
+                    int width = decoder.Frames[0].PixelWidth;
                     slidImg.Tag = item.TagName;
                     slidImg.Source = new BitmapImage(new Uri(item.TagName, UriKind.Absolute));
                     slidImg.Stretch = Stretch.Uniform;
@@ -40,27 +40,31 @@ namespace ArtWork
 
         private void GoToLoc_Click(object sender, RoutedEventArgs e)
         {
-            var item = img.Items[img.PageIndex] as Image;
+            Image item = img.Items[img.PageIndex] as Image;
             System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + item.Tag + "\"");
         }
 
         private void SetDesktopWallpaper_Click(object sender, RoutedEventArgs e)
         {
-            var item = img.Items[img.PageIndex] as Image;
+            Image item = img.Items[img.PageIndex] as Image;
             MainWindow.mainWindow.SetDesktopWallpaper(item.Tag.ToString(), true);
         }
-       
+
         private void Img_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = img.Items[img.PageIndex] as Image;
-            var file = ShellFile.FromFilePath(item.Tag.ToString());
+            Image item = img.Items[img.PageIndex] as Image;
+            ShellFile file = ShellFile.FromFilePath(item.Tag.ToString());
             try
             {
-                var country = string.Empty;
+                string country = string.Empty;
                 if (file.Properties.System.Keywords.Value[1].Equals("Empty"))
+                {
                     country = "Location Unknown";
+                }
                 else
+                {
                     country = file.Properties.System.Keywords.Value[1];
+                }
 
                 shItems.Status = img.Items.Count;
                 shTitle.Status = file.Properties.System.Title.Value;
@@ -77,11 +81,13 @@ namespace ArtWork
         }
         private void setFlowDirection()
         {
-            var IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
+            bool IsRightToLeft = Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft;
             if (IsRightToLeft)
+            {
                 main.FlowDirection = FlowDirection.RightToLeft;
+            }
         }
 
-        
+
     }
 }
