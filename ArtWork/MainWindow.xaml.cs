@@ -80,7 +80,7 @@ namespace ArtWork
         #region Set as Wallpaper
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SystemParametersInfo(uint uiAction, uint uiParam, string pvParam, uint fWinIni);
+        private static bool SystemParametersInfo(uint uiAction, uint uiParam, string pvParam, uint fWinIni);
 
         private const uint SPI_SETDESKWALLPAPER = 0x14;
         private const uint SPIF_UPDATEINIFILE = 0x1;

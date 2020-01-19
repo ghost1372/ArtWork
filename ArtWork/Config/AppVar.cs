@@ -4,8 +4,7 @@ namespace ArtWork
 {
     public class AppVar
     {
-        public static readonly int NumberOfAllItemExist = 9432;
-        public static readonly int NumberOfAllItemCurrected = 9403;
+        public static readonly int NumberOfAllItemExist = 9592;
         public static readonly string imagesBaseUrl = "https://kraken99.blob.core.windows.net/images4000xn/";
         public static readonly string jsonBaseUrl = "https://kraken99.blob.core.windows.net/tileinfo/";
         public static readonly string FavoriteFilePath = "Fav.txt";

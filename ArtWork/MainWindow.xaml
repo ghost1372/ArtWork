@@ -229,7 +229,7 @@
                                 </Button>
                             </StackPanel>
 
-                            <controls:CoverView Tag="{Binding TagName}" ItemsSource="{Binding Images}" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
+                            <controls:CoverView ShowContent="False" Tag="{Binding TagName}" ItemsSource="{Binding Images}" Grid.Row="1" HorizontalAlignment="Stretch" Name="cover" ItemWidth="160" ItemHeight="160">
                                 <controls:CoverView.ItemHeaderTemplate>
                                     <DataTemplate>
                                         <Image Name="ImageHeader" Tag="{Binding TagName}" Source="{Binding ImageSource}">
@@ -244,13 +244,6 @@
                                         </Image>
                                     </DataTemplate>
                                 </controls:CoverView.ItemHeaderTemplate>
-                                <!--<controls:CoverView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="10">
-                            <Image Stretch="Uniform" Source="{Binding ImageSource}"/>
-                        </Border>
-                    </DataTemplate>
-                </controls:CoverView.ItemTemplate>-->
                                 <controls:CoverView.ItemContainerStyle>
                                     <Style TargetType="controls:CoverViewItem" BasedOn="{StaticResource CoverViewItemBaseStyle}">
                                         <EventSetter Event="Selected" Handler="Cv_Selected"/>
@@ -283,7 +276,7 @@
                             <Button Width="120" Click="CancelTaskButton_Click" Margin="4,0,0,0" Name="cancelTaskButtonFav" Content="{x:Static langs:Lang.CancelTask}" Style="{StaticResource ButtonDanger}"/>
                             <Button Width="240" Click="SetAsDesktopRandom_Click" Margin="4,0,0,0" Name="SetAsDesktopRandom" Content="{x:Static langs:Lang.SetDesktopRandom}" Style="{StaticResource ButtonWarning}"/>
                         </StackPanel>
-                        <controls:CoverView Tag="{Binding TagName}" ItemsSource="{Binding FavoriteImages}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="coverFav" ItemWidth="160" ItemHeight="160">
+                        <controls:CoverView ShowContent="False" Tag="{Binding TagName}" ItemsSource="{Binding FavoriteImages}" ItemContentHeightFixed="True" Grid.Row="1" HorizontalAlignment="Stretch" Name="coverFav" ItemWidth="160" ItemHeight="160">
                             <controls:CoverView.ItemHeaderTemplate>
                                 <DataTemplate>
                                     <ToggleButton Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" Tag="{Binding TagName}" Background="Transparent" Width="160" Height="160" BorderBrush="{DynamicResource DangerBrush}">
@@ -320,7 +313,7 @@
 
                 </TabItem>
             </TabControl>
-            <controls:ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsEnableInertia="True" IsPenetrating="True">
+            <controls:ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsInertiaEnabled="True" IsPenetrating="True">
                 <StackPanel controls:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
             </controls:ScrollViewer>
         </Grid>

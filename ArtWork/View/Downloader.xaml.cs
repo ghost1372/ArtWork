@@ -40,7 +40,7 @@ namespace ArtWork
 
             DataContext = this;
 
-            TotalItem = AppVar.NumberOfAllItemCurrected;
+            TotalItem = AppVar.NumberOfAllItemExist;
 
             // Generate All Items
             for (int i = 1; i < AppVar.NumberOfAllItemExist; i++)
