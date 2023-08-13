@@ -18,7 +18,16 @@ public partial class DownloadViewModel : ObservableRecipient
     private string messageStatus;
 
     [ObservableProperty]
+    private string errorMessage;
+
+    [ObservableProperty]
     private int progressValue;
+
+    [ObservableProperty]
+    private int totalProgressValue;
+
+    [ObservableProperty]
+    private int totalProgressMax;
 
     [ObservableProperty]
     private string previewImage;
@@ -28,6 +37,7 @@ public partial class DownloadViewModel : ObservableRecipient
     private DownloadPackage downloadPack;
     private string directoryName;
     private bool isCanceled = false;
+
     private IJsonNavigationViewService jsonNavigationViewService;
     public DownloadViewModel(IJsonNavigationViewService jsonNavigationViewService)
     {
@@ -71,6 +81,32 @@ public partial class DownloadViewModel : ObservableRecipient
     }
 
     [RelayCommand]
+    private async Task OnCancel()
+    {
+        try
+        {
+            MessageStatus = "Canceled";
+            isCanceled = true;
+            IsActive = false;
+            ProgressValue = 0;
+            download?.Dispose();
+            download = null;
+
+            if (File.Exists(downloadPack.FileName))
+            {
+                await Task.Delay(1500);
+                File.Delete(downloadPack.FileName);
+            }
+
+            downloadPack.Clear();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    [RelayCommand]
     private void OnDownload()
     {
         isCanceled = false;
@@ -94,57 +130,9 @@ public partial class DownloadViewModel : ObservableRecipient
             _downloadUrls.Enqueue(new ArtWorkUrl(urls.JsonUrls[i], urls.ImageUrls[i]));
         }
 
+        TotalProgressMax = _downloadUrls.Count;
+        TotalProgressValue = existFiles.Count();
         DownloadImage();
-    }
-
-    private void RemoveInCompleteFiles()
-    {
-        IEnumerable<string> imageFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories);
-        IEnumerable<string> jsonFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.json", SearchOption.AllDirectories);
-
-        foreach (var item in imageFiles)
-        {
-            var jsonNotExist = jsonFiles.Any(x => Path.GetFileNameWithoutExtension(x).Equals(Path.GetFileNameWithoutExtension(item)));
-            if (!jsonNotExist)
-            {
-                File.Delete(item);
-            }
-        }
-
-        foreach (var item in jsonFiles)
-        {
-            var imageNotExist = imageFiles.Any(x => Path.GetFileNameWithoutExtension(x).Equals(Path.GetFileNameWithoutExtension(item)));
-            if (!imageNotExist)
-            {
-                File.Delete(item);
-            }
-        }
-    }
-
-    [RelayCommand]
-    private async Task OnCancel()
-    {
-        try
-        {
-            MessageStatus = "Canceled";
-            isCanceled = true;
-            IsActive = false;
-            ProgressValue = 0;
-            download?.Dispose();
-            download = null;
-
-            if (File.Exists(downloadPack.FileName))
-            {
-                await Task.Delay(1500);
-                File.Delete(downloadPack.FileName);
-            }
-
-            downloadPack.Clear();
-        }
-        catch (Exception)
-        {
-
-        }
     }
 
     private async void DownloadImage()
@@ -159,8 +147,25 @@ public partial class DownloadViewModel : ObservableRecipient
                     PreviewImage = url.ImageUrl;
                     using var client = new HttpClient();
                     var json = await client.GetStringAsync(url.JsonUrl);
-                    var artWork = JsonSerializer.Deserialize<ArtWorkModel>(json);
-                    directoryName = string.Join("", artWork?.wikiartist?.Split(Path.GetInvalidFileNameChars()));
+                    var artWorkJson = JsonSerializer.Deserialize<ArtWorkModel>(json);
+
+                    var sig = artWorkJson?.wikiartist;
+
+                    if (string.IsNullOrEmpty(sig))
+                    {
+                        int index = artWorkJson.sig.IndexOf(',');
+                        if (index > 0)
+                        {
+                            sig = artWorkJson.sig.Substring(0, index);
+                        }
+
+                        if (string.IsNullOrEmpty(sig))
+                        {
+                            sig = "Unknown Artist";
+                        }
+                    }
+
+                    directoryName = string.Join("", sig.Split(Path.GetInvalidFileNameChars()));
 
                     var artistDir = Path.Combine(Settings.ArtWorkDirectory, directoryName);
                     if (!Directory.Exists(artistDir))
@@ -169,10 +174,15 @@ public partial class DownloadViewModel : ObservableRecipient
                     }
 
                     using (StreamWriter writer = new StreamWriter(Path.Combine(artistDir, Path.GetFileName(url.JsonUrl)), false, Encoding.UTF8))
-                        await writer.WriteAsync(json);
+                    await writer.WriteAsync(json);
 
                     download = DownloadBuilder.New()
                         .WithUrl(url.ImageUrl)
+                        .WithConfiguration(new DownloadConfiguration
+                        {
+                            ChunkCount = 8,
+                            ParallelDownload = true,
+                        })
                         .WithDirectory(artistDir)
                         .WithFileName(Path.GetFileName(url.ImageUrl))
                         .WithConfiguration(new DownloadConfiguration())
@@ -183,14 +193,16 @@ public partial class DownloadViewModel : ObservableRecipient
                     downloadPack = download.Package;
 
                     MessageStatus = $"Downloading ArtWork: {Path.GetFileName(url.ImageUrl)}";
+                    TotalProgressValue++;
 
                     await download.StartAsync();
 
                     return;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    IsActive = false;
+                    DownloadImage();
+                    ErrorMessage = ex.Message;
                 }
             }
         }
@@ -205,6 +217,7 @@ public partial class DownloadViewModel : ObservableRecipient
     {
         dispatcherQueue.TryEnqueue(() =>
         {
+            ErrorMessage = string.Empty;
             if (e.Cancelled)
             {
                 IsActive = false;
@@ -236,5 +249,29 @@ public partial class DownloadViewModel : ObservableRecipient
             jsonUrls.Add(Constants.JsonBaseUrl + i.ToString() + ".json");
         }
         return (imageUrls, jsonUrls);
+    }
+
+    private void RemoveInCompleteFiles()
+    {
+        IEnumerable<string> imageFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories);
+        IEnumerable<string> jsonFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.json", SearchOption.AllDirectories);
+
+        foreach (var item in imageFiles)
+        {
+            var jsonNotExist = jsonFiles.Any(x => Path.GetFileNameWithoutExtension(x).Equals(Path.GetFileNameWithoutExtension(item)));
+            if (!jsonNotExist)
+            {
+                File.Delete(item);
+            }
+        }
+
+        foreach (var item in jsonFiles)
+        {
+            var imageNotExist = imageFiles.Any(x => Path.GetFileNameWithoutExtension(x).Equals(Path.GetFileNameWithoutExtension(item)));
+            if (!imageNotExist)
+            {
+                File.Delete(item);
+            }
+        }
     }
 }

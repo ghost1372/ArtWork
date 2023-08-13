@@ -40,13 +40,24 @@
                 <NavigationViewItemSeparator />
 
                 <InfoBar Title="{x:Bind ViewModel.TitleStatus}"
+                         CornerRadius="6,6,0,0"
                          IsClosable="False"
                          IsIconVisible="False"
                          IsOpen="True"
                          Message="{x:Bind ViewModel.MessageStatus, Mode=OneWay}" />
+                <InfoBar Margin="0,-5"
+                         CornerRadius="0,0,6,6"
+                         IsClosable="False"
+                         IsIconVisible="False"
+                         IsOpen="True"
+                         Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                         Severity="Error" />
 
                 <ProgressBar Margin="0,10"
-                             Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}" />
+                             Maximum="{x:Bind ViewModel.TotalProgressMax, Mode=OneWay}"
+                             Value="{x:Bind ViewModel.TotalProgressValue, Mode=OneWay}" />
+
+                <ProgressBar Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}" />
 
                 <CommandBar HorizontalAlignment="Center"
                             Background="Transparent"
