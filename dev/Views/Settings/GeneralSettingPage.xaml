@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Page x:Class="ArtWork.Views.GeneralSettingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:settings="using:ArtWork.Common"
+      xmlns:views="using:ArtWork.Views"
+      xmlns:wuc="using:WinUICommunity"
+      mc:Ignorable="d">
+
+    <ScrollViewer Margin="{ThemeResource ContentPageMargin}"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="10"
+                    ChildrenTransitions="{StaticResource SettingsCardsAnimations}"
+                    Spacing="5">
+
+            <views:BreadcrumbBarUserControl SingleItem="{x:Bind BreadCrumbBarItemText, Mode=OneWay}" />
+
+            <wuc:SettingsCard Header="Storage location (Please choose a place to store the artwork)"
+                              HeaderIcon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}">
+                <wuc:SettingsCard.Description>
+                    <HyperlinkButton Padding="5,0"
+                                     Command="{x:Bind ViewModel.LaunchArtWorkPathCommand}"
+                                     Content="{x:Bind ViewModel.ArtWorkFolderPath, Mode=OneWay}" />
+                </wuc:SettingsCard.Description>
+                <Button Command="{x:Bind ViewModel.ChooseArtWorkPathCommand}"
+                        Content="Choose Folder" />
+            </wuc:SettingsCard>
+            <wuc:SettingsCard Description="Get new artwork by increasing this amount, only works when there is new artwork"
+                              Header="ArtWork Count"
+                              HeaderIcon="{wuc:BitmapIcon Source=Assets/Fluent/artwork.png}">
+                <NumberBox SpinButtonPlacementMode="Inline"
+                           Value="{x:Bind settings:ArtWorkHelper.Settings.AvailableArtWorkCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </wuc:SettingsCard>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

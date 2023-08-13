@@ -1,0 +1,38 @@
+﻿{
+  "Groups": [
+    {
+      "UniqueId": "ArtWork",
+      "Title": "ArtWork",
+      "ImagePath": "ms-appx:///Assets/icon.png",
+      "ImageIconPath": "ms-appx:///Assets/icon.png",
+      "IsSpecialSection": false,
+      "ShowItemsWithoutGroup": true,
+      "IsExpanded": false,
+      "Items": [
+        {
+          "UniqueId": "ArtWork.Views.HomeLandingPage",
+          "Title": "Home",
+          "Subtitle": "Home",
+          "ImagePath": "ms-appx:///Assets/icon.png",
+          "ImageIconPath": "ms-appx:///Assets/icon.png",
+          "HideItem": true
+        },
+        {
+          "UniqueId": "ArtWork.Views.ArtWorkPage",
+          "Title": "ArtWork",
+          "Subtitle": "high-resolution artworks famous paintings, sculptures, and architectural wonders from around the world",
+          "ImagePath": "ms-appx:///Assets/Fluent/artwork.png",
+          "ImageIconPath": "ms-appx:///Assets/Fluent/artwork.png",
+          "IncludedInBuild": false
+        },
+        {
+          "UniqueId": "ArtWork.Views.DownloadPage",
+          "Title": "Download",
+          "Subtitle": "Download new ArtWorks",
+          "ImagePath": "ms-appx:///Assets/Fluent/download.png",
+          "ImageIconPath": "ms-appx:///Assets/Fluent/download.png"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ArtWork (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ArtWork (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
