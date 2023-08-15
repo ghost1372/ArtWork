@@ -117,13 +117,11 @@ public partial class DownloadViewModel : ObservableRecipient
 
         IEnumerable<string> existFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories);
 
-        foreach (string item in existFiles)
-        {
-            var removeImage = urls.ImageUrls.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(Path.GetFileNameWithoutExtension(item)));
-            var removeJson = urls.JsonUrls.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(Path.GetFileNameWithoutExtension(item)));
-            urls.ImageUrls.Remove(removeImage);
-            urls.JsonUrls.Remove(removeJson);
-        }
+        var filesToRemove = new HashSet<string>(existFiles.Select(item => Path.GetFileNameWithoutExtension(item)));
+
+        urls.ImageUrls = urls.ImageUrls.Where(imageUrl => !filesToRemove.Contains(Path.GetFileNameWithoutExtension(imageUrl))).ToList();
+        urls.JsonUrls = urls.JsonUrls.Where(jsonUrl => !filesToRemove.Contains(Path.GetFileNameWithoutExtension(jsonUrl))).ToList();
+
 
         for (int i = 0; i < urls.ImageUrls.Count; i++)
         {
@@ -253,25 +251,25 @@ public partial class DownloadViewModel : ObservableRecipient
 
     private void RemoveInCompleteFiles()
     {
-        IEnumerable<string> imageFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories);
-        IEnumerable<string> jsonFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.json", SearchOption.AllDirectories);
+        HashSet<string> imageFileNames = new HashSet<string>(Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories));
+        HashSet<string> jsonFileNames = new HashSet<string>(Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.json", SearchOption.AllDirectories));
 
-        foreach (var item in imageFiles)
+        var onlyImageFileName = imageFileNames.Select(Path.GetFileNameWithoutExtension);
+        var onlyJsonFileName = jsonFileNames.Select(Path.GetFileNameWithoutExtension);
+
+        var imageFilesToDelete = onlyImageFileName.Except(onlyJsonFileName);
+        var jsonFilesToDelete = onlyJsonFileName.Except(onlyImageFileName);
+
+        foreach (var item in imageFilesToDelete)
         {
-            var jsonNotExist = jsonFiles.Any(x => Path.GetFileNameWithoutExtension(x).Equals(Path.GetFileNameWithoutExtension(item)));
-            if (!jsonNotExist)
-            {
-                File.Delete(item);
-            }
+            var removeItem = imageFileNames.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(item));
+            File.Delete(removeItem);
         }
 
-        foreach (var item in jsonFiles)
+        foreach (var item in jsonFilesToDelete)
         {
-            var imageNotExist = imageFiles.Any(x => Path.GetFileNameWithoutExtension(x).Equals(Path.GetFileNameWithoutExtension(item)));
-            if (!imageNotExist)
-            {
-                File.Delete(item);
-            }
+            var removeItem = jsonFileNames.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(item));
+            File.Delete(removeItem);
         }
     }
 }

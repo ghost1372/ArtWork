@@ -75,7 +75,7 @@
 
                 <NavigationViewItemSeparator />
 
-                <wuc:ImageEx Height="400"
+                <wuc:ImageEx Height="200"
                              Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}" />
             </StackPanel>
         </Grid>
