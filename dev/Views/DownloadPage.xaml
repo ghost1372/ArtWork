@@ -14,8 +14,14 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
-            <CommandBar HorizontalAlignment="Left"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <CommandBar Grid.ColumnSpan="2"
+                        HorizontalAlignment="Left"
                         Background="Transparent"
                         DefaultLabelPosition="Right"
                         IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
@@ -26,9 +32,13 @@
                 <AppBarButton Command="{x:Bind ViewModel.ChangeDirectoryCommand}"
                               Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
                               Label="Change Directory" />
+                <AppBarButton Command="{x:Bind ViewModel.ValidateCommand}"
+                              Icon="{wuc:BitmapIcon Source=Assets/Fluent/validate.png}"
+                              Label="Validate" />
             </CommandBar>
 
             <StackPanel Grid.Row="1"
+                        Grid.ColumnSpan="2"
                         Margin="10"
                         Spacing="5">
                 <HyperlinkButton Command="{x:Bind ViewModel.NavigateToDirectoryCommand}">
@@ -40,21 +50,14 @@
                 <NavigationViewItemSeparator />
 
                 <InfoBar Title="{x:Bind ViewModel.TitleStatus}"
-                         CornerRadius="6,6,0,0"
                          IsClosable="False"
                          IsIconVisible="False"
                          IsOpen="True"
                          Message="{x:Bind ViewModel.MessageStatus, Mode=OneWay}" />
-                <InfoBar Margin="0,-5"
-                         CornerRadius="0,0,6,6"
-                         IsClosable="False"
-                         IsIconVisible="False"
-                         IsOpen="True"
-                         Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
-                         Severity="Error" />
 
                 <ProgressBar Margin="0,10"
-                             Maximum="{x:Bind ViewModel.TotalProgressMax, Mode=OneWay}"
+                             Maximum="{x:Bind settings:ArtWorkHelper.Settings.AvailableArtWorkCount, Mode=OneWay}"
+                             Visibility="{x:Bind ViewModel.UseParallelDownload, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                              Value="{x:Bind ViewModel.TotalProgressValue, Mode=OneWay}" />
 
                 <ProgressBar Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}" />
@@ -72,12 +75,36 @@
                                   IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay}"
                                   Label="Cancel" />
                 </CommandBar>
+                <StackPanel HorizontalAlignment="Left"
+                            Orientation="Horizontal"
+                            Spacing="5">
 
+
+                    <NumberBox Margin="10,0"
+                               Header="Chunk Count"
+                               Maximum="10"
+                               Minimum="1"
+                               PlaceholderText="Chunk Count"
+                               SpinButtonPlacementMode="Inline"
+                               Value="{x:Bind ViewModel.ChunkCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleSwitch Margin="10,0"
+                                  Header="Parallel Download"
+                                  IsOn="{x:Bind ViewModel.UseParallelDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
                 <NavigationViewItemSeparator />
-
-                <wuc:ImageEx Height="200"
-                             Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}" />
             </StackPanel>
+
+            <wuc:ImageEx Grid.Row="2"
+                         Grid.Column="1"
+                         Height="200"
+                         Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}" />
+            <RichTextBlock Grid.Row="2"
+                           Height="400"
+                           TextWrapping="Wrap">
+                <Paragraph>
+                    <Run Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" />
+                </Paragraph>
+            </RichTextBlock>
         </Grid>
     </ScrollViewer>
 </Page>

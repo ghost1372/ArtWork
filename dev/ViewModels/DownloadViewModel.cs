@@ -27,10 +27,13 @@ public partial class DownloadViewModel : ObservableRecipient
     private int totalProgressValue;
 
     [ObservableProperty]
-    private int totalProgressMax;
+    private string previewImage;
 
     [ObservableProperty]
-    private string previewImage;
+    private int chunkCount = 1;
+
+    [ObservableProperty]
+    private bool useParallelDownload;
 
     private readonly Queue<ArtWorkUrl> _downloadUrls = new Queue<ArtWorkUrl>();
     private IDownload download;
@@ -66,17 +69,51 @@ public partial class DownloadViewModel : ObservableRecipient
         var file = await ApplicationHelper.PickSaveFileAsync(App.currentWindow, fileTypeChoices);
         if (file != null)
         {
-            using (FileStream fs = new FileStream(file.Path, FileMode.Create))
+            using FileStream fs = new FileStream(file.Path, FileMode.Create);
+            using StreamWriter writer = new StreamWriter(fs);
+            for (int i = 0; i < urls.ImageUrls.Count; i++)
             {
-                using (StreamWriter writer = new StreamWriter(fs))
+                await writer.WriteLineAsync(urls.ImageUrls[i]);
+                await writer.WriteLineAsync(urls.JsonUrls[i]);
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async Task OnValidate()
+    {
+        IEnumerable<string> onlyImageFileNames = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories).Select(Path.GetFileNameWithoutExtension);
+        IEnumerable<string> onlyJsonFileNames = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.json", SearchOption.AllDirectories).Select(Path.GetFileNameWithoutExtension);
+
+        var allItems = Enumerable.Range(1, Settings.AvailableArtWorkCount);
+        var existingItems = onlyImageFileNames.Select(name => int.Parse(name)).Union(onlyJsonFileNames.Select(name => int.Parse(name)));
+        var missingItems = allItems.Except(existingItems);
+        
+        if (missingItems != null && missingItems.Count() > 0)
+        {
+            var fileTypeChoices = new Dictionary<string, IList<string>>();
+            fileTypeChoices.Add("Text", new List<string> { ".txt" });
+            var file = await ApplicationHelper.PickSaveFileAsync(App.currentWindow, fileTypeChoices);
+            if (file != null)
+            {
+                using FileStream fs = new FileStream(file.Path, FileMode.Create);
+                using StreamWriter writer = new StreamWriter(fs);
+                await writer.WriteLineAsync("The following items have not been downloaded");
+                await writer.WriteLineAsync("############################################");
+                foreach (var item in missingItems)
                 {
-                    for (int i = 0; i < urls.ImageUrls.Count; i++)
-                    {
-                        await writer.WriteLineAsync(urls.ImageUrls[i]);
-                        await writer.WriteLineAsync(urls.JsonUrls[i]);
-                    }
+                    await writer.WriteLineAsync(item.ToString());
                 }
             }
+        }
+        else
+        {
+            ContentDialog contentDialog = new ContentDialog();
+            contentDialog.XamlRoot = App.currentWindow.Content.XamlRoot;
+            contentDialog.Title = "Validate";
+            contentDialog.Content = "All files have been downloaded successfully";
+            contentDialog.PrimaryButtonText = "Ok";
+            await contentDialog.ShowAsync();
         }
     }
 
@@ -102,7 +139,7 @@ public partial class DownloadViewModel : ObservableRecipient
         }
         catch (Exception ex)
         {
-            ErrorMessage = ex.Message;
+            ErrorMessage =  $"{ErrorMessage}\n\n{ex.Message} -##- {downloadPack.FileName}";
         }
     }
 
@@ -112,8 +149,6 @@ public partial class DownloadViewModel : ObservableRecipient
         isCanceled = false;
         IsActive = true;
         var urls = GenerateUrls();
-
-        TotalProgressMax = urls.ImageUrls.Count;
 
         RemoveInCompleteFiles();
 
@@ -175,13 +210,14 @@ public partial class DownloadViewModel : ObservableRecipient
                     using (StreamWriter writer = new StreamWriter(Path.Combine(artistDir, Path.GetFileName(url.JsonUrl)), false, Encoding.UTF8))
                     await writer.WriteAsync(json);
 
+                    var downloadConfiguration = new DownloadConfiguration();
+
+                    downloadConfiguration.ParallelDownload = UseParallelDownload;
+                    downloadConfiguration.ChunkCount = ChunkCount;
+
                     download = DownloadBuilder.New()
                         .WithUrl(url.ImageUrl)
-                        .WithConfiguration(new DownloadConfiguration
-                        {
-                            ChunkCount = 8,
-                            ParallelDownload = true,
-                        })
+                        .WithConfiguration(downloadConfiguration)
                         .WithDirectory(artistDir)
                         .WithFileName(Path.GetFileName(url.ImageUrl))
                         .WithConfiguration(new DownloadConfiguration())
@@ -193,7 +229,6 @@ public partial class DownloadViewModel : ObservableRecipient
 
                     MessageStatus = $"Downloading ArtWork: {Path.GetFileName(url.ImageUrl)}";
                     TotalProgressValue++;
-
                     await download.StartAsync();
 
                     return;
@@ -201,7 +236,7 @@ public partial class DownloadViewModel : ObservableRecipient
                 catch (Exception ex)
                 {
                     DownloadImage();
-                    ErrorMessage = ex.Message;
+                    ErrorMessage = $"{ErrorMessage}\n\n{ex.Message} -##- {downloadPack.FileName} ";
                 }
             }
         }
@@ -216,7 +251,6 @@ public partial class DownloadViewModel : ObservableRecipient
     {
         dispatcherQueue.TryEnqueue(() =>
         {
-            ErrorMessage = string.Empty;
             if (e.Cancelled)
             {
                 IsActive = false;
@@ -264,13 +298,19 @@ public partial class DownloadViewModel : ObservableRecipient
         foreach (var item in imageFilesToDelete)
         {
             var removeItem = imageFileNames.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(item));
-            File.Delete(removeItem);
+            if (removeItem != null)
+            {
+                File.Delete(removeItem);
+            }
         }
 
         foreach (var item in jsonFilesToDelete)
         {
             var removeItem = jsonFileNames.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(item));
-            File.Delete(removeItem);
+            if (removeItem != null)
+            {
+                File.Delete(removeItem);
+            }
         }
     }
 }
