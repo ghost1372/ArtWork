@@ -113,6 +113,8 @@ public partial class DownloadViewModel : ObservableRecipient
         IsActive = true;
         var urls = GenerateUrls();
 
+        TotalProgressMax = urls.ImageUrls.Count;
+
         RemoveInCompleteFiles();
 
         IEnumerable<string> existFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories);
@@ -128,7 +130,6 @@ public partial class DownloadViewModel : ObservableRecipient
             _downloadUrls.Enqueue(new ArtWorkUrl(urls.JsonUrls[i], urls.ImageUrls[i]));
         }
 
-        TotalProgressMax = _downloadUrls.Count;
         TotalProgressValue = existFiles.Count();
         DownloadImage();
     }
