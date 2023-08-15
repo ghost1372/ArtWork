@@ -2,6 +2,8 @@
 using System.Text.Json;
 
 using ArtWork.Common;
+using ArtWork.Database;
+using ArtWork.Database.Tables;
 using ArtWork.Models;
 
 using Downloader;
@@ -189,25 +191,9 @@ public partial class DownloadViewModel : ObservableRecipient
                     var json = await client.GetStringAsync(url.JsonUrl);
                     var artWorkJson = JsonSerializer.Deserialize<ArtWorkModel>(json);
 
-                    var sig = artWorkJson?.wikiartist;
+                    var dir = GetDirectoryName(artWorkJson?.wikiartist, artWorkJson?.sig);
 
-                    if (string.IsNullOrEmpty(sig))
-                    {
-                        int index = artWorkJson.sig.IndexOf(',');
-                        if (index > 0)
-                        {
-                            sig = artWorkJson.sig.Substring(0, index);
-                        }
-
-                        if (string.IsNullOrEmpty(sig))
-                        {
-                            sig = "Unknown Artist";
-                        }
-                    }
-
-                    directoryName = string.Join("", sig.Split(Path.GetInvalidFileNameChars()));
-
-                    var artistDir = Path.Combine(Settings.ArtWorkDirectory, directoryName);
+                    var artistDir = Path.Combine(Settings.ArtWorkDirectory, dir.DirectoryName);
                     if (!Directory.Exists(artistDir))
                     {
                         Directory.CreateDirectory(artistDir);
@@ -216,8 +202,24 @@ public partial class DownloadViewModel : ObservableRecipient
                     using (StreamWriter writer = new StreamWriter(Path.Combine(artistDir, Path.GetFileName(url.JsonUrl)), false, Encoding.UTF8))
                     await writer.WriteAsync(json);
 
-                    var downloadConfiguration = new DownloadConfiguration();
+                    using var db = new ArtWorkDbContext();
+                    var art = new Art
+                    {
+                        Folder = dir.DirectoryName,
+                        City = artWorkJson.city,
+                        Country = artWorkJson.country,
+                        Gallery = artWorkJson.gal,
+                        Latitude = artWorkJson.lat,
+                        Longitude = artWorkJson.@long,
+                        Sig = artWorkJson.sig,
+                        SimplifiedSig = dir.SimplifiedSig,
+                        Title = artWorkJson.title,
+                        Wikiartist = artWorkJson.wikiartist
+                    };
 
+                    await db.Arts.AddAsync(art);
+                    await db.SaveChangesAsync();
+                    var downloadConfiguration = new DownloadConfiguration();
                     downloadConfiguration.ParallelDownload = UseParallelDownload;
                     downloadConfiguration.ChunkCount = ChunkCount;
 

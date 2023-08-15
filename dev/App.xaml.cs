@@ -29,7 +29,7 @@ public partial class App : Application
         }
     }
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
         currentWindow = new Window();
 
@@ -46,6 +46,8 @@ public partial class App : Application
         currentWindow.Title = currentWindow.AppWindow.Title = $"{AppName} v{AppVersion}";
         currentWindow.AppWindow.SetIcon("Assets/icon.ico");
         currentWindow.Activate();
+
+        await AddNudesIntoDataBase();
     }
 
     private static IServiceProvider ConfigureServices()
@@ -64,6 +66,7 @@ public partial class App : Application
         services.AddTransient<SettingsViewModel>();
         services.AddTransient<BreadCrumbBarViewModel>();
         services.AddTransient<DownloadViewModel>();
+        services.AddTransient<DataBaseViewModel>();
 
         //Settings
         services.AddTransient<AboutUsSettingViewModel>();

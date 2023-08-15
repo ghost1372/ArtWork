@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Page x:Class="ArtWork.Views.DataBasePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+    <ScrollViewer Margin="{ThemeResource ContentPageMargin}"
+                  VerticalScrollBarVisibility="Auto">
+        <Grid ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel Spacing="5">
+                <InfoBar Title="If you have a searching issues or the database file is deleted or corrupted, you can rebuild the database file here"
+                         IsClosable="False"
+                         IsOpen="True"
+                         Severity="Informational" />
+                <InfoBar Title="be careful!"
+                         IsClosable="False"
+                         IsOpen="True"
+                         Message="This takes some time and rebuilds the database"
+                         Severity="Warning" />
+            </StackPanel>
+            <StackPanel Grid.Row="1"
+                        Margin="0,50"
+                        Spacing="5">
+                <Button VerticalAlignment="Top"
+                        Command="{x:Bind ViewModel.ReBuildDataBaseCommand}"
+                        Content="ReBuild Database"
+                        IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay}" />
+                <InfoBar Title="{x:Bind ViewModel.TitleStatus, Mode=OneWay}"
+                         IsClosable="False"
+                         IsOpen="True"
+                         Message="{x:Bind ViewModel.MessageStatus, Mode=OneWay}"
+                         Severity="Informational" />
+                <ProgressBar Margin="0,10"
+                             Maximum="{x:Bind ViewModel.ProgressMaxValue, Mode=OneWay}"
+                             Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

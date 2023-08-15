@@ -10,5 +10,5 @@ public static class Constants
 
     private static readonly string ArtWorkFolderName = "ArtWork";
     public static readonly string ArtWorkPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), AppName, ArtWorkFolderName);
-
+    public static readonly string NudesPath = "Assets/Files/nudes.txt";
 }

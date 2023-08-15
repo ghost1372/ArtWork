@@ -31,6 +31,13 @@
           "Subtitle": "Download new ArtWorks",
           "ImagePath": "ms-appx:///Assets/Fluent/download.png",
           "ImageIconPath": "ms-appx:///Assets/Fluent/download.png"
+        },
+        {
+          "UniqueId": "ArtWork.Views.DataBasePage",
+          "Title": "ReBuild Database",
+          "Subtitle": "If you have a searching issues or the database file is deleted or corrupted, you can rebuild the database file here",
+          "ImagePath": "ms-appx:///Assets/Fluent/database.png",
+          "ImageIconPath": "ms-appx:///Assets/Fluent/database.png"
         }
       ]
     }

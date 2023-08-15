@@ -99,10 +99,12 @@
             <wuc:ImageEx Grid.Row="2"
                          Grid.Column="1"
                          Height="200"
+                         VerticalAlignment="Top"
                          Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}"
                          Visibility="{x:Bind ViewModel.UsePreviewImage, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
             <RichTextBlock Grid.Row="2"
-                           Height="400"
+                           Height="300"
+                           VerticalAlignment="Top"
                            TextWrapping="Wrap">
                 <Paragraph>
                     <Run Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" />
