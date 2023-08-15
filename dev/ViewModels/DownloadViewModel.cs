@@ -43,7 +43,6 @@ public partial class DownloadViewModel : ObservableRecipient
     private readonly Queue<ArtWorkUrl> _downloadUrls = new Queue<ArtWorkUrl>();
     private IDownload download;
     private DownloadPackage downloadPack;
-    private string directoryName;
     private bool isCanceled = false;
 
     private IJsonNavigationViewService jsonNavigationViewService;
@@ -205,16 +204,17 @@ public partial class DownloadViewModel : ObservableRecipient
                     using var db = new ArtWorkDbContext();
                     var art = new Art
                     {
-                        Folder = dir.DirectoryName,
-                        City = artWorkJson.city,
-                        Country = artWorkJson.country,
-                        Gallery = artWorkJson.gal,
+                        FolderName = NormalizeString(dir.DirectoryName),
+                        FileName = Path.GetFileName(url.ImageUrl),
+                        City = NormalizeString(artWorkJson.city),
+                        Country = NormalizeString(artWorkJson.country),
+                        Gallery = NormalizeString(artWorkJson.gal),
                         Latitude = artWorkJson.lat,
                         Longitude = artWorkJson.@long,
-                        Sig = artWorkJson.sig,
-                        SimplifiedSig = dir.SimplifiedSig,
-                        Title = artWorkJson.title,
-                        Wikiartist = artWorkJson.wikiartist
+                        Sig = NormalizeString(artWorkJson.sig),
+                        SimplifiedSig = NormalizeString(dir.SimplifiedSig),
+                        Title = NormalizeString(artWorkJson.title),
+                        Wikiartist = NormalizeString(artWorkJson.wikiartist)
                     };
 
                     await db.Arts.AddAsync(art);
@@ -296,35 +296,5 @@ public partial class DownloadViewModel : ObservableRecipient
             jsonUrls.Add(Constants.JsonBaseUrl + i.ToString() + ".json");
         }
         return (imageUrls, jsonUrls);
-    }
-
-    private void RemoveInCompleteFiles()
-    {
-        HashSet<string> imageFileNames = new HashSet<string>(Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories));
-        HashSet<string> jsonFileNames = new HashSet<string>(Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.json", SearchOption.AllDirectories));
-
-        var onlyImageFileName = imageFileNames.Select(Path.GetFileNameWithoutExtension);
-        var onlyJsonFileName = jsonFileNames.Select(Path.GetFileNameWithoutExtension);
-
-        var imageFilesToDelete = onlyImageFileName.Except(onlyJsonFileName);
-        var jsonFilesToDelete = onlyJsonFileName.Except(onlyImageFileName);
-
-        foreach (var item in imageFilesToDelete)
-        {
-            var removeItem = imageFileNames.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(item));
-            if (removeItem != null)
-            {
-                File.Delete(removeItem);
-            }
-        }
-
-        foreach (var item in jsonFilesToDelete)
-        {
-            var removeItem = jsonFileNames.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(item));
-            if (removeItem != null)
-            {
-                File.Delete(removeItem);
-            }
-        }
     }
 }

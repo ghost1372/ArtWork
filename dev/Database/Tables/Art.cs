@@ -6,7 +6,8 @@ public class Art
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    public string Folder { get; set; }
+    public string FolderName { get; set; }
+    public string FileName { get; set; }
     public string Title { get; set; }
     public string Sig { get; set; }
     public string SimplifiedSig { get; set; }

@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text;
+using System.Text.Json;
 
 using ArtWork.Database;
 using ArtWork.Database.Tables;
@@ -28,6 +30,7 @@ public partial class DataBaseViewModel : ObservableRecipient
     private async Task OnReBuildDataBase()
     {
         IsActive = false;
+        RemoveInCompleteFiles();
         IEnumerable<string> jsonFiles = Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.json", SearchOption.AllDirectories);
         TitleStatus = $"Total Json Files: {jsonFiles.Count()}";
         ProgressMaxValue = jsonFiles.Count();
@@ -47,16 +50,17 @@ public partial class DataBaseViewModel : ObservableRecipient
             var dir = GetDirectoryName(artWorkJson?.wikiartist, artWorkJson?.sig);
             var art = new Art
             {
-                Folder = dir.DirectoryName,
-                City = artWorkJson.city,
-                Country = artWorkJson.country,
-                Gallery = artWorkJson.gal,
+                FolderName = NormalizeString(dir.DirectoryName),
+                FileName = $"{Path.GetFileNameWithoutExtension(item)}.jpg",
+                City = NormalizeString(artWorkJson.city),
+                Country = NormalizeString(artWorkJson.country),
+                Gallery = NormalizeString(artWorkJson.gal),
                 Latitude = artWorkJson.lat,
                 Longitude = artWorkJson.@long,
-                Sig = artWorkJson.sig,
-                SimplifiedSig = dir.SimplifiedSig,
-                Title = artWorkJson.title,
-                Wikiartist = artWorkJson.wikiartist
+                Sig = NormalizeString(artWorkJson.sig),
+                SimplifiedSig = NormalizeString(dir.SimplifiedSig),
+                Title = NormalizeString(artWorkJson.title),
+                Wikiartist = NormalizeString(artWorkJson.wikiartist)
             };
             await db.Arts.AddAsync(art);
             MessageStatus = $"{index} Items Added to the database.";

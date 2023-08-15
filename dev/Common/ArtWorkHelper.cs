@@ -1,4 +1,7 @@
-﻿using ArtWork.Database;
+﻿using System.Globalization;
+using System.Text;
+
+using ArtWork.Database;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -52,6 +55,53 @@ public static class ArtWorkHelper
                 });
             }
             await db.SaveChangesAsync();
+        }
+    }
+
+    public static string NormalizeString(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+
+        string normalizedString = input.Normalize(NormalizationForm.FormD);
+        StringBuilder result = new StringBuilder();
+
+        foreach (char c in normalizedString)
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                result.Append(c);
+        }
+
+        return result.ToString();
+    }
+
+    public static void RemoveInCompleteFiles()
+    {
+        HashSet<string> imageFileNames = new HashSet<string>(Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.jpg", SearchOption.AllDirectories));
+        HashSet<string> jsonFileNames = new HashSet<string>(Directory.EnumerateFiles(Settings.ArtWorkDirectory, "*.json", SearchOption.AllDirectories));
+
+        var onlyImageFileName = imageFileNames.Select(Path.GetFileNameWithoutExtension);
+        var onlyJsonFileName = jsonFileNames.Select(Path.GetFileNameWithoutExtension);
+
+        var imageFilesToDelete = onlyImageFileName.Except(onlyJsonFileName);
+        var jsonFilesToDelete = onlyJsonFileName.Except(onlyImageFileName);
+
+        foreach (var item in imageFilesToDelete)
+        {
+            var removeItem = imageFileNames.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(item));
+            if (removeItem != null)
+            {
+                File.Delete(removeItem);
+            }
+        }
+
+        foreach (var item in jsonFilesToDelete)
+        {
+            var removeItem = jsonFileNames.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(item));
+            if (removeItem != null)
+            {
+                File.Delete(removeItem);
+            }
         }
     }
 }
