@@ -239,6 +239,12 @@ public partial class DownloadViewModel : ObservableRecipient
                     ErrorMessage = $"{ErrorMessage}\n\n{ex.Message} -##- {downloadPack.FileName} ";
                 }
             }
+            else
+            {
+                IsActive = false;
+                ProgressValue = 0;
+                MessageStatus = "All files have been downloaded successfully. Press the Validate button to be more sure";
+            }
         }
         else
         {
