@@ -35,6 +35,9 @@ public partial class DownloadViewModel : ObservableRecipient
     [ObservableProperty]
     private bool useParallelDownload;
 
+    [ObservableProperty]
+    private bool usePreviewImage;
+
     private readonly Queue<ArtWorkUrl> _downloadUrls = new Queue<ArtWorkUrl>();
     private IDownload download;
     private DownloadPackage downloadPack;
@@ -178,7 +181,10 @@ public partial class DownloadViewModel : ObservableRecipient
                 try
                 {
                     var url = _downloadUrls.Dequeue();
-                    PreviewImage = url.ImageUrl;
+                    if (UsePreviewImage)
+                    {
+                        PreviewImage = url.ImageUrl;
+                    }
                     using var client = new HttpClient();
                     var json = await client.GetStringAsync(url.JsonUrl);
                     var artWorkJson = JsonSerializer.Deserialize<ArtWorkModel>(json);

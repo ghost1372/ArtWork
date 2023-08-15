@@ -47,6 +47,23 @@
                                Text="{x:Bind settings:ArtWorkHelper.Settings.ArtWorkDirectory}" />
                 </HyperlinkButton>
 
+                <StackPanel Margin="0,10"
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal"
+                            Spacing="5">
+                    <NumberBox Margin="10,0"
+                               Header="Chunk Count"
+                               Maximum="10"
+                               Minimum="1"
+                               PlaceholderText="Chunk Count"
+                               SpinButtonPlacementMode="Inline"
+                               Value="{x:Bind ViewModel.ChunkCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleSwitch Margin="10,0"
+                                  Header="Parallel Download"
+                                  IsOn="{x:Bind ViewModel.UseParallelDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleSwitch Header="Preview Art"
+                                  IsOn="{x:Bind ViewModel.UsePreviewImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
                 <NavigationViewItemSeparator />
 
                 <InfoBar Title="{x:Bind ViewModel.TitleStatus}"
@@ -75,29 +92,15 @@
                                   IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay}"
                                   Label="Cancel" />
                 </CommandBar>
-                <StackPanel HorizontalAlignment="Left"
-                            Orientation="Horizontal"
-                            Spacing="5">
 
-
-                    <NumberBox Margin="10,0"
-                               Header="Chunk Count"
-                               Maximum="10"
-                               Minimum="1"
-                               PlaceholderText="Chunk Count"
-                               SpinButtonPlacementMode="Inline"
-                               Value="{x:Bind ViewModel.ChunkCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <ToggleSwitch Margin="10,0"
-                                  Header="Parallel Download"
-                                  IsOn="{x:Bind ViewModel.UseParallelDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
                 <NavigationViewItemSeparator />
             </StackPanel>
 
             <wuc:ImageEx Grid.Row="2"
                          Grid.Column="1"
                          Height="200"
-                         Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}" />
+                         Source="{x:Bind ViewModel.PreviewImage, Mode=OneWay}"
+                         Visibility="{x:Bind ViewModel.UsePreviewImage, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
             <RichTextBlock Grid.Row="2"
                            Height="400"
                            TextWrapping="Wrap">
