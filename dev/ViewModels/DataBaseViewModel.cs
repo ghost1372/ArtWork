@@ -48,17 +48,23 @@ public partial class DataBaseViewModel : ObservableRecipient
             using FileStream openStream = File.OpenRead(item);
             var artWorkJson = await JsonSerializer.DeserializeAsync<ArtWorkModel>(openStream);
             var dir = GetDirectoryName(artWorkJson?.wikiartist, artWorkJson?.sig);
+
+            var folderName = dir.DirectoryName;
+            var fileName = $"{Path.GetFileNameWithoutExtension(item)}.jpg";
+            var fileFolderPath = Path.Combine(folderName, fileName);
+
             var art = new Art
             {
-                FolderName = NormalizeString(dir.DirectoryName),
-                FileName = $"{Path.GetFileNameWithoutExtension(item)}.jpg",
+                FolderName = folderName,
+                FileName = fileName,
+                FileFolderPath = fileFolderPath,
                 City = NormalizeString(artWorkJson.city),
                 Country = NormalizeString(artWorkJson.country),
                 Gallery = NormalizeString(artWorkJson.gal),
                 Latitude = artWorkJson.lat,
                 Longitude = artWorkJson.@long,
                 Sig = NormalizeString(artWorkJson.sig),
-                SimplifiedSig = NormalizeString(dir.SimplifiedSig),
+                SimplifiedSig = dir.SimplifiedSig,
                 Title = NormalizeString(artWorkJson.title),
                 Wikiartist = NormalizeString(artWorkJson.wikiartist)
             };

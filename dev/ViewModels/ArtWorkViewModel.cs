@@ -3,6 +3,8 @@ using ArtWork.Database.Tables;
 
 using CommunityToolkit.WinUI.UI;
 
+using Microsoft.UI.Xaml.Media.Animation;
+
 namespace ArtWork.ViewModels;
 public partial class ArtWorkViewModel : ObservableRecipient
 {
@@ -13,10 +15,14 @@ public partial class ArtWorkViewModel : ObservableRecipient
     private AdvancedCollectionView artistsACV;
 
     [ObservableProperty]
-    private string messageStatus; 
+    private string messageStatus;
 
-    public ArtWorkViewModel()
+    private IJsonNavigationViewService jsonNavigationViewService;
+
+    public ArtWorkViewModel(IJsonNavigationViewService jsonNavigationViewService)
     {
+        this.jsonNavigationViewService = jsonNavigationViewService;
+
         using var db = new ArtWorkDbContext();
 
         var uniqueItems = db.Arts.GroupBy(item => item.SimplifiedSig)
@@ -24,6 +30,17 @@ public partial class ArtWorkViewModel : ObservableRecipient
         Artists = new(uniqueItems);
         ArtistsACV = new AdvancedCollectionView(Artists, true);
         MessageStatus = $"Total Artists: {Artists.Count}";
+    }
+
+    [RelayCommand]
+    private void OnGoToDetailPage(SelectionChangedEventArgs e)
+    {
+        var item = e.AddedItems[0] as Art;
+        if (item != null)
+        {
+            EntranceNavigationTransitionInfo entranceNavigation = new EntranceNavigationTransitionInfo();
+            jsonNavigationViewService.NavigateTo(typeof(ArtWorkDetailPage), item.SimplifiedSig, false, entranceNavigation);
+        }
     }
 
     public void Search()

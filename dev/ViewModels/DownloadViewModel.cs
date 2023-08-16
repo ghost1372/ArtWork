@@ -201,18 +201,22 @@ public partial class DownloadViewModel : ObservableRecipient
                     using (StreamWriter writer = new StreamWriter(Path.Combine(artistDir, Path.GetFileName(url.JsonUrl)), false, Encoding.UTF8))
                     await writer.WriteAsync(json);
 
+                    var folderName = dir.DirectoryName;
+                    var fileName = Path.GetFileName(url.ImageUrl);
+                    var fileFolderPath = Path.Combine(folderName, fileName);
                     using var db = new ArtWorkDbContext();
                     var art = new Art
                     {
-                        FolderName = NormalizeString(dir.DirectoryName),
-                        FileName = Path.GetFileName(url.ImageUrl),
+                        FolderName = folderName,
+                        FileName = fileName,
+                        FileFolderPath = fileFolderPath,
                         City = NormalizeString(artWorkJson.city),
                         Country = NormalizeString(artWorkJson.country),
                         Gallery = NormalizeString(artWorkJson.gal),
                         Latitude = artWorkJson.lat,
                         Longitude = artWorkJson.@long,
                         Sig = NormalizeString(artWorkJson.sig),
-                        SimplifiedSig = NormalizeString(dir.SimplifiedSig),
+                        SimplifiedSig = dir.SimplifiedSig,
                         Title = NormalizeString(artWorkJson.title),
                         Wikiartist = NormalizeString(artWorkJson.wikiartist)
                     };

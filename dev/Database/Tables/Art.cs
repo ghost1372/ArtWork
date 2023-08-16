@@ -8,6 +8,7 @@ public class Art
     public int Id { get; set; }
     public string FolderName { get; set; }
     public string FileName { get; set; }
+    public string FileFolderPath { get; set; }
     public string Title { get; set; }
     public string Sig { get; set; }
     public string SimplifiedSig { get; set; }

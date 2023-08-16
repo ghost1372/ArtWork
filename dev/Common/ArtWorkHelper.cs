@@ -45,8 +45,8 @@ public static class ArtWorkHelper
         }
 
         var dirName = string.Join("", wikiartist.Split(Path.GetInvalidFileNameChars()));
-
-        return (dirName, simplifiedSig ?? dirName);
+        dirName = NormalizeString(dirName);
+        return (dirName, NormalizeString(simplifiedSig) ?? dirName);
     }
 
     public static async Task AddNudesIntoDataBase()
