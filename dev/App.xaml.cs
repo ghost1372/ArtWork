@@ -67,6 +67,7 @@ public partial class App : Application
         services.AddTransient<BreadCrumbBarViewModel>();
         services.AddTransient<DownloadViewModel>();
         services.AddTransient<DataBaseViewModel>();
+        services.AddTransient<ArtWorkViewModel>();
 
         //Settings
         services.AddTransient<AboutUsSettingViewModel>();

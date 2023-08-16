@@ -24,10 +24,19 @@ public static class ArtWorkHelper
     {
         string simplifiedSig = string.Empty;
 
-        int index = sig.IndexOf(',');
-        if (index > 0)
+        int commaIndex = sig.IndexOf(',');
+        if (commaIndex > 0)
         {
-            simplifiedSig = sig?.Substring(0, index);
+            simplifiedSig = sig?.Substring(0, commaIndex);
+        }
+
+        if (string.IsNullOrEmpty(simplifiedSig))
+        {
+            int questionMarkIndex = sig.IndexOf('?');
+            if (questionMarkIndex > 0)
+            {
+                simplifiedSig = sig?.Substring(0, questionMarkIndex);
+            }
         }
 
         if (string.IsNullOrEmpty(wikiartist))
@@ -35,7 +44,9 @@ public static class ArtWorkHelper
             wikiartist = simplifiedSig ?? "Unknown Artist";
         }
 
-        return (string.Join("", wikiartist.Split(Path.GetInvalidFileNameChars())), simplifiedSig);
+        var dirName = string.Join("", wikiartist.Split(Path.GetInvalidFileNameChars()));
+
+        return (dirName, simplifiedSig ?? dirName);
     }
 
     public static async Task AddNudesIntoDataBase()
