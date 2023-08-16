@@ -2,10 +2,12 @@
 
 public sealed partial class ArtWorkPage : Page
 {
-    private ArtWorkViewModel ViewModel { get; set; }
+    public static ArtWorkPage Instance { get; private set; }
+    public ArtWorkViewModel ViewModel { get; set; }
     public ArtWorkPage()
     {
         ViewModel = App.GetService<ArtWorkViewModel>();
         this.InitializeComponent();
+        Instance = this;
     }
 }

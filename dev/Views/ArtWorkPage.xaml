@@ -14,9 +14,11 @@
         </Grid.RowDefinitions>
         <InfoBar Title="Select an artist to view their artwork"
                  IsClosable="False"
-                 IsOpen="True" />
+                 IsOpen="True"
+                 Message="{x:Bind ViewModel.MessageStatus, Mode=OneWay}" />
         <ListView Grid.Row="1"
+                  Margin="5,10"
                   DisplayMemberPath="SimplifiedSig"
-                  ItemsSource="{x:Bind ViewModel.Artists, Mode=OneWay}" />
+                  ItemsSource="{x:Bind ViewModel.ArtistsACV, Mode=OneWay}" />
     </Grid>
 </Page>

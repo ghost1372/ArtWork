@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Page x:Class="ArtWork.Views.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -24,8 +24,10 @@
                             UriSource="ms-appx:///Assets/icon.png" />
             </wuc:TitleBar.Icon>
             <wuc:TitleBar.Content>
-                <AutoSuggestBox PlaceholderText="Search"
-                                QueryIcon="Find" />
+                <AutoSuggestBox x:Name="TxtSearch"
+                                PlaceholderText="Search Artists, Arts, City, Gallery..."
+                                QueryIcon="Find"
+                                TextChanged="TxtSearch_TextChanged" />
             </wuc:TitleBar.Content>
             <wuc:TitleBar.Footer>
                 <Button x:Name="ThemeButton"

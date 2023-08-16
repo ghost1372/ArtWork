@@ -2,11 +2,13 @@
 
 public sealed partial class MainPage : Page
 {
+    public static MainPage Instance { get; set; }
     public MainViewModel ViewModel { get; }
     public MainPage()
     {
         ViewModel = App.GetService<MainViewModel>();
         this.InitializeComponent();
+        Instance = this;
         appTitleBar.Window = App.currentWindow;
         ViewModel.JsonNavigationViewService.Initialize(NavView, NavFrame);
         ViewModel.JsonNavigationViewService.ConfigJson("Assets/NavViewMenu/AppData.json");
@@ -42,6 +44,33 @@ public sealed partial class MainPage : Page
         {
             element.RequestedTheme = ElementTheme.Light;
         }
+    }
+
+    public AutoSuggestBox GetAutoSuggestBox()
+    {
+        return TxtSearch;
+    }
+
+    private void TxtSearch_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        var viewModel = GetCurrentViewModel();
+        if (viewModel != null)
+        {
+            viewModel.Search();
+        }
+    }
+
+    private dynamic GetCurrentViewModel()
+    {
+        var rootFrame = ViewModel.JsonNavigationViewService.Frame;
+        dynamic root = rootFrame.Content;
+        dynamic viewModel = null;
+        if (root is ArtWorkPage)
+        {
+            viewModel = ArtWorkPage.Instance.ViewModel;
+        }
+
+        return viewModel;
     }
 }
 
