@@ -30,6 +30,10 @@
                         Command="{x:Bind ViewModel.ReBuildDataBaseCommand}"
                         Content="ReBuild Database"
                         IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay}" />
+                <Button VerticalAlignment="Top"
+                        Command="{x:Bind ViewModel.NormalizeFoldersCommand}"
+                        Content="Normalize Artist Folders"
+                        IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay}" />
                 <InfoBar Title="{x:Bind ViewModel.TitleStatus, Mode=OneWay}"
                          IsClosable="False"
                          IsOpen="True"

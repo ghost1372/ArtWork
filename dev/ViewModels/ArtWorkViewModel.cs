@@ -54,6 +54,9 @@ public partial class ArtWorkViewModel : ObservableRecipient
 
     public bool ArtistFilter(object item)
     {
+        if (item == null)
+            return false;
+
         var query = (Art)item;
         var txtSearch = MainPage.Instance.GetAutoSuggestBox();
         return query.SimplifiedSig.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase);
