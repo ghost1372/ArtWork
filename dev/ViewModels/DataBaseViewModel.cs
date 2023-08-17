@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 
 using ArtWork.Database;
-using ArtWork.Database.Tables;
 using ArtWork.Models;
 
 namespace ArtWork.ViewModels;
@@ -45,27 +44,12 @@ public partial class DataBaseViewModel : ObservableRecipient
             ProgressValue++;
             using FileStream openStream = File.OpenRead(item);
             var artWorkJson = await JsonSerializer.DeserializeAsync<ArtWorkModel>(openStream);
+            var fileName = $"{Path.GetFileNameWithoutExtension(item)}.jpg";
+
             var dir = GetDirectoryName(artWorkJson?.wikiartist, artWorkJson?.sig);
 
-            var folderName = dir.DirectoryName;
-            var fileName = $"{Path.GetFileNameWithoutExtension(item)}.jpg";
-            var fileFolderPath = Path.Combine(folderName, fileName);
+            var art = GetArt(artWorkJson, fileName, dir.DirectoryName, dir.SimplifiedSig);
 
-            var art = new Art
-            {
-                FolderName = folderName,
-                FileName = fileName,
-                FileFolderPath = fileFolderPath,
-                City = NormalizeString(artWorkJson.city),
-                Country = NormalizeString(artWorkJson.country),
-                Gallery = NormalizeString(artWorkJson.gal),
-                Latitude = artWorkJson.lat,
-                Longitude = artWorkJson.@long,
-                Sig = NormalizeString(artWorkJson.sig),
-                SimplifiedSig = dir.SimplifiedSig,
-                Title = NormalizeString(artWorkJson.title),
-                Wikiartist = NormalizeString(artWorkJson.wikiartist)
-            };
             await db.Arts.AddAsync(art);
             MessageStatus = $"{ProgressValue} Items Added to the database.";
         }

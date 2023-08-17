@@ -2,6 +2,8 @@
 using System.Text;
 
 using ArtWork.Database;
+using ArtWork.Database.Tables;
+using ArtWork.Models;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -17,8 +19,29 @@ public static class ArtWorkHelper
     public static ArtWorkConfig Settings = JsonSettings.Configure<ArtWorkConfig>()
                                .WithRecovery(RecoveryAction.RenameAndLoadDefault)
                                .WithVersioning(VersioningResultAction.RenameAndLoadDefault)
-                               .LoadNow()
+        .LoadNow()
                                .EnableAutosave();
+
+    public static Art GetArt(ArtWorkModel artWorkJson, string fileName, string directoryName, string simplifiedSig)
+    {
+        var fileFolderPath = Path.Combine(directoryName, fileName);
+
+        return new Art
+        {
+            FolderName = directoryName,
+            FileName = fileName,
+            FileFolderPath = fileFolderPath,
+            City = NormalizeString(artWorkJson.city),
+            Country = NormalizeString(artWorkJson.country),
+            Gallery = NormalizeString(artWorkJson.gal),
+            Latitude = artWorkJson.lat,
+            Longitude = artWorkJson.@long,
+            Sig = NormalizeString(artWorkJson.sig),
+            SimplifiedSig = simplifiedSig,
+            Title = NormalizeString(artWorkJson.title),
+            Wikiartist = NormalizeString(artWorkJson.wikiartist)
+        };
+    }
 
     public static (string DirectoryName, string SimplifiedSig) GetDirectoryName(string wikiartist, string sig)
     {
@@ -39,13 +62,16 @@ public static class ArtWorkHelper
             }
         }
 
+        simplifiedSig = simplifiedSig.Replace("(?)", "");
+        simplifiedSig = simplifiedSig.Trim();
+
         if (string.IsNullOrEmpty(wikiartist))
         {
             wikiartist = simplifiedSig ?? "Unknown Artist";
         }
 
         var dirName = string.Join("", wikiartist.Split(Path.GetInvalidFileNameChars()));
-        dirName = NormalizeString(dirName);
+        dirName = NormalizeString(dirName).Trim();
         return (dirName, NormalizeString(simplifiedSig) ?? dirName);
     }
 

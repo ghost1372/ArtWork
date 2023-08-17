@@ -3,7 +3,6 @@ using System.Text.Json;
 
 using ArtWork.Common;
 using ArtWork.Database;
-using ArtWork.Database.Tables;
 using ArtWork.Models;
 
 using Downloader;
@@ -201,26 +200,10 @@ public partial class DownloadViewModel : ObservableRecipient
                     using (StreamWriter writer = new StreamWriter(Path.Combine(artistDir, Path.GetFileName(url.JsonUrl)), false, Encoding.UTF8))
                     await writer.WriteAsync(json);
 
-                    var folderName = dir.DirectoryName;
                     var fileName = Path.GetFileName(url.ImageUrl);
-                    var fileFolderPath = Path.Combine(folderName, fileName);
-                    using var db = new ArtWorkDbContext();
-                    var art = new Art
-                    {
-                        FolderName = folderName,
-                        FileName = fileName,
-                        FileFolderPath = fileFolderPath,
-                        City = NormalizeString(artWorkJson.city),
-                        Country = NormalizeString(artWorkJson.country),
-                        Gallery = NormalizeString(artWorkJson.gal),
-                        Latitude = artWorkJson.lat,
-                        Longitude = artWorkJson.@long,
-                        Sig = NormalizeString(artWorkJson.sig),
-                        SimplifiedSig = dir.SimplifiedSig,
-                        Title = NormalizeString(artWorkJson.title),
-                        Wikiartist = NormalizeString(artWorkJson.wikiartist)
-                    };
+                    var art = GetArt(artWorkJson, fileName, dir.DirectoryName, dir.SimplifiedSig);
 
+                    using var db = new ArtWorkDbContext();
                     await db.Arts.AddAsync(art);
                     await db.SaveChangesAsync();
                     var downloadConfiguration = new DownloadConfiguration();
