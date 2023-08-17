@@ -6,7 +6,6 @@
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      NavigationCacheMode="Required"
       mc:Ignorable="d">
 
     <Grid Margin="10"
