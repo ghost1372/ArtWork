@@ -7,5 +7,7 @@ public sealed partial class ArtWorkDetailPage : Page
     {
         ViewModel = App.GetService<ArtWorkDetailViewModel>();
         this.InitializeComponent();
+        SlideShowDialog.XamlRoot = App.currentWindow.Content.XamlRoot;
+        ViewModel.SlideShowDialog = SlideShowDialog;
     }
 }

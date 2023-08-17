@@ -14,12 +14,98 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-
-            <GridView AllowDrop="False"
+            <CommandBar HorizontalAlignment="Left"
+                        Background="Transparent"
+                        DefaultLabelPosition="Right"
+                        IsOpen="False">
+                <AppBarButton Command="{x:Bind ViewModel.OpenImageCommand}"
+                              Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                              Label="Open Image (Photo App)" />
+                <AppBarElementContainer>
+                    <SplitButton Command="{x:Bind ViewModel.NavigateToDirectoryCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <BitmapIcon Margin="0,0,8,0"
+                                        ShowAsMonochrome="False"
+                                        UriSource="Assets/Fluent/explorer.png" />
+                            <TextBlock Text="Open Explorer" />
+                        </StackPanel>
+                        <SplitButton.Flyout>
+                            <Flyout Placement="Bottom">
+                                <StackPanel MinWidth="200"
+                                            Spacing="5">
+                                    <Button HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.NavigateToFileCommand}"
+                                            Content="Open File" />
+                                </StackPanel>
+                            </Flyout>
+                        </SplitButton.Flyout>
+                    </SplitButton>
+                </AppBarElementContainer>
+                <AppBarElementContainer>
+                    <SplitButton Command="{x:Bind ViewModel.SetWallpaperCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <BitmapIcon Margin="0,0,8,0"
+                                        ShowAsMonochrome="False"
+                                        UriSource="Assets/Fluent/wallpaper.png" />
+                            <TextBlock Text="Set as Desktop background" />
+                        </StackPanel>
+                        <SplitButton.Flyout>
+                            <Flyout Placement="Bottom">
+                                <StackPanel MinWidth="200"
+                                            Spacing="5">
+                                    <Button x:Name="btnFill"
+                                            HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                            CommandParameter="{Binding ElementName=btnFill}"
+                                            Content="Fill"
+                                            Tag="Fill" />
+                                    <Button x:Name="btnFit"
+                                            HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                            CommandParameter="{Binding ElementName=btnFit}"
+                                            Content="Fit"
+                                            Tag="Fit" />
+                                    <Button x:Name="btnSpan"
+                                            HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                            CommandParameter="{Binding ElementName=btnSpan}"
+                                            Content="Span"
+                                            Tag="Span" />
+                                    <Button x:Name="btnStretch"
+                                            HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                            CommandParameter="{Binding ElementName=btnStretch}"
+                                            Content="Stretch"
+                                            Tag="Stretch" />
+                                    <Button x:Name="btnTile"
+                                            HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                            CommandParameter="{Binding ElementName=btnTile}"
+                                            Content="Tile"
+                                            Tag="Tile" />
+                                    <Button x:Name="btnCenter"
+                                            HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                            CommandParameter="{Binding ElementName=btnCenter}"
+                                            Content="Center"
+                                            Tag="Center" />
+                                </StackPanel>
+                            </Flyout>
+                        </SplitButton.Flyout>
+                    </SplitButton>
+                </AppBarElementContainer>
+                <AppBarButton Command="{x:Bind ViewModel.SetSlideShowCommand}"
+                              Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                              Label="Set Folder as SlideShow" />
+            </CommandBar>
+            <GridView Grid.Row="1"
+                      Margin="5,10"
+                      AllowDrop="False"
                       CanDragItems="False"
                       CanReorderItems="False"
                       IsItemClickEnabled="False"
                       ItemsSource="{x:Bind ViewModel.ArtsACV, Mode=OneWay}"
+                      SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       SelectionMode="Single">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="tables:Art">
@@ -46,7 +132,41 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
+            <ContentDialog x:Name="SlideShowDialog"
+                           Title="SlideShow Options"
+                           Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                           PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
+                           PrimaryButtonText="Ok"
+                           SecondaryButtonText="Cancel">
+                <StackPanel Margin="10"
+                            Spacing="5">
+                    <ComboBox HorizontalAlignment="Stretch"
+                              Header="Wallpaper Fit"
+                              SelectedIndex="2"
+                              SelectedItem="{x:Bind ViewModel.SelectedWallpaperFit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBoxItem Content="Center" />
+                        <ComboBoxItem Content="Fill" />
+                        <ComboBoxItem Content="Fit" />
+                        <ComboBoxItem Content="Span" />
+                        <ComboBoxItem Content="Stretch" />
+                        <ComboBoxItem Content="Tile" />
+                    </ComboBox>
+                    <RadioButtons MaxColumns="3"
+                                  SelectedIndex="1"
+                                  SelectedItem="{x:Bind ViewModel.SelectedTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <RadioButton Content="Second" />
+                        <RadioButton Content="Minute" />
+                        <RadioButton Content="Hour" />
+                    </RadioButtons>
+                    <NumberBox Header="Interval"
+                               Minimum="1"
+                               SpinButtonPlacementMode="Inline"
+                               Value="{x:Bind ViewModel.SelectedInterval, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
+                    <ToggleSwitch Header="Shuffle"
+                                  IsOn="{x:Bind ViewModel.ShuffleSlideShow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </ContentDialog>
         </Grid>
     </ScrollViewer>
 </Page>
