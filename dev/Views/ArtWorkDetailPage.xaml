@@ -6,11 +6,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tables="using:ArtWork.Database.Tables"
       xmlns:wuc="using:WinUICommunity"
+      x:Name="This"
       mc:Ignorable="d">
     <Grid Margin="10"
           ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <CommandBar HorizontalAlignment="Left"
@@ -97,9 +99,30 @@
                           Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
                           Label="Set Folder as SlideShow" />
         </CommandBar>
-        <ScrollViewer Grid.Row="1"
+        <StackPanel Grid.Row="1"
+                    Margin="10,0,10,10"
+                    Padding="10"
+                    Background="{ThemeResource InfoBarInformationalSeverityBackgroundBrush}"
+                    BorderBrush="{ThemeResource InfoBarBorderBrush}"
+                    BorderThickness="{ThemeResource InfoBarBorderThickness}"
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                    Orientation="Horizontal"
+                    Spacing="5">
+            <BitmapIcon Width="20"
+                        ShowAsMonochrome="False"
+                        UriSource="Assets/Fluent/city.png" />
+            <TextBlock Text="{x:Bind ViewModel.SelectedItem.(tables:Art.City), Mode=OneWay}" />
+            <AppBarSeparator />
+            <BitmapIcon Width="20"
+                        ShowAsMonochrome="False"
+                        UriSource="Assets/Fluent/country.png" />
+            <TextBlock Text="{x:Bind ViewModel.SelectedItem.(tables:Art.Country), Mode=OneWay}" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="2"
                       VerticalScrollBarVisibility="Auto">
-            <GridView Margin="5,10"
+            <GridView x:Name="ArtGridView"
+                      Margin="5,10"
                       AllowDrop="False"
                       CanDragItems="False"
                       CanReorderItems="False"
@@ -110,25 +133,52 @@
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="tables:Art">
                         <Grid Width="300"
-                              Height="350">
+                              Height="350" DoubleTapped="Grid_DoubleTapped"
+                              RightTapped="GridView_RightTapped">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.OpenImageCommand}"
+                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                    Text="Open Image (Photo App)" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.NavigateToDirectoryCommand}"
+                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
+                                                    Text="Open Folder" />
+                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.NavigateToFileCommand}"
+                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
+                                                    Text="Open File" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.SetWallpaperCommand}"
+                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                    Text="Set as Desktop background" />
+                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.SetSlideShowCommand}"
+                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                    Text="Set Folder as SlideShow" />
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <wuc:ImageEx Height="220"
                                          Margin="5,0"
                                          Source="{x:Bind FileFolderPath, Converter={StaticResource FileNameToFilePathConverter}}"
                                          Stretch="UniformToFill" />
-                            <StackPanel Grid.Row="1"
-                                        Margin="8,0,0,8">
-                                <TextBlock Margin="0,0,0,8"
-                                           Style="{ThemeResource SubtitleTextBlockStyle}"
-                                           Text="{x:Bind Title}" />
-                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
-                                           Text="{x:Bind Sig}" />
-                                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
-                                           Text="{x:Bind Gallery}" />
-                            </StackPanel>
+                            <TextBlock Grid.Row="1"
+                                       Margin="10,5"
+                                       Style="{ThemeResource SubtitleTextBlockStyle}"
+                                       Text="{x:Bind Title}" />
+                            <TextBlock Grid.Row="2"
+                                       Margin="10,0"
+                                       Style="{ThemeResource BaseTextBlockStyle}"
+                                       Text="{x:Bind Sig}" />
+                            <TextBlock Grid.Row="3"
+                                       Margin="10,5"
+                                       Style="{ThemeResource CaptionTextBlockStyle}"
+                                       Text="{x:Bind Gallery}" />
+
                         </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>

@@ -6,6 +6,7 @@ using ArtWork.Database.Tables;
 using ArtWork.Models;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.UI.Xaml.Media;
 
 using Nucs.JsonSettings;
 using Nucs.JsonSettings.Autosave;
@@ -141,4 +142,25 @@ public static class ArtWorkHelper
             }
         }
     }
+
+    public static T FindParent<T>(DependencyObject child) where T : DependencyObject
+    {
+        while (true)
+        {
+            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+
+            if (parentObject == null)
+            {
+                return null;
+            }
+
+            if (parentObject is T parent)
+            {
+                return parent;
+            }
+
+            child = parentObject;
+        }
+    }
+
 }
