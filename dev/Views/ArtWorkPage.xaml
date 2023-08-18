@@ -6,21 +6,48 @@
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      NavigationCacheMode="Enabled"
       mc:Ignorable="d">
 
     <Grid Margin="10"
           ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1"
+                    Margin="10,10,10,0"
+                    Spacing="5">
+            <ComboBox MinWidth="200"
+                      Header="Filter"
+                      SelectedIndex="0"
+                      SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBoxItem Content="Artist"
+                              Tag="SimplifiedSig" />
+                <ComboBoxItem Content="Gallery"
+                              Tag="Gallery" />
+                <ComboBoxItem Content="City"
+                              Tag="City" />
+                <ComboBoxItem Content="Country"
+                              Tag="Country" />
+
+                <i:Interaction.Behaviors>
+                    <ic:EventTriggerBehavior EventName="SelectionChanged">
+                        <ic:EventTriggerBehavior.Actions>
+                            <ic:InvokeCommandAction Command="{x:Bind ViewModel.ComboBoxItemChangedCommand}" />
+                        </ic:EventTriggerBehavior.Actions>
+                    </ic:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </ComboBox>
+        </StackPanel>
         <InfoBar Title="Select an artist to view their artwork"
                  IsClosable="False"
                  IsOpen="True"
                  Message="{x:Bind ViewModel.MessageStatus, Mode=OneWay}" />
-        <ListView Grid.Row="1"
+        <ListView Grid.Row="2"
                   Margin="5,10"
-                  DisplayMemberPath="SimplifiedSig"
+                  DisplayMemberPath="{x:Bind ViewModel.DisplayMemberPath, Mode=OneWay}"
                   ItemsSource="{x:Bind ViewModel.ArtistsACV, Mode=OneWay}">
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="SelectionChanged">
@@ -30,5 +57,9 @@
                 </ic:EventTriggerBehavior>
             </i:Interaction.Behaviors>
         </ListView>
+        <ProgressRing Grid.Row="2"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      IsActive="{x:Bind ViewModel.IsActive, Mode=OneWay}" />
     </Grid>
 </Page>

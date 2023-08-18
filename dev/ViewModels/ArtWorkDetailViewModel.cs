@@ -2,6 +2,7 @@
 
 using ArtWork.Database;
 using ArtWork.Database.Tables;
+using ArtWork.Models;
 
 using CommunityToolkit.WinUI.UI;
 
@@ -39,9 +40,25 @@ public partial class ArtWorkDetailViewModel : ObservableRecipient, INavigationAw
 
     public void OnNavigatedTo(object parameter)
     {
-        var simplifiedSig = parameter as string;
+        var artParameter = parameter as ArtWorkNavigationParameter;
+        IQueryable<Art> items = null;
         using var db = new ArtWorkDbContext();
-        var items = db.Arts.Where(x => x.SimplifiedSig.Equals(simplifiedSig));
+        switch (artParameter.DataFilter)
+        {
+            case DataFilter.SimplifiedSig:
+                items = db.Arts.Where(x => x.SimplifiedSig.Equals(artParameter.Art.SimplifiedSig));
+                break;
+            case DataFilter.Gallery:
+                items = db.Arts.Where(x => x.Gallery.Equals(artParameter.Art.Gallery));
+                break;
+            case DataFilter.City:
+                items = db.Arts.Where(x => x.City.Equals(artParameter.Art.City));
+                break;
+            case DataFilter.Country:
+                items = db.Arts.Where(x => x.Country.Equals(artParameter.Art.Country));
+                break;
+        }
+        
         Arts = new(items);
         ArtsACV = new AdvancedCollectionView(Arts, true);
     }
