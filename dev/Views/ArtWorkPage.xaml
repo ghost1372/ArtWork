@@ -5,10 +5,39 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:local="using:ArtWork.Common"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:tables="using:ArtWork.Database.Tables"
       NavigationCacheMode="Enabled"
       mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="SimplifiedSigTemplate"
+                      x:DataType="tables:Art">
+            <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
+                       Text="{x:Bind SimplifiedSig, Mode=OneWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="GalleryTemplate"
+                      x:DataType="tables:Art">
+            <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
+                       Text="{x:Bind Gallery, Mode=OneWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="CityTemplate"
+                      x:DataType="tables:Art">
+            <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
+                       Text="{x:Bind City, Mode=OneWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="CountryTemplate"
+                      x:DataType="tables:Art">
+            <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
+                       Text="{x:Bind Country, Mode=OneWay}" />
+        </DataTemplate>
 
+        <local:ListViewItemTemplateSelector x:Key="ListViewItemTemplateSelector"
+                                            CityTemplate="{StaticResource CityTemplate}"
+                                            CountryTemplate="{StaticResource CountryTemplate}"
+                                            GalleryTemplate="{StaticResource GalleryTemplate}"
+                                            SimplifiedSigTemplate="{StaticResource SimplifiedSigTemplate}" />
+    </Page.Resources>
     <Grid Margin="10"
           ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
         <Grid.RowDefinitions>
@@ -22,7 +51,7 @@
             <ComboBox MinWidth="200"
                       Header="Filter"
                       SelectedIndex="0"
-                      SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                      SelectedItem="{x:Bind ViewModel.CmbSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ComboBoxItem Content="Artist"
                               Tag="SimplifiedSig" />
                 <ComboBoxItem Content="Gallery"
@@ -45,10 +74,12 @@
                  IsClosable="False"
                  IsOpen="True"
                  Message="{x:Bind ViewModel.MessageStatus, Mode=OneWay}" />
-        <ListView Grid.Row="2"
+        <ListView x:Name="ListView"
+                  Grid.Row="2"
                   Margin="5,10"
-                  DisplayMemberPath="{x:Bind ViewModel.DisplayMemberPath, Mode=OneWay}"
-                  ItemsSource="{x:Bind ViewModel.ArtistsACV, Mode=OneWay}">
+                  ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}"
+                  ItemsSource="{x:Bind ViewModel.ArtistsACV, Mode=OneWay}"
+                  SelectedItem="{x:Bind ViewModel.ListViewSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="SelectionChanged">
                     <ic:EventTriggerBehavior.Actions>

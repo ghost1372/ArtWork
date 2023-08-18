@@ -19,10 +19,10 @@ public partial class ArtWorkViewModel : ObservableRecipient
     private string messageStatus;
 
     [ObservableProperty]
-    private object selectedItem = "SimplifiedSig";
+    private object listViewSelectedItem;
 
     [ObservableProperty]
-    private string displayMemberPath = "SimplifiedSig";
+    private object cmbSelectedItem = "SimplifiedSig";
 
     public DataFilter Filter { get; set; }
     private IJsonNavigationViewService jsonNavigationViewService;
@@ -38,7 +38,7 @@ public partial class ArtWorkViewModel : ObservableRecipient
     private void OnComboBoxItemChanged()
     {
         IsActive = true;
-        var item = SelectedItem as ComboBoxItem;
+        var item = CmbSelectedItem as ComboBoxItem;
         Filter = DataFilter.SimplifiedSig;
         if (item != null)
         {
@@ -69,7 +69,7 @@ public partial class ArtWorkViewModel : ObservableRecipient
                     .Select(group => group.FirstOrDefault());
                 break;
         }
-        DisplayMemberPath = Filter.ToString();
+
         Artists = new(uniqueItems);
         MessageStatus = $"Total {Filter}: {Artists.Count}";
         IsActive = false;
@@ -77,9 +77,9 @@ public partial class ArtWorkViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private void OnGoToDetailPage(SelectionChangedEventArgs e)
+    private void OnGoToDetailPage()
     {
-        var item = e.AddedItems[0] as Art;
+        var item = ListViewSelectedItem as Art;
         if (item != null)
         {
             EntranceNavigationTransitionInfo entranceNavigation = new EntranceNavigationTransitionInfo();
