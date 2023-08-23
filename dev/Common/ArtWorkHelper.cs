@@ -20,8 +20,10 @@ public static class ArtWorkHelper
     public static ArtWorkConfig Settings = JsonSettings.Configure<ArtWorkConfig>()
                                .WithRecovery(RecoveryAction.RenameAndLoadDefault)
                                .WithVersioning(VersioningResultAction.RenameAndLoadDefault)
-        .LoadNow()
+                               .LoadNow()
                                .EnableAutosave();
+
+    public static string[] ImageFilesCacheForHomeLandingPage = null;
 
     public static Art GetArt(ArtWorkModel artWorkJson, string fileName, string directoryName, string simplifiedSig)
     {
