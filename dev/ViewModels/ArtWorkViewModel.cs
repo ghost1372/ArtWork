@@ -71,7 +71,13 @@ public partial class ArtWorkViewModel : ObservableRecipient
         }
 
         Artists = new(uniqueItems);
-        MessageStatus = $"Total {Filter}: {Artists.Count}";
+        var filterType = $"{Filter}";
+        if (Filter == DataFilter.SimplifiedSig)
+        {
+            filterType = "Artist";
+        }
+
+        MessageStatus = $"Total {filterType}: {Artists.Count}";
         IsActive = false;
         ArtistsACV = new AdvancedCollectionView(Artists, true);
     }
