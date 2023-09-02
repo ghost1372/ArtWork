@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
-    <ScrollViewer Margin="{ThemeResource ContentPageMargin}"
+    <ScrollView Margin="{ThemeResource ContentPageMargin}"
                   VerticalScrollBarVisibility="Auto">
         <Grid ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
             <Grid.RowDefinitions>
@@ -44,5 +44,5 @@
                              Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}" />
             </StackPanel>
         </Grid>
-    </ScrollViewer>
+    </ScrollView>
 </Page>

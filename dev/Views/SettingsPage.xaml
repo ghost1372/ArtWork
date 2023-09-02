@@ -6,7 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:wuc="using:WinUICommunity"
       mc:Ignorable="d">
-    <ScrollViewer Margin="{ThemeResource ContentPageMargin}"
+    <ScrollView Margin="{ThemeResource ContentPageMargin}"
                   HorizontalAlignment="Stretch"
                   VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="10"
@@ -36,6 +36,6 @@
                               IsClickEnabled="True"
                               Tag="AboutUsSettingPage" />
         </StackPanel>
-    </ScrollViewer>
+    </ScrollView>
 </Page>
 

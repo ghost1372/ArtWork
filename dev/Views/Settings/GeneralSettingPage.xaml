@@ -9,7 +9,7 @@
       xmlns:wuc="using:WinUICommunity"
       mc:Ignorable="d">
 
-    <ScrollViewer Margin="{ThemeResource ContentPageMargin}"
+    <ScrollView Margin="{ThemeResource ContentPageMargin}"
                   VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="10"
                     ChildrenTransitions="{StaticResource SettingsCardsAnimations}"
@@ -34,5 +34,5 @@
                            Value="{x:Bind settings:ArtWorkHelper.Settings.AvailableArtWorkCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </wuc:SettingsCard>
         </StackPanel>
-    </ScrollViewer>
+    </ScrollView>
 </Page>

@@ -8,7 +8,7 @@
       xmlns:wuc="using:WinUICommunity"
       mc:Ignorable="d">
 
-    <ScrollViewer Margin="{ThemeResource ContentPageMargin}"
+    <ScrollView Margin="{ThemeResource ContentPageMargin}"
                   VerticalScrollBarVisibility="Auto">
         <Grid ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
             <Grid.RowDefinitions>
@@ -111,5 +111,5 @@
                 </Paragraph>
             </RichTextBlock>
         </Grid>
-    </ScrollViewer>
+    </ScrollView>
 </Page>

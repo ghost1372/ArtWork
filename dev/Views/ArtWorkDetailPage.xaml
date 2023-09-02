@@ -119,8 +119,8 @@
             <TextBlock Text="{x:Bind ViewModel.SelectedItem.(tables:Art.Country), Mode=OneWay}" />
         </StackPanel>
 
-        <ScrollViewer Grid.Row="2"
-                      VerticalScrollBarVisibility="Auto">
+        <ScrollView Grid.Row="2"
+                    VerticalScrollBarVisibility="Auto">
             <GridView x:Name="ArtGridView"
                       Margin="5,10"
                       AllowDrop="False"
@@ -133,7 +133,8 @@
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="tables:Art">
                         <Grid Width="300"
-                              Height="350" DoubleTapped="Grid_DoubleTapped"
+                              Height="350"
+                              DoubleTapped="Grid_DoubleTapped"
                               RightTapped="GridView_RightTapped">
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
@@ -183,7 +184,7 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-        </ScrollViewer>
+        </ScrollView>
 
         <ContentDialog x:Name="SlideShowDialog"
                        Title="SlideShow Options"
