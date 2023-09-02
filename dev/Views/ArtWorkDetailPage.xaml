@@ -6,7 +6,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tables="using:ArtWork.Database.Tables"
       xmlns:wuc="using:WinUICommunity"
-      x:Name="This"
       mc:Ignorable="d">
     <Grid Margin="10"
           ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
@@ -121,69 +120,73 @@
 
         <ScrollView Grid.Row="2"
                     VerticalScrollBarVisibility="Auto">
-            <GridView x:Name="ArtGridView"
-                      Margin="5,10"
-                      AllowDrop="False"
-                      CanDragItems="False"
-                      CanReorderItems="False"
-                      IsItemClickEnabled="False"
-                      ItemsSource="{x:Bind ViewModel.ArtsACV, Mode=OneWay}"
-                      SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      SelectionMode="Single">
-                <GridView.ItemTemplate>
+            <ItemsView x:Name="ArtItemsView"
+                       ItemsSource="{x:Bind ViewModel.ArtsACV, Mode=OneWay}"
+                       SelectionChanged="ArtItemsView_SelectionChanged">
+                <ItemsView.Layout>
+                    <LinedFlowLayout LineHeight="350"
+                                     LineSpacing="5" />
+                </ItemsView.Layout>
+                <ItemsView.ItemTemplate>
                     <DataTemplate x:DataType="tables:Art">
-                        <Grid Width="300"
-                              Height="350"
-                              DoubleTapped="Grid_DoubleTapped"
-                              RightTapped="GridView_RightTapped">
-                            <Grid.ContextFlyout>
+                        <ItemContainer DataContext="{x:Bind}"
+                                       DoubleTapped="Grid_DoubleTapped"
+                                       RightTapped="GridView_RightTapped">
+                            <ItemContainer.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.OpenImageCommand}"
+                                    <MenuFlyoutItem x:Name="menuOpenImage"
+                                                    Click="menuOpenImage_Click"
                                                     Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
                                                     Text="Open Image (Photo App)" />
                                     <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.NavigateToDirectoryCommand}"
+                                    <MenuFlyoutItem x:Name="menuGoToDirectory"
+                                                    Click="menuGoToDirectory_Click"
                                                     Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
                                                     Text="Open Folder" />
-                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.NavigateToFileCommand}"
+                                    <MenuFlyoutItem x:Name="menuGotoFile"
+                                                    Click="menuGotoFile_Click"
                                                     Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
                                                     Text="Open File" />
                                     <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.SetWallpaperCommand}"
+                                    <MenuFlyoutItem x:Name="menuSetWallpaper"
+                                                    Click="menuSetWallpaper_Click"
                                                     Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
                                                     Text="Set as Desktop background" />
-                                    <MenuFlyoutItem Command="{Binding ElementName=This, Path=DataContext.ViewModel.SetSlideShowCommand}"
+                                    <MenuFlyoutItem x:Name="menuSetSlideShow"
+                                                    Click="menuSetSlideShow_Click"
                                                     Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
                                                     Text="Set Folder as SlideShow" />
                                 </MenuFlyout>
-                            </Grid.ContextFlyout>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <wuc:ImageEx Height="220"
-                                         Margin="5,0"
-                                         Source="{x:Bind FileFolderPath, Converter={StaticResource FileNameToFilePathConverter}}"
-                                         Stretch="UniformToFill" />
-                            <TextBlock Grid.Row="1"
-                                       Margin="10,5"
-                                       Style="{ThemeResource SubtitleTextBlockStyle}"
-                                       Text="{x:Bind Title}" />
-                            <TextBlock Grid.Row="2"
-                                       Margin="10,0"
-                                       Style="{ThemeResource BaseTextBlockStyle}"
-                                       Text="{x:Bind Sig}" />
-                            <TextBlock Grid.Row="3"
-                                       Margin="10,5"
-                                       Style="{ThemeResource CaptionTextBlockStyle}"
-                                       Text="{x:Bind Gallery}" />
+                            </ItemContainer.ContextFlyout>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <wuc:ImageEx Height="220"
+                                             Margin="5,0"
+                                             Source="{x:Bind FileFolderPath, Converter={StaticResource FileNameToFilePathConverter}}"
+                                             Stretch="UniformToFill" />
+                                <TextBlock Grid.Row="1"
+                                           Margin="10,5"
+                                           Style="{ThemeResource SubtitleTextBlockStyle}"
+                                           Text="{x:Bind Title}" />
+                                <TextBlock Grid.Row="2"
+                                           Margin="10,0"
+                                           Style="{ThemeResource BaseTextBlockStyle}"
+                                           Text="{x:Bind Sig}" />
+                                <TextBlock Grid.Row="3"
+                                           Margin="10,5"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind Gallery}" />
 
-                        </Grid>
+                            </Grid>
+                        </ItemContainer>
                     </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
+                </ItemsView.ItemTemplate>
+            </ItemsView>
         </ScrollView>
 
         <ContentDialog x:Name="SlideShowDialog"
