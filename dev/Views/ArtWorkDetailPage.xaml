@@ -121,6 +121,7 @@
         <ScrollView Grid.Row="2"
                     VerticalScrollBarVisibility="Auto">
             <ItemsView x:Name="ArtItemsView"
+                       Margin="0,0,15,0"
                        ItemsSource="{x:Bind ViewModel.ArtsACV, Mode=OneWay}"
                        SelectionChanged="ArtItemsView_SelectionChanged">
                 <ItemsView.Layout>
@@ -160,13 +161,12 @@
                             </ItemContainer.ContextFlyout>
                             <Grid>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <wuc:ImageEx Height="220"
-                                             Margin="5,0"
+                                <wuc:ImageEx Margin="5"
                                              Source="{x:Bind FileFolderPath, Converter={StaticResource FileNameToFilePathConverter}}"
                                              Stretch="UniformToFill" />
                                 <TextBlock Grid.Row="1"
@@ -178,7 +178,7 @@
                                            Style="{ThemeResource BaseTextBlockStyle}"
                                            Text="{x:Bind Sig}" />
                                 <TextBlock Grid.Row="3"
-                                           Margin="10,5"
+                                           Margin="10,5,10,10"
                                            Style="{ThemeResource CaptionTextBlockStyle}"
                                            Text="{x:Bind Gallery}" />
 
