@@ -69,6 +69,7 @@ public partial class App : Application
         services.AddTransient<DataBaseViewModel>();
         services.AddTransient<ArtWorkViewModel>();
         services.AddTransient<ArtWorkDetailViewModel>();
+        services.AddTransient<GalleryViewModel>();
 
         //Settings
         services.AddTransient<AboutUsSettingViewModel>();

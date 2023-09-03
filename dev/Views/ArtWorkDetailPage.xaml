@@ -183,6 +183,10 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <wuc:ImageEx Margin="5"
+                                             CacheMode="BitmapCache"
+                                             CornerRadius="{ThemeResource OverlayCornerRadius}"
+                                             EnableLazyLoading="True"
+                                             IsCacheEnabled="True"
                                              Source="{x:Bind FileFolderPath, Converter={StaticResource FileNameToFilePathConverter}}"
                                              Stretch="UniformToFill" />
                                 <TextBlock Grid.Row="1"

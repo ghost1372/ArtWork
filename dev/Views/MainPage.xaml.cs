@@ -69,6 +69,10 @@ public sealed partial class MainPage : Page
         {
             viewModel = ArtWorkPage.Instance.ViewModel;
         }
+        else if (root is GalleryPage)
+        {
+            viewModel = GalleryPage.Instance.ViewModel;
+        }
 
         return viewModel;
     }
