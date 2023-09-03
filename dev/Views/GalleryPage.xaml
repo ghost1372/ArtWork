@@ -45,25 +45,55 @@
             </labs:Segmented>
         </StackPanel>
         <uc:ArtCommandBar Grid.Row="1" />
-        <StackPanel Grid.Row="2"
-                    Margin="10,0,10,10"
-                    Padding="10"
-                    Background="{ThemeResource InfoBarInformationalSeverityBackgroundBrush}"
-                    BorderBrush="{ThemeResource InfoBarBorderBrush}"
-                    BorderThickness="{ThemeResource InfoBarBorderThickness}"
-                    CornerRadius="{ThemeResource ControlCornerRadius}"
-                    Orientation="Horizontal"
-                    Spacing="5">
-            <BitmapIcon Width="20"
-                        ShowAsMonochrome="False"
-                        UriSource="Assets/Fluent/city.png" />
-            <TextBlock Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.City), Mode=OneWay}" />
-            <AppBarSeparator />
-            <BitmapIcon Width="20"
-                        ShowAsMonochrome="False"
-                        UriSource="Assets/Fluent/country.png" />
-            <TextBlock Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Country), Mode=OneWay}" />
-        </StackPanel>
+        <Border Grid.Row="2"
+                Margin="10,0,10,10"
+                Padding="10"
+                Background="{ThemeResource InfoBarInformationalSeverityBackgroundBrush}"
+                BorderBrush="{ThemeResource InfoBarBorderBrush}"
+                BorderThickness="{ThemeResource InfoBarBorderThickness}"
+                CornerRadius="{ThemeResource ControlCornerRadius}">
+            <wuc:WrapPanel>
+                <BitmapIcon Width="20"
+                            Margin="0,0,5,0"
+                            ShowAsMonochrome="False"
+                            UriSource="Assets/Fluent/artwork.png"
+                            Visibility="{x:Bind TxtTitle.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
+                <TextBlock x:Name="TxtTitle"
+                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Title), Mode=OneWay}" />
+                <AppBarSeparator />
+                <BitmapIcon Width="20"
+                            Margin="0,0,5,0"
+                            ShowAsMonochrome="False"
+                            UriSource="Assets/Fluent/painter.png"
+                            Visibility="{x:Bind TxtSig.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
+                <TextBlock x:Name="TxtSig"
+                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Sig), Mode=OneWay}" />
+                <AppBarSeparator />
+                <BitmapIcon Width="20"
+                            Margin="0,0,5,0"
+                            ShowAsMonochrome="False"
+                            UriSource="Assets/Fluent/gallery.png"
+                            Visibility="{x:Bind TxtGallery.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
+                <TextBlock x:Name="TxtGallery"
+                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Gallery), Mode=OneWay}" />
+                <AppBarSeparator />
+                <BitmapIcon Width="20"
+                            Margin="0,0,5,0"
+                            ShowAsMonochrome="False"
+                            UriSource="Assets/Fluent/city.png"
+                            Visibility="{x:Bind TxtCity.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
+                <TextBlock x:Name="TxtCity"
+                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.City), Mode=OneWay}" />
+                <AppBarSeparator />
+                <BitmapIcon Width="20"
+                            Margin="0,0,5,0"
+                            ShowAsMonochrome="False"
+                            UriSource="Assets/Fluent/country.png"
+                            Visibility="{x:Bind TxtCountry.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
+                <TextBlock x:Name="TxtCountry"
+                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Country), Mode=OneWay}" />
+            </wuc:WrapPanel>
+        </Border>
         <ScrollView Grid.Row="3"
                     VerticalScrollBarVisibility="Auto">
             <ItemsView x:Name="ArtItemsView"
