@@ -6,6 +6,7 @@ using ArtWork.Database.Tables;
 using ArtWork.Models;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 
 using Nucs.JsonSettings;
@@ -165,4 +166,17 @@ public static class ArtWorkHelper
         }
     }
 
+    public static Art GetArtFromRightClick(RightTappedRoutedEventArgs e)
+    {
+        FrameworkElement element = e.OriginalSource as FrameworkElement;
+        if (element != null)
+        {
+            var itemContainer = FindParent<ItemContainer>(element);
+            if (itemContainer != null)
+            {
+                return itemContainer.DataContext as Art;
+            }
+        }
+        return null;
+    }
 }

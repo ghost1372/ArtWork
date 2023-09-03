@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog x:Class="ArtWork.Views.SlideShowDialog"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               Title="SlideShow Options"
+               Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+               CornerRadius="{ThemeResource OverlayCornerRadius}"
+               PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
+               PrimaryButtonText="Ok"
+               SecondaryButtonText="Cancel">
+    <StackPanel Margin="10"
+                Spacing="5">
+        <ComboBox HorizontalAlignment="Stretch"
+                  Header="Wallpaper Fit"
+                  SelectedIndex="2"
+                  SelectedItem="{x:Bind CommandBarViewModel.SelectedWallpaperFit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ComboBoxItem Content="Center" />
+            <ComboBoxItem Content="Fill" />
+            <ComboBoxItem Content="Fit" />
+            <ComboBoxItem Content="Span" />
+            <ComboBoxItem Content="Stretch" />
+            <ComboBoxItem Content="Tile" />
+        </ComboBox>
+        <RadioButtons MaxColumns="3"
+                      SelectedIndex="1"
+                      SelectedItem="{x:Bind CommandBarViewModel.SelectedTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <RadioButton Content="Second" />
+            <RadioButton Content="Minute" />
+            <RadioButton Content="Hour" />
+        </RadioButtons>
+        <NumberBox Header="Interval"
+                   Minimum="1"
+                   SpinButtonPlacementMode="Inline"
+                   Value="{x:Bind CommandBarViewModel.SelectedInterval, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <ToggleSwitch Header="Shuffle"
+                      IsOn="{x:Bind CommandBarViewModel.ShuffleSlideShow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </StackPanel>
+</ContentDialog>

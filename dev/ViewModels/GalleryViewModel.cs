@@ -30,7 +30,7 @@ public partial class GalleryViewModel : ObservableRecipient
     public bool isCitySelected;
 
     [RelayCommand]
-    private async void OnPageLoaded()
+    private void OnPageLoaded()
     {
         IsTitleSelected = true;
         IsSigSelected = true;

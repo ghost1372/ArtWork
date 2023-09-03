@@ -70,6 +70,7 @@ public partial class App : Application
         services.AddTransient<ArtWorkViewModel>();
         services.AddTransient<ArtWorkDetailViewModel>();
         services.AddTransient<GalleryViewModel>();
+        services.AddTransient<ArtCommandBarViewModel>();
 
         //Settings
         services.AddTransient<AboutUsSettingViewModel>();

@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<UserControl x:Class="ArtWork.Views.UserControls.ArtCommandBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:wuc="using:WinUICommunity"
+             mc:Ignorable="d">
+
+    <CommandBar HorizontalAlignment="Left"
+                Background="Transparent"
+                DefaultLabelPosition="Right"
+                IsOpen="False">
+        <AppBarButton Command="{x:Bind ViewModel.OpenImageCommand}"
+                      Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                      Label="Open Image (Photo App)" />
+        <AppBarElementContainer>
+            <SplitButton Command="{x:Bind ViewModel.NavigateToDirectoryCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <BitmapIcon Margin="0,0,8,0"
+                                ShowAsMonochrome="False"
+                                UriSource="Assets/Fluent/explorer.png" />
+                    <TextBlock Text="Open Explorer" />
+                </StackPanel>
+                <SplitButton.Flyout>
+                    <Flyout Placement="Bottom">
+                        <Button MinWidth="200"
+                                HorizontalAlignment="Stretch"
+                                Command="{x:Bind ViewModel.NavigateToFileCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <BitmapIcon Width="20"
+                                            Margin="0,0,8,0"
+                                            ShowAsMonochrome="False"
+                                            UriSource="Assets/Fluent/explorer.png" />
+                                <TextBlock Text="Open File" />
+                            </StackPanel>
+                        </Button>
+                    </Flyout>
+                </SplitButton.Flyout>
+            </SplitButton>
+        </AppBarElementContainer>
+        <AppBarElementContainer>
+            <SplitButton Command="{x:Bind ViewModel.SetWallpaperCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <BitmapIcon Margin="0,0,8,0"
+                                ShowAsMonochrome="False"
+                                UriSource="Assets/Fluent/wallpaper.png" />
+                    <TextBlock Text="Set as Desktop background" />
+                </StackPanel>
+                <SplitButton.Flyout>
+                    <Flyout Placement="Bottom">
+                        <StackPanel MinWidth="200"
+                                    Spacing="5">
+                            <Button x:Name="btnFill"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                    CommandParameter="{Binding ElementName=btnFill}"
+                                    Content="Fill"
+                                    Tag="Fill" />
+                            <Button x:Name="btnFit"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                    CommandParameter="{Binding ElementName=btnFit}"
+                                    Content="Fit"
+                                    Tag="Fit" />
+                            <Button x:Name="btnSpan"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                    CommandParameter="{Binding ElementName=btnSpan}"
+                                    Content="Span"
+                                    Tag="Span" />
+                            <Button x:Name="btnStretch"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                    CommandParameter="{Binding ElementName=btnStretch}"
+                                    Content="Stretch"
+                                    Tag="Stretch" />
+                            <Button x:Name="btnTile"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                    CommandParameter="{Binding ElementName=btnTile}"
+                                    Content="Tile"
+                                    Tag="Tile" />
+                            <Button x:Name="btnCenter"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.SetWallpaperCommand}"
+                                    CommandParameter="{Binding ElementName=btnCenter}"
+                                    Content="Center"
+                                    Tag="Center" />
+                        </StackPanel>
+                    </Flyout>
+                </SplitButton.Flyout>
+            </SplitButton>
+        </AppBarElementContainer>
+        <AppBarButton Command="{x:Bind ViewModel.SetSlideShowCommand}"
+                      Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                      Label="Set Folder as SlideShow" />
+        <AppBarElementContainer Margin="5,0"
+                                VerticalContentAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <BitmapIcon Height="20"
+                            ShowAsMonochrome="False"
+                            UriSource="Assets/Fluent/height.png" />
+                <TextBlock VerticalAlignment="Center"
+                           Text="Items Height" />
+                <NumberBox x:Name="LinedFlowLayoutNumberBox"
+                           Margin="5,0"
+                           Maximum="1000"
+                           Minimum="350"
+                           SpinButtonPlacementMode="Inline"
+                           Value="{x:Bind ViewModel.LinedFlowLayoutHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </AppBarElementContainer>
+    </CommandBar>
+</UserControl>
