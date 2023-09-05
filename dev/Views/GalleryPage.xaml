@@ -2,10 +2,10 @@
 <Page x:Class="ArtWork.Views.GalleryPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:community="using:CommunityToolkit.WinUI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
-      xmlns:labs="using:CommunityToolkit.Labs.WinUI"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:settings="using:ArtWork.Common"
       xmlns:tables="using:ArtWork.Database.Tables"
@@ -32,18 +32,18 @@
             <TextBlock VerticalAlignment="Center"
                        Style="{ThemeResource BaseTextBlockStyle}"
                        Text="Search In" />
-            <labs:Segmented SelectionMode="Multiple">
-                <labs:SegmentedItem Content="Title"
-                                    IsSelected="{x:Bind ViewModel.IsTitleSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <labs:SegmentedItem Content="Gallery"
-                                    IsSelected="{x:Bind ViewModel.IsGallerySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <labs:SegmentedItem Content="Sig"
-                                    IsSelected="{x:Bind ViewModel.IsSigSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <labs:SegmentedItem Content="Country"
-                                    IsSelected="{x:Bind ViewModel.IsCountrySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <labs:SegmentedItem Content="City"
-                                    IsSelected="{x:Bind ViewModel.IsCitySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </labs:Segmented>
+            <community:Segmented SelectionMode="Multiple">
+                <community:SegmentedItem Content="Title"
+                                         IsSelected="{x:Bind ViewModel.IsTitleSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <community:SegmentedItem Content="Gallery"
+                                         IsSelected="{x:Bind ViewModel.IsGallerySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <community:SegmentedItem Content="Sig"
+                                         IsSelected="{x:Bind ViewModel.IsSigSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <community:SegmentedItem Content="Country"
+                                         IsSelected="{x:Bind ViewModel.IsCountrySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <community:SegmentedItem Content="City"
+                                         IsSelected="{x:Bind ViewModel.IsCitySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </community:Segmented>
 
             <ToggleSwitch x:Name="TgShowNudes"
                           IsOn="{x:Bind settings:ArtWorkHelper.Settings.IsShowNudes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
