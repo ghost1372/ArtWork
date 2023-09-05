@@ -1,4 +1,4 @@
-name: Publish Release
+﻿name: Publish Release
 
 on:
   workflow_dispatch:
@@ -15,7 +15,12 @@ jobs:
     - uses: actions/checkout@v3
       with:
        fetch-depth: 0
-        
+
+    - name: Set up NuGet
+      run: |
+         nuget sources add -name Labs -source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-Labs/nuget/v3/index.json
+         nuget sources add -name Main-Labs -source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-MainLatest/nuget/v3/index.json
+
     - name: Get ${{ env.FILE_NAME }} Version
       uses: kzrnm/get-net-sdk-project-versions-action@v1.3.0
       id: get-version
