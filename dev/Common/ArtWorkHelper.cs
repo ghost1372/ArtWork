@@ -26,12 +26,15 @@ public static class ArtWorkHelper
 
     public static string[] ImageFilesCacheForHomeLandingPage = null;
 
-    public static Art GetArt(ArtWorkModel artWorkJson, string fileName, string directoryName, string simplifiedSig)
+    public static Art GetArt(ArtWorkDbContext db, ArtWorkModel artWorkJson, string fileName, string directoryName, string simplifiedSig)
     {
         var fileFolderPath = Path.Combine(directoryName, fileName);
 
+        var isNude = db.Nudes.Any(x => (Path.GetFileNameWithoutExtension(fileName)).Equals(x.FileNameWithoutExtension));
+
         return new Art
         {
+            IsNude = isNude,
             FolderName = directoryName,
             FileName = fileName,
             FileFolderPath = fileFolderPath,

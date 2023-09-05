@@ -37,6 +37,7 @@ public partial class DataBaseViewModel : ObservableRecipient
         await Task.Delay(1000);
         await db.Database.EnsureCreatedAsync();
         await Task.Delay(1000);
+        await AddNudesIntoDataBase();
 
         ProgressValue = 0;
         foreach (var item in jsonFiles)
@@ -48,14 +49,13 @@ public partial class DataBaseViewModel : ObservableRecipient
 
             var dir = GetDirectoryName(artWorkJson?.wikiartist, artWorkJson?.sig);
 
-            var art = GetArt(artWorkJson, fileName, dir.DirectoryName, dir.SimplifiedSig);
+            var art = GetArt(db, artWorkJson, fileName, dir.DirectoryName, dir.SimplifiedSig);
 
             await db.Arts.AddAsync(art);
             MessageStatus = $"{ProgressValue} Items Added to the database.";
         }
 
         await db.SaveChangesAsync();
-        await AddNudesIntoDataBase();
         IsActive = true;
         ProgressValue = 0;
     }

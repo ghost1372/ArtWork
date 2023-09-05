@@ -6,6 +6,7 @@ public class Art
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+    public bool IsNude { get; set; }
     public string FolderName { get; set; }
     public string FileName { get; set; }
     public string FileFolderPath { get; set; }

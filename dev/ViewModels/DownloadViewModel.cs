@@ -201,9 +201,9 @@ public partial class DownloadViewModel : ObservableRecipient
                     await writer.WriteAsync(json);
 
                     var fileName = Path.GetFileName(url.ImageUrl);
-                    var art = GetArt(artWorkJson, fileName, dir.DirectoryName, dir.SimplifiedSig);
 
                     using var db = new ArtWorkDbContext();
+                    var art = GetArt(db, artWorkJson, fileName, dir.DirectoryName, dir.SimplifiedSig);
                     await db.Arts.AddAsync(art);
                     await db.SaveChangesAsync();
                     var downloadConfiguration = new DownloadConfiguration();
