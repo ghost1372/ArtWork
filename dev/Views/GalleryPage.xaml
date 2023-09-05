@@ -7,6 +7,7 @@
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:labs="using:CommunityToolkit.Labs.WinUI"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:settings="using:ArtWork.Common"
       xmlns:tables="using:ArtWork.Database.Tables"
       xmlns:uc="using:ArtWork.Views.UserControls"
       xmlns:wuc="using:WinUICommunity"
@@ -30,7 +31,7 @@
                     Spacing="5">
             <TextBlock VerticalAlignment="Center"
                        Style="{ThemeResource BaseTextBlockStyle}"
-                       Text="Search Options" />
+                       Text="Search In" />
             <labs:Segmented SelectionMode="Multiple">
                 <labs:SegmentedItem Content="Title"
                                     IsSelected="{x:Bind ViewModel.IsTitleSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -43,6 +44,18 @@
                 <labs:SegmentedItem Content="City"
                                     IsSelected="{x:Bind ViewModel.IsCitySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </labs:Segmented>
+
+            <ToggleSwitch x:Name="TgShowNudes"
+                          IsOn="{x:Bind settings:ArtWorkHelper.Settings.IsShowNudes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          OffContent="Do Not Show Nudes"
+                          OnContent="Show Nudes"
+                          Toggled="TgShowNudes_Toggled" />
+            <ToggleSwitch x:Name="TgShowOnlyNudes"
+                          IsEnabled="False"
+                          IsOn="{x:Bind settings:ArtWorkHelper.Settings.IsShowOnlyNudes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          OffContent="Show All"
+                          OnContent="Only Show Nudes"
+                          Toggled="TgShowOnlyNudes_Toggled" />
         </StackPanel>
         <uc:ArtCommandBar Grid.Row="1" />
         <Border Grid.Row="2"
@@ -98,7 +111,7 @@
                     VerticalScrollBarVisibility="Auto">
             <ItemsView x:Name="ArtItemsView"
                        Margin="0,0,15,0"
-                       ItemsSource="{x:Bind ViewModel.ArtsACV, Mode=OneWay}"
+                       ItemsSource="{x:Bind ViewModel.Arts, Mode=OneWay}"
                        SelectionChanged="ArtItemsView_SelectionChanged">
                 <ItemsView.Layout>
                     <LinedFlowLayout LineHeight="{x:Bind ArtCommandBarViewModel.LinedFlowLayoutHeight, Mode=OneWay}"

@@ -10,4 +10,6 @@ public class ArtWorkConfig : JsonSettings, IVersionable
 
     public virtual string ArtWorkDirectory { get; set; } = Constants.ArtWorkPath;
     public virtual int AvailableArtWorkCount { get; set; } = 10430;
+    public virtual bool IsShowNudes { get; set; } = true;
+    public virtual bool IsShowOnlyNudes { get; set; } = false;
 }

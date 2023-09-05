@@ -29,7 +29,7 @@ public sealed partial class GalleryPage : Page
         var art = GetArtFromRightClick(e);
         if (art != null)
         {
-            var itemIndex = ViewModel.ArtsACV.IndexOf(art);
+            var itemIndex = ViewModel.Arts.IndexOf(art);
             if (itemIndex != -1)
             {
                 ArtItemsView.Select(itemIndex);
@@ -65,5 +65,25 @@ public sealed partial class GalleryPage : Page
     private void OnSetWallpaperDefault(SplitButton sender, SplitButtonClickEventArgs args)
     {
         ArtCommandBarViewModel.SetWallpaperCommand.Execute("");
+    }
+
+    private void TgShowOnlyNudes_Toggled(object sender, RoutedEventArgs e)
+    {
+        ViewModel.GetArts(TgShowNudes.IsOn, TgShowOnlyNudes.IsOn);
+    }
+
+    private void TgShowNudes_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (TgShowNudes.IsOn)
+        {
+            TgShowOnlyNudes.IsEnabled = true;
+        }
+        else
+        {
+            TgShowOnlyNudes.IsEnabled = false;
+            TgShowOnlyNudes.IsOn = false;
+        }
+
+        ViewModel.GetArts(TgShowNudes.IsOn, TgShowOnlyNudes.IsOn);
     }
 }

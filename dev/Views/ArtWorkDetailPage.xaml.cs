@@ -22,7 +22,7 @@ public sealed partial class ArtWorkDetailPage : Page
         var art = GetArtFromRightClick(e);
         if (art != null)
         {
-            var itemIndex = ViewModel.ArtsACV.IndexOf(art);
+            var itemIndex = ViewModel.Arts.IndexOf(art);
             if (itemIndex != -1)
             {
                 ArtItemsView.Select(itemIndex);
@@ -63,5 +63,10 @@ public sealed partial class ArtWorkDetailPage : Page
     private void menuSetSlideShow_Click(object sender, RoutedEventArgs e)
     {
         ArtCommandBarViewModel.SetSlideShowCommand.Execute(null);
+    }
+
+    private void TgShowNudes_Toggled(object sender, RoutedEventArgs e)
+    {
+        ViewModel.GetArts(TgShowNudes.IsOn);
     }
 }

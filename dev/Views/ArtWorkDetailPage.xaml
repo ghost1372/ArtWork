@@ -4,6 +4,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:settings="using:ArtWork.Common"
       xmlns:tables="using:ArtWork.Database.Tables"
       xmlns:uc="using:ArtWork.Views.UserControls"
       xmlns:wuc="using:WinUICommunity"
@@ -13,10 +14,19 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <uc:ArtCommandBar />
-        <StackPanel Grid.Row="1"
+        <StackPanel Orientation="Horizontal"
+                    Spacing="5">
+            <ToggleSwitch x:Name="TgShowNudes"
+                          IsOn="{x:Bind settings:ArtWorkHelper.Settings.IsShowNudes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          OffContent="Do Not Show Nudes"
+                          OnContent="Show Nudes"
+                          Toggled="TgShowNudes_Toggled" />
+        </StackPanel>
+        <uc:ArtCommandBar Grid.Row="1" />
+        <StackPanel Grid.Row="2"
                     Margin="10,0,10,10"
                     Padding="10"
                     Background="{ThemeResource InfoBarInformationalSeverityBackgroundBrush}"
@@ -36,11 +46,11 @@
             <TextBlock Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Country), Mode=OneWay}" />
         </StackPanel>
 
-        <ScrollView Grid.Row="2"
+        <ScrollView Grid.Row="3"
                     VerticalScrollBarVisibility="Auto">
             <ItemsView x:Name="ArtItemsView"
                        Margin="0,0,15,0"
-                       ItemsSource="{x:Bind ViewModel.ArtsACV, Mode=OneWay}"
+                       ItemsSource="{x:Bind ViewModel.Arts, Mode=OneWay}"
                        SelectionChanged="ArtItemsView_SelectionChanged">
                 <ItemsView.Layout>
                     <LinedFlowLayout LineHeight="{x:Bind ArtCommandBarViewModel.LinedFlowLayoutHeight, Mode=OneWay}"

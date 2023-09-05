@@ -2,16 +2,13 @@
 using ArtWork.Database.Tables;
 using ArtWork.Models;
 
-using CommunityToolkit.WinUI.UI;
-
 namespace ArtWork.ViewModels;
 public partial class ArtWorkDetailViewModel : ObservableRecipient, INavigationAware
 {
     [ObservableProperty]
     private ObservableCollection<Art> arts;
 
-    [ObservableProperty]
-    private AdvancedCollectionView artsACV;
+    private ArtWorkNavigationParameter artWorkNavigationParameter;
 
     public void OnNavigatedFrom()
     {
@@ -19,26 +16,39 @@ public partial class ArtWorkDetailViewModel : ObservableRecipient, INavigationAw
 
     public void OnNavigatedTo(object parameter)
     {
-        var artParameter = parameter as ArtWorkNavigationParameter;
+        artWorkNavigationParameter = parameter as ArtWorkNavigationParameter;
+
+        if (Arts == null)
+        {
+            GetArts(Settings.IsShowNudes);
+        }
+    }
+
+    public void GetArts(bool isShowNudes)
+    {
         IQueryable<Art> items = null;
         using var db = new ArtWorkDbContext();
-        switch (artParameter.DataFilter)
+        switch (artWorkNavigationParameter.DataFilter)
         {
             case DataFilter.SimplifiedSig:
-                items = db.Arts.Where(x => x.SimplifiedSig.Equals(artParameter.Art.SimplifiedSig));
+                items = db.Arts.Where(x => x.SimplifiedSig.Equals(artWorkNavigationParameter.Art.SimplifiedSig));
                 break;
             case DataFilter.Gallery:
-                items = db.Arts.Where(x => x.Gallery.Equals(artParameter.Art.Gallery));
+                items = db.Arts.Where(x => x.Gallery.Equals(artWorkNavigationParameter.Art.Gallery));
                 break;
             case DataFilter.City:
-                items = db.Arts.Where(x => x.City.Equals(artParameter.Art.City));
+                items = db.Arts.Where(x => x.City.Equals(artWorkNavigationParameter.Art.City));
                 break;
             case DataFilter.Country:
-                items = db.Arts.Where(x => x.Country.Equals(artParameter.Art.Country));
+                items = db.Arts.Where(x => x.Country.Equals(artWorkNavigationParameter.Art.Country));
                 break;
         }
-        
+
+        if (!isShowNudes)
+        {
+            items = items.Where(x => x.IsNude == false);
+        }
+
         Arts = new(items);
-        ArtsACV = new AdvancedCollectionView(Arts, true);
     }
 }
