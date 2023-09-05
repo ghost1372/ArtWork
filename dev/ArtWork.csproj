@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Labs.WinUI.SegmentedControl" Version="0.1.230830" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.230904-build.694" />
 		<PackageReference Include="Downloader" Version="3.0.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230822000" />
@@ -33,7 +33,7 @@
 		<PackageReference Include="WinUICommunity.Components" Version="5.1.0" />
 		<PackageReference Include="WinUICommunity.Core" Version="5.1.0" />
 		<PackageReference Include="WinUICommunity.LandingPages" Version="5.1.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2-build.1" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 		<Manifest Include="$(ApplicationManifest)" />
