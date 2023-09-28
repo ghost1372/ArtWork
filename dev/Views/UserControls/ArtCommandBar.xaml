@@ -95,21 +95,5 @@
         <AppBarButton Command="{x:Bind ViewModel.SetSlideShowCommand}"
                       Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
                       Label="Set Folder as SlideShow" />
-        <AppBarElementContainer Margin="5,0"
-                                VerticalContentAlignment="Center">
-            <StackPanel Orientation="Horizontal">
-                <BitmapIcon Height="20"
-                            ShowAsMonochrome="False"
-                            UriSource="Assets/Fluent/height.png" />
-                <TextBlock VerticalAlignment="Center"
-                           Text="Items Height" />
-                <NumberBox x:Name="LinedFlowLayoutNumberBox"
-                           Margin="5,0"
-                           Maximum="1000"
-                           Minimum="350"
-                           SpinButtonPlacementMode="Inline"
-                           Value="{x:Bind ViewModel.LinedFlowLayoutHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
-        </AppBarElementContainer>
     </CommandBar>
 </UserControl>

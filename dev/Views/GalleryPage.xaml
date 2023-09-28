@@ -23,7 +23,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Margin="10"
@@ -58,174 +57,162 @@
                           Toggled="TgShowOnlyNudes_Toggled" />
         </StackPanel>
         <uc:ArtCommandBar Grid.Row="1" />
-        <Border Grid.Row="2"
-                Margin="10,0,10,10"
-                Padding="10"
-                Background="{ThemeResource InfoBarInformationalSeverityBackgroundBrush}"
-                BorderBrush="{ThemeResource InfoBarBorderBrush}"
-                BorderThickness="{ThemeResource InfoBarBorderThickness}"
-                CornerRadius="{ThemeResource ControlCornerRadius}">
-            <wuc:WrapPanel>
-                <BitmapIcon Width="20"
-                            Margin="0,0,5,0"
-                            ShowAsMonochrome="False"
-                            UriSource="Assets/Fluent/artwork.png"
-                            Visibility="{x:Bind TxtTitle.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
-                <TextBlock x:Name="TxtTitle"
-                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Title), Mode=OneWay}" />
-                <AppBarSeparator />
-                <BitmapIcon Width="20"
-                            Margin="0,0,5,0"
-                            ShowAsMonochrome="False"
-                            UriSource="Assets/Fluent/painter.png"
-                            Visibility="{x:Bind TxtSig.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
-                <TextBlock x:Name="TxtSig"
-                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Sig), Mode=OneWay}" />
-                <AppBarSeparator />
-                <BitmapIcon Width="20"
-                            Margin="0,0,5,0"
-                            ShowAsMonochrome="False"
-                            UriSource="Assets/Fluent/gallery.png"
-                            Visibility="{x:Bind TxtGallery.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
-                <TextBlock x:Name="TxtGallery"
-                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Gallery), Mode=OneWay}" />
-                <AppBarSeparator />
-                <BitmapIcon Width="20"
-                            Margin="0,0,5,0"
-                            ShowAsMonochrome="False"
-                            UriSource="Assets/Fluent/city.png"
-                            Visibility="{x:Bind TxtCity.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
-                <TextBlock x:Name="TxtCity"
-                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.City), Mode=OneWay}" />
-                <AppBarSeparator />
-                <BitmapIcon Width="20"
-                            Margin="0,0,5,0"
-                            ShowAsMonochrome="False"
-                            UriSource="Assets/Fluent/country.png"
-                            Visibility="{x:Bind TxtCountry.Text, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}" />
-                <TextBlock x:Name="TxtCountry"
-                           Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Country), Mode=OneWay}" />
-            </wuc:WrapPanel>
-        </Border>
-        <ScrollView Grid.Row="3"
-                    VerticalScrollBarVisibility="Auto">
-            <ItemsView x:Name="ArtItemsView"
-                       Margin="0,0,15,0"
-                       ItemsSource="{x:Bind ViewModel.Arts, Mode=OneWay}"
-                       SelectionChanged="ArtItemsView_SelectionChanged">
-                <ItemsView.Layout>
-                    <LinedFlowLayout LineHeight="{x:Bind ArtCommandBarViewModel.LinedFlowLayoutHeight, Mode=OneWay}"
-                                     LineSpacing="5" />
-                </ItemsView.Layout>
-                <ItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="tables:Art">
-                        <ItemContainer DataContext="{x:Bind}"
-                                       DoubleTapped="Grid_DoubleTapped"
-                                       RightTapped="GridView_RightTapped">
-                            <wuc:ImageEx Margin="5"
-                                         CacheMode="BitmapCache"
-                                         CornerRadius="{ThemeResource OverlayCornerRadius}"
-                                         EnableLazyLoading="True"
-                                         IsCacheEnabled="True"
-                                         Source="{x:Bind FileFolderPath}"
-                                         Stretch="UniformToFill">
-                                <wuc:ImageEx.ContextFlyout>
-                                    <Flyout>
-                                        <StackPanel Spacing="5">
-                                            <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
-                                                       Text="{x:Bind Title}" />
-                                            <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
-                                                       Text="{x:Bind SimplifiedSig}" />
-                                            <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
-                                                       Text="{x:Bind Gallery}" />
-                                            <MenuFlyoutSeparator />
-                                            <StackPanel Orientation="Horizontal">
-                                                <Button Click="OnOpenImage">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <BitmapIcon Width="20"
-                                                                    Margin="0,0,8,0"
-                                                                    ShowAsMonochrome="False"
-                                                                    UriSource="Assets/Fluent/wallpaper.png" />
-                                                        <TextBlock VerticalAlignment="Center"
-                                                                   Text="Open Image (Photo App)" />
-                                                    </StackPanel>
-                                                </Button>
-                                                <AppBarSeparator />
-                                                <SplitButton Click="OnNavigateToDirectory">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <BitmapIcon Width="20"
-                                                                    Margin="0,0,8,0"
-                                                                    ShowAsMonochrome="False"
-                                                                    UriSource="Assets/Fluent/explorer.png" />
-                                                        <TextBlock Text="Open Explorer" />
-                                                    </StackPanel>
-                                                    <SplitButton.Flyout>
-                                                        <Flyout Placement="Bottom">
-                                                            <Button MinWidth="200"
-                                                                    HorizontalAlignment="Stretch"
-                                                                    Click="OnNavigateToFile">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <BitmapIcon Width="20"
-                                                                                Margin="0,0,8,0"
-                                                                                ShowAsMonochrome="False"
-                                                                                UriSource="Assets/Fluent/explorer.png" />
-                                                                    <TextBlock Text="Open File" />
-                                                                </StackPanel>
-                                                            </Button>
-                                                        </Flyout>
-                                                    </SplitButton.Flyout>
-                                                </SplitButton>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <SplitButton Click="OnSetWallpaperDefault">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <BitmapIcon Width="20"
-                                                                    Margin="0,0,8,0"
-                                                                    ShowAsMonochrome="False"
-                                                                    UriSource="Assets/Fluent/wallpaper.png" />
-                                                        <TextBlock Text="Set as Desktop background" />
-                                                    </StackPanel>
-                                                    <SplitButton.Flyout>
-                                                        <Flyout Placement="Bottom">
-                                                            <StackPanel MinWidth="200"
-                                                                        Spacing="5">
-                                                                <Button HorizontalAlignment="Stretch"
-                                                                        Click="OnSetWallpaper"
-                                                                        Content="Fill"
-                                                                        Tag="Fill" />
-                                                                <Button HorizontalAlignment="Stretch"
-                                                                        Click="OnSetWallpaper"
-                                                                        Content="Fit"
-                                                                        Tag="Fit" />
-                                                                <Button HorizontalAlignment="Stretch"
-                                                                        Click="OnSetWallpaper"
-                                                                        Content="Span"
-                                                                        Tag="Span" />
-                                                                <Button HorizontalAlignment="Stretch"
-                                                                        Click="OnSetWallpaper"
-                                                                        Content="Stretch"
-                                                                        Tag="Stretch" />
-                                                                <Button HorizontalAlignment="Stretch"
-                                                                        Click="OnSetWallpaper"
-                                                                        Content="Tile"
-                                                                        Tag="Tile" />
-                                                                <Button HorizontalAlignment="Stretch"
-                                                                        Click="OnSetWallpaper"
-                                                                        Content="Center"
-                                                                        Tag="Center" />
+        <ItemsView x:Name="ArtItemsView"
+                   Grid.Row="2"
+                   Margin="20,0,20,0"
+                   ItemsSource="{x:Bind ViewModel.Arts, Mode=OneWay}"
+                   SelectionChanged="ArtItemsView_SelectionChanged">
+            <ItemsView.Layout>
+                <LinedFlowLayout LineHeight="160"
+                                 LineSpacing="10" />
+            </ItemsView.Layout>
+            <ItemsView.ItemTemplate>
+                <DataTemplate x:DataType="tables:Art">
+                    <ItemContainer Margin="5,0,5,0"
+                                   DataContext="{x:Bind}"
+                                   DoubleTapped="Grid_DoubleTapped"
+                                   RightTapped="GridView_RightTapped">
+                        <wuc:ImageEx CacheMode="BitmapCache"
+                                     CornerRadius="{ThemeResource OverlayCornerRadius}"
+                                     EnableLazyLoading="True"
+                                     IsCacheEnabled="True"
+                                     PlaceholderSource="ms-appx:///Assets/Cover/placeholder.jpg"
+                                     PlaceholderStretch="UniformToFill"
+                                     Source="{x:Bind FileFolderPath}"
+                                     Stretch="UniformToFill">
+                            <wuc:ImageEx.ContextFlyout>
+                                <Flyout>
+                                    <StackPanel Spacing="5">
+                                        <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
+                                                   Text="{x:Bind Title}" />
+                                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
+                                                   Text="{x:Bind SimplifiedSig}" />
+                                        <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   Text="{x:Bind Gallery}" />
+                                        <MenuFlyoutSeparator />
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Click="OnOpenImage">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <BitmapIcon Width="20"
+                                                                Margin="0,0,8,0"
+                                                                ShowAsMonochrome="False"
+                                                                UriSource="Assets/Fluent/wallpaper.png" />
+                                                    <TextBlock VerticalAlignment="Center"
+                                                               Text="Open Image (Photo App)" />
+                                                </StackPanel>
+                                            </Button>
+                                            <AppBarSeparator />
+                                            <SplitButton Click="OnNavigateToDirectory">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <BitmapIcon Width="20"
+                                                                Margin="0,0,8,0"
+                                                                ShowAsMonochrome="False"
+                                                                UriSource="Assets/Fluent/explorer.png" />
+                                                    <TextBlock Text="Open Explorer" />
+                                                </StackPanel>
+                                                <SplitButton.Flyout>
+                                                    <Flyout Placement="Bottom">
+                                                        <Button MinWidth="200"
+                                                                HorizontalAlignment="Stretch"
+                                                                Click="OnNavigateToFile">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <BitmapIcon Width="20"
+                                                                            Margin="0,0,8,0"
+                                                                            ShowAsMonochrome="False"
+                                                                            UriSource="Assets/Fluent/explorer.png" />
+                                                                <TextBlock Text="Open File" />
                                                             </StackPanel>
-                                                        </Flyout>
-                                                    </SplitButton.Flyout>
-                                                </SplitButton>
-                                            </StackPanel>
+                                                        </Button>
+                                                    </Flyout>
+                                                </SplitButton.Flyout>
+                                            </SplitButton>
                                         </StackPanel>
-                                    </Flyout>
-                                </wuc:ImageEx.ContextFlyout>
-                            </wuc:ImageEx>
-                        </ItemContainer>
-                    </DataTemplate>
-                </ItemsView.ItemTemplate>
-            </ItemsView>
-        </ScrollView>
+                                        <StackPanel Orientation="Horizontal">
+                                            <SplitButton Click="OnSetWallpaperDefault">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <BitmapIcon Width="20"
+                                                                Margin="0,0,8,0"
+                                                                ShowAsMonochrome="False"
+                                                                UriSource="Assets/Fluent/wallpaper.png" />
+                                                    <TextBlock Text="Set as Desktop background" />
+                                                </StackPanel>
+                                                <SplitButton.Flyout>
+                                                    <Flyout Placement="Bottom">
+                                                        <StackPanel MinWidth="200"
+                                                                    Spacing="5">
+                                                            <Button HorizontalAlignment="Stretch"
+                                                                    Click="OnSetWallpaper"
+                                                                    Content="Fill"
+                                                                    Tag="Fill" />
+                                                            <Button HorizontalAlignment="Stretch"
+                                                                    Click="OnSetWallpaper"
+                                                                    Content="Fit"
+                                                                    Tag="Fit" />
+                                                            <Button HorizontalAlignment="Stretch"
+                                                                    Click="OnSetWallpaper"
+                                                                    Content="Span"
+                                                                    Tag="Span" />
+                                                            <Button HorizontalAlignment="Stretch"
+                                                                    Click="OnSetWallpaper"
+                                                                    Content="Stretch"
+                                                                    Tag="Stretch" />
+                                                            <Button HorizontalAlignment="Stretch"
+                                                                    Click="OnSetWallpaper"
+                                                                    Content="Tile"
+                                                                    Tag="Tile" />
+                                                            <Button HorizontalAlignment="Stretch"
+                                                                    Click="OnSetWallpaper"
+                                                                    Content="Center"
+                                                                    Tag="Center" />
+                                                        </StackPanel>
+                                                    </Flyout>
+                                                </SplitButton.Flyout>
+                                            </SplitButton>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Flyout>
+                            </wuc:ImageEx.ContextFlyout>
+                        </wuc:ImageEx>
+                        <ToolTipService.ToolTip>
+                            <StackPanel Spacing="5">
+                                <TextBlock Margin="10,5"
+                                           Style="{ThemeResource SubtitleTextBlockStyle}"
+                                           Text="{x:Bind Title}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Margin="10,0"
+                                           Style="{ThemeResource BaseTextBlockStyle}"
+                                           Text="{x:Bind Sig}" />
+                                <StackPanel Margin="10,0"
+                                            Orientation="Horizontal"
+                                            Spacing="5">
+                                    <TextBlock Text="Gallery:" />
+                                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Text="{x:Bind Gallery}" />
+                                </StackPanel>
+                                <StackPanel Margin="10,0"
+                                            Orientation="Horizontal"
+                                            Spacing="5">
+                                    <TextBlock Text="City:" />
+                                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Text="{x:Bind City}" />
+                                </StackPanel>
+                                <StackPanel Margin="10,0"
+                                            Orientation="Horizontal"
+                                            Spacing="5">
+                                    <TextBlock Text="Country:" />
+                                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Text="{x:Bind Country}" />
+                                </StackPanel>
+
+                                <TextBlock Margin="10,0"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind FileFolderPath, Converter={StaticResource FileFolderPathToRealPathConverter}}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                        </ToolTipService.ToolTip>
+                    </ItemContainer>
+                </DataTemplate>
+            </ItemsView.ItemTemplate>
+        </ItemsView>
     </Grid>
 </Page>

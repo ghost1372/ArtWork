@@ -22,9 +22,6 @@ public partial class ArtCommandBarViewModel : ObservableObject
     [ObservableProperty]
     private bool shuffleSlideShow;
 
-    [ObservableProperty]
-    private double linedFlowLayoutHeight = 350;
-
     public ContentDialog SlideShowDialog { get; set; }
 
     [RelayCommand]

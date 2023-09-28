@@ -17,6 +17,7 @@
             <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <common:FileNameToFilePathConverter x:Key="FileNameToFilePathConverter" />
+            <common:FileFolderPathToRealPathConverter x:Key="FileFolderPathToRealPathConverter" />
             <converters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>

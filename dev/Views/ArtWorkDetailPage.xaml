@@ -14,7 +14,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal"
@@ -26,99 +25,94 @@
                           Toggled="TgShowNudes_Toggled" />
         </StackPanel>
         <uc:ArtCommandBar Grid.Row="1" />
-        <StackPanel Grid.Row="2"
-                    Margin="10,0,10,10"
-                    Padding="10"
-                    Background="{ThemeResource InfoBarInformationalSeverityBackgroundBrush}"
-                    BorderBrush="{ThemeResource InfoBarBorderBrush}"
-                    BorderThickness="{ThemeResource InfoBarBorderThickness}"
-                    CornerRadius="{ThemeResource ControlCornerRadius}"
-                    Orientation="Horizontal"
-                    Spacing="5">
-            <BitmapIcon Width="20"
-                        ShowAsMonochrome="False"
-                        UriSource="Assets/Fluent/city.png" />
-            <TextBlock Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.City), Mode=OneWay}" />
-            <AppBarSeparator />
-            <BitmapIcon Width="20"
-                        ShowAsMonochrome="False"
-                        UriSource="Assets/Fluent/country.png" />
-            <TextBlock Text="{x:Bind ArtCommandBarViewModel.SelectedItem.(tables:Art.Country), Mode=OneWay}" />
-        </StackPanel>
 
-        <ScrollView Grid.Row="3"
-                    VerticalScrollBarVisibility="Auto">
-            <ItemsView x:Name="ArtItemsView"
-                       Margin="0,0,15,0"
-                       ItemsSource="{x:Bind ViewModel.Arts, Mode=OneWay}"
-                       SelectionChanged="ArtItemsView_SelectionChanged">
-                <ItemsView.Layout>
-                    <LinedFlowLayout LineHeight="{x:Bind ArtCommandBarViewModel.LinedFlowLayoutHeight, Mode=OneWay}"
-                                     LineSpacing="5" />
-                </ItemsView.Layout>
-                <ItemsView.ItemTemplate>
-                    <DataTemplate x:DataType="tables:Art">
-                        <ItemContainer DataContext="{x:Bind}"
-                                       DoubleTapped="Grid_DoubleTapped"
-                                       RightTapped="GridView_RightTapped">
-                            <ItemContainer.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem x:Name="menuOpenImage"
-                                                    Click="menuOpenImage_Click"
-                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
-                                                    Text="Open Image (Photo App)" />
-                                    <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem x:Name="menuGoToDirectory"
-                                                    Click="menuGoToDirectory_Click"
-                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
-                                                    Text="Open Folder" />
-                                    <MenuFlyoutItem x:Name="menuGotoFile"
-                                                    Click="menuGotoFile_Click"
-                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
-                                                    Text="Open File" />
-                                    <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem x:Name="menuSetWallpaper"
-                                                    Click="menuSetWallpaper_Click"
-                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
-                                                    Text="Set as Desktop background" />
-                                    <MenuFlyoutItem x:Name="menuSetSlideShow"
-                                                    Click="menuSetSlideShow_Click"
-                                                    Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
-                                                    Text="Set Folder as SlideShow" />
-                                </MenuFlyout>
-                            </ItemContainer.ContextFlyout>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <wuc:ImageEx Margin="5"
-                                             CacheMode="BitmapCache"
-                                             CornerRadius="{ThemeResource OverlayCornerRadius}"
-                                             EnableLazyLoading="True"
-                                             IsCacheEnabled="True"
-                                             Source="{x:Bind FileFolderPath, Converter={StaticResource FileNameToFilePathConverter}}"
-                                             Stretch="UniformToFill" />
-                                <TextBlock Grid.Row="1"
-                                           Margin="10,5"
+        <ItemsView x:Name="ArtItemsView"
+                   Grid.Row="2"
+                   Margin="20,0,20,0"
+                   ItemsSource="{x:Bind ViewModel.Arts, Mode=OneWay}"
+                   SelectionChanged="ArtItemsView_SelectionChanged">
+            <ItemsView.Layout>
+                <LinedFlowLayout LineHeight="160"
+                                 LineSpacing="10" />
+            </ItemsView.Layout>
+            <ItemsView.ItemTemplate>
+                <DataTemplate x:DataType="tables:Art">
+                    <ItemContainer Margin="5,0,5,0"
+                                   DataContext="{x:Bind}"
+                                   DoubleTapped="Grid_DoubleTapped"
+                                   RightTapped="GridView_RightTapped">
+                        <ItemContainer.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem x:Name="menuOpenImage"
+                                                Click="menuOpenImage_Click"
+                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                Text="Open Image (Photo App)" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem x:Name="menuGoToDirectory"
+                                                Click="menuGoToDirectory_Click"
+                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
+                                                Text="Open Folder" />
+                                <MenuFlyoutItem x:Name="menuGotoFile"
+                                                Click="menuGotoFile_Click"
+                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
+                                                Text="Open File" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem x:Name="menuSetWallpaper"
+                                                Click="menuSetWallpaper_Click"
+                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                Text="Set as Desktop background" />
+                                <MenuFlyoutItem x:Name="menuSetSlideShow"
+                                                Click="menuSetSlideShow_Click"
+                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                Text="Set Folder as SlideShow" />
+                            </MenuFlyout>
+                        </ItemContainer.ContextFlyout>
+                        <wuc:ImageEx CacheMode="BitmapCache"
+                                     CornerRadius="{ThemeResource OverlayCornerRadius}"
+                                     EnableLazyLoading="False"
+                                     IsCacheEnabled="True"
+                                     Source="{x:Bind FileFolderPath, Converter={StaticResource FileNameToFilePathConverter}}"
+                                     Stretch="UniformToFill" />
+                        <ToolTipService.ToolTip>
+                            <StackPanel Spacing="5">
+                                <TextBlock Margin="10,5"
                                            Style="{ThemeResource SubtitleTextBlockStyle}"
-                                           Text="{x:Bind Title}" />
-                                <TextBlock Grid.Row="2"
-                                           Margin="10,0"
+                                           Text="{x:Bind Title}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Margin="10,0"
                                            Style="{ThemeResource BaseTextBlockStyle}"
                                            Text="{x:Bind Sig}" />
-                                <TextBlock Grid.Row="3"
-                                           Margin="10,5,10,10"
-                                           Style="{ThemeResource CaptionTextBlockStyle}"
-                                           Text="{x:Bind Gallery}" />
+                                <StackPanel Margin="10,0"
+                                            Orientation="Horizontal"
+                                            Spacing="5">
+                                    <TextBlock Text="Gallery:" />
+                                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Text="{x:Bind Gallery}" />
+                                </StackPanel>
+                                <StackPanel Margin="10,0"
+                                            Orientation="Horizontal"
+                                            Spacing="5">
+                                    <TextBlock Text="City:" />
+                                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Text="{x:Bind City}" />
+                                </StackPanel>
+                                <StackPanel Margin="10,0"
+                                            Orientation="Horizontal"
+                                            Spacing="5">
+                                    <TextBlock Text="Country:" />
+                                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Text="{x:Bind Country}" />
+                                </StackPanel>
 
-                            </Grid>
-                        </ItemContainer>
-                    </DataTemplate>
-                </ItemsView.ItemTemplate>
-            </ItemsView>
-        </ScrollView>
+                                <TextBlock Margin="10,0"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind FileFolderPath, Converter={StaticResource FileFolderPathToRealPathConverter}}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                        </ToolTipService.ToolTip>
+                    </ItemContainer>
+                </DataTemplate>
+            </ItemsView.ItemTemplate>
+        </ItemsView>
     </Grid>
 </Page>
