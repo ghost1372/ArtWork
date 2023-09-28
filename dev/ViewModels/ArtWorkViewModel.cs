@@ -2,7 +2,7 @@
 using ArtWork.Database.Tables;
 using ArtWork.Models;
 
-using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.Collections;
 
 using Microsoft.UI.Xaml.Media.Animation;
 

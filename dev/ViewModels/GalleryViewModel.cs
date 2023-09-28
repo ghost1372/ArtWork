@@ -1,8 +1,6 @@
 ﻿using ArtWork.Database;
 using ArtWork.Database.Tables;
 
-using CommunityToolkit.WinUI.UI;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace ArtWork.ViewModels;
