@@ -69,8 +69,10 @@
                         </ItemContainer.ContextFlyout>
                         <wuc:ImageEx CacheMode="BitmapCache"
                                      CornerRadius="{ThemeResource OverlayCornerRadius}"
-                                     EnableLazyLoading="False"
+                                     EnableLazyLoading="True"
                                      IsCacheEnabled="True"
+                                     PlaceholderSource="ms-appx:///Assets/Cover/placeholder.jpg"
+                                     PlaceholderStretch="UniformToFill"
                                      Source="{x:Bind FileFolderPath, Converter={StaticResource FileNameToFilePathConverter}}"
                                      Stretch="UniformToFill" />
                         <ToolTipService.ToolTip>

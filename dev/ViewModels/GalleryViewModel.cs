@@ -70,6 +70,7 @@ public partial class GalleryViewModel : ObservableRecipient
             Wikiartist = x.Wikiartist
         });
 
+        arts = arts.OrderBy(x => EF.Functions.Random());
         Arts = new(arts);
     }
 

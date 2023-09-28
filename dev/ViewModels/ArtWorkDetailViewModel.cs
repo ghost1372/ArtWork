@@ -2,6 +2,8 @@
 using ArtWork.Database.Tables;
 using ArtWork.Models;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace ArtWork.ViewModels;
 public partial class ArtWorkDetailViewModel : ObservableRecipient, INavigationAware
 {
@@ -49,6 +51,7 @@ public partial class ArtWorkDetailViewModel : ObservableRecipient, INavigationAw
             items = items.Where(x => x.IsNude == false);
         }
 
+        items = items.OrderBy(x => EF.Functions.Random());
         Arts = new(items);
     }
 }
