@@ -215,7 +215,6 @@ public partial class DownloadViewModel : ObservableRecipient
                         .WithConfiguration(downloadConfiguration)
                         .WithDirectory(artistDir)
                         .WithFileName(Path.GetFileName(url.ImageUrl))
-                        .WithConfiguration(new DownloadConfiguration())
                         .Build();
 
                     download.DownloadProgressChanged += Download_DownloadProgressChanged;

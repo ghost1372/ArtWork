@@ -5,7 +5,7 @@ public partial class App : Application
     public static Window currentWindow = Window.Current;
     public IServiceProvider Services { get; }
     public new static App Current => (App)Application.Current;
-    public string AppVersion { get; set; } = VersionHelper.GetVersion();
+    public string AppVersion { get; set; } = ApplicationHelper.GetAppVersion();
     public string AppName { get; set; } = "ArtWork";
 
     public static T GetService<T>()
@@ -61,6 +61,7 @@ public partial class App : Application
             json.ConfigSettingsPage(typeof(SettingsPage));
             return json;
         });
+
         services.AddTransient<HomeLandingViewModel>();
         services.AddTransient<MainViewModel>();
         services.AddTransient<SettingsViewModel>();

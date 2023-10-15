@@ -1,8 +1,10 @@
 ﻿namespace ArtWork.Common;
 public static class Constants
 {
-    public static readonly string AppName = ApplicationHelper.GetProjectNameAndVersion();
-    public static readonly string RootDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppName);
+    public static readonly string AppName = ApplicationHelper.GetAppNameAndVersion().NameAndVersion;
+    public static readonly string RootDirectoryPath = Path.Combine(ApplicationHelper.GetLocalFolderPath(), AppName);
+    public static readonly string LogDirectoryPath = Path.Combine(RootDirectoryPath, "Log");
+    public static readonly string LogFilePath = Path.Combine(LogDirectoryPath, "Log.txt");
     public static readonly string AppConfigPath = Path.Combine(RootDirectoryPath, "AppConfig.json");
 
     public static readonly string ArtWorkBaseUrl = "https://kraken99.blob.core.windows.net/images4000xn/";

@@ -10,7 +10,7 @@
 		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
-		<Version>2.2.0</Version>
+		<Version>2.3.0</Version>
 		<ImplicitUsings>true</ImplicitUsings>
 		<LangVersion>Latest</LangVersion>
 		<ApplicationIcon>Assets\icon.ico</ApplicationIcon>
@@ -28,14 +28,14 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.230907" />
 		<PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.230907" />
 		<PackageReference Include="Downloader" Version="3.0.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
 		<PackageReference Include="Vanara.Windows.Shell" Version="3.4.16" />
-		<PackageReference Include="WinUICommunity.Components" Version="5.2.0" />
-		<PackageReference Include="WinUICommunity.Core" Version="5.2.0" />
-		<PackageReference Include="WinUICommunity.LandingPages" Version="5.2.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2-build.1" />
+		<PackageReference Include="WinUICommunity.Components" Version="5.3.0" />
+		<PackageReference Include="WinUICommunity.Core" Version="5.3.1" />
+		<PackageReference Include="WinUICommunity.LandingPages" Version="5.3.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2-build.2" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
 		<Manifest Include="$(ApplicationManifest)" />
