@@ -1,4 +1,5 @@
 ﻿using ArtWork.Views.UserControls;
+using CommunityToolkit.WinUI.Controls;
 
 namespace ArtWork.Views;
 
@@ -10,11 +11,13 @@ public sealed partial class ArtWorkDetailPage : Page
     {
         ViewModel = App.GetService<ArtWorkDetailViewModel>();
         this.InitializeComponent();
+        DataContext = ViewModel;
         ArtCommandBarViewModel = ArtCommandBar.Instance.ViewModel;
 
         var dialog = new SlideShowDialog();
         dialog.CommandBarViewModel = ArtCommandBarViewModel;
         ArtCommandBarViewModel.SlideShowDialog = dialog;
+        Loaded += GalleryPage_Loaded;
     }
 
     private void GridView_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
@@ -65,8 +68,32 @@ public sealed partial class ArtWorkDetailPage : Page
         ArtCommandBarViewModel.SetSlideShowCommand.Execute(null);
     }
 
-    private void TgShowNudes_Toggled(object sender, RoutedEventArgs e)
+    private void Segmented_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ViewModel.GetArts(TgShowNudes.IsOn);
+        var item = SegmentedFilter.SelectedItem as SegmentedItem;
+        switch (item.Tag.ToString())
+        {
+                Settings.IsShowNudes = false;
+                Settings.IsShowOnlyNudes = false;
+                ViewModel.GetArts(false);
+                break;
+            case "ShowAll":
+                Settings.IsShowNudes = true;
+                Settings.IsShowOnlyNudes = false;
+                ViewModel.GetArts(true);
+                break;
+        }
+    }
+
+    private void GalleryPage_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (Settings.IsShowNudes)
+        {
+            SegmentedFilter.SelectedItem = SegmentedFilter.Items.Cast<SegmentedItem>().Where(x => x.Tag.ToString().Equals("ShowAll")).FirstOrDefault();
+        }
+        else
+        {
+            SegmentedFilter.SelectedItem = SegmentedFilter.Items.Cast<SegmentedItem>().Where(x => x.Tag.ToString().Equals("NoNudes")).FirstOrDefault();
+        }
     }
 }

@@ -2,6 +2,7 @@
 <Page x:Class="ArtWork.Views.ArtWorkDetailPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:community="using:CommunityToolkit.WinUI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:dev="using:DevWinUI"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,16 +17,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal"
-                    Spacing="5">
-            <ToggleSwitch x:Name="TgShowNudes"
-                          IsOn="{x:Bind settings:ArtWorkHelper.Settings.IsShowNudes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          OffContent="Do Not Show Nudes"
-                          OnContent="Show Nudes"
-                          Toggled="TgShowNudes_Toggled" />
+        <uc:ArtCommandBar />
+        <StackPanel Grid.Row="1"
+                    Margin="0,0,0,5">
+            <NavigationViewItemSeparator Margin="0,0,0,10" />
+            <community:Segmented x:Name="SegmentedFilter"
+                                 HorizontalAlignment="Center"
+                                 SelectionChanged="Segmented_SelectionChanged">
+                <community:SegmentedItem Content="Show All"
+                                         Tag="ShowAll" />
+                <community:SegmentedItem Content="Do Not Show Nudes"
+                                         Tag="NoNudes" />
+            </community:Segmented>
+            <NavigationViewItemSeparator Margin="0,10,0,0" />
         </StackPanel>
-        <uc:ArtCommandBar Grid.Row="1" />
-
         <ItemsView x:Name="ArtItemsView"
                    Grid.Row="2"
                    Margin="20,0,20,0"

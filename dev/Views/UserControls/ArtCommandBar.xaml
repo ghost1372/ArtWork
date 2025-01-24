@@ -17,7 +17,9 @@
         <AppBarElementContainer>
             <SplitButton Command="{x:Bind ViewModel.NavigateToDirectoryCommand}">
                 <StackPanel Orientation="Horizontal">
-                    <BitmapIcon Margin="0,0,8,0"
+                    <BitmapIcon Width="16"
+                                Height="16"
+                                Margin="0,0,8,0"
                                 ShowAsMonochrome="False"
                                 UriSource="Assets/Fluent/explorer.png" />
                     <TextBlock Text="Open Explorer" />
@@ -42,10 +44,14 @@
         <AppBarElementContainer>
             <SplitButton Command="{x:Bind ViewModel.SetWallpaperCommand}">
                 <StackPanel Orientation="Horizontal">
-                    <BitmapIcon Margin="0,0,8,0"
+                    <BitmapIcon Width="16"
+                                Height="16"
+                                Margin="0,0,8,0"
                                 ShowAsMonochrome="False"
                                 UriSource="Assets/Fluent/wallpaper.png" />
-                    <TextBlock Text="Set as Desktop background" />
+                    <TextBlock FontWeight="Normal"
+                               Style="{ThemeResource BaseTextBlockStyle}"
+                               Text="Set as Desktop background" />
                 </StackPanel>
                 <SplitButton.Flyout>
                     <Flyout Placement="Bottom">

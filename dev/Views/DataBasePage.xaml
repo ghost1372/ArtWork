@@ -6,7 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
     <ScrollView Margin="{ThemeResource ContentPageMargin}"
-                  VerticalScrollBarVisibility="Auto">
+                VerticalScrollBarVisibility="Auto">
         <Grid ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -16,7 +16,7 @@
                 <InfoBar Title="If you have a searching issues or the database file is deleted or corrupted, you can rebuild the database file here"
                          IsClosable="False"
                          IsOpen="True"
-                         Severity="Informational" />
+                         Severity="Warning" />
                 <InfoBar Title="be careful!"
                          IsClosable="False"
                          IsOpen="True"
@@ -26,11 +26,13 @@
             <StackPanel Grid.Row="1"
                         Margin="0,50"
                         Spacing="5">
-                <Button VerticalAlignment="Top"
+                <Button MinWidth="200"
+                        VerticalAlignment="Top"
                         Command="{x:Bind ViewModel.ReBuildDataBaseCommand}"
                         Content="ReBuild Database"
                         IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay}" />
-                <Button VerticalAlignment="Top"
+                <Button MinWidth="200"
+                        VerticalAlignment="Top"
                         Command="{x:Bind ViewModel.NormalizeFoldersCommand}"
                         Content="Normalize Artist Folders"
                         IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay}" />

@@ -8,6 +8,7 @@ public sealed partial class ArtWorkPage : Page
     {
         ViewModel = App.GetService<ArtWorkViewModel>();
         this.InitializeComponent();
+        DataContext = ViewModel;
         Instance = this;
     }
 }

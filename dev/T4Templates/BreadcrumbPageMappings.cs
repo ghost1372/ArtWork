@@ -11,5 +11,9 @@ public partial class BreadcrumbPageMappings
 {
     public static Dictionary<Type, BreadcrumbPageConfig> PageDictionary = new()
     {
+        {typeof(ArtWork.Views.SettingsPage), new BreadcrumbPageConfig { PageTitle = null, IsHeaderVisible = true, ClearNavigation = false}},
+        {typeof(ArtWork.Views.AboutUsSettingPage), new BreadcrumbPageConfig { PageTitle = null, IsHeaderVisible = true, ClearNavigation = false}},
+        {typeof(ArtWork.Views.GeneralSettingPage), new BreadcrumbPageConfig { PageTitle = null, IsHeaderVisible = true, ClearNavigation = false}},
+        {typeof(ArtWork.Views.ThemeSettingPage), new BreadcrumbPageConfig { PageTitle = null, IsHeaderVisible = true, ClearNavigation = false}},
     };
 }

@@ -7,8 +7,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:settings="using:ArtWork.Common"
       xmlns:views="using:ArtWork.Views"
+      dev:BreadcrumbNavigator.IsHeaderVisible="True"
       mc:Ignorable="d">
-
     <ScrollView Margin="{ThemeResource ContentPageMargin}"
                 VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="10"

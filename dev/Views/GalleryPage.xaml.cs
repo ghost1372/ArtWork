@@ -1,4 +1,5 @@
 ﻿using ArtWork.Views.UserControls;
+using CommunityToolkit.WinUI.Controls;
 
 namespace ArtWork.Views;
 
@@ -11,12 +12,30 @@ public sealed partial class GalleryPage : Page
     {
         ViewModel = App.GetService<GalleryViewModel>();
         this.InitializeComponent();
+        DataContext = ViewModel;
         Instance = this;
         ArtCommandBarViewModel = ArtCommandBar.Instance.ViewModel;
 
         var dialog = new SlideShowDialog();
         dialog.CommandBarViewModel = ArtCommandBarViewModel;
         ArtCommandBarViewModel.SlideShowDialog = dialog;
+        Loaded += GalleryPage_Loaded;
+    }
+
+    private void GalleryPage_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (Settings.IsShowOnlyNudes)
+        {
+            SegmentedFilter.SelectedItem = SegmentedFilter.Items.Cast<SegmentedItem>().Where(x => x.Tag.ToString().Equals("OnlyNudes")).FirstOrDefault();
+        }
+        else if (Settings.IsShowNudes && !Settings.IsShowOnlyNudes)
+        {
+            SegmentedFilter.SelectedItem = SegmentedFilter.Items.Cast<SegmentedItem>().Where(x => x.Tag.ToString().Equals("ShowAll")).FirstOrDefault();
+        }
+        else if (!Settings.IsShowNudes)
+        {
+            SegmentedFilter.SelectedItem = SegmentedFilter.Items.Cast<SegmentedItem>().Where(x => x.Tag.ToString().Equals("NoNudes")).FirstOrDefault();
+        }
     }
 
     private void ArtItemsView_SelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
@@ -67,23 +86,26 @@ public sealed partial class GalleryPage : Page
         ArtCommandBarViewModel.SetWallpaperCommand.Execute("");
     }
 
-    private void TgShowOnlyNudes_Toggled(object sender, RoutedEventArgs e)
+    private void Segmented_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ViewModel.GetArts(TgShowNudes.IsOn, TgShowOnlyNudes.IsOn);
-    }
-
-    private void TgShowNudes_Toggled(object sender, RoutedEventArgs e)
-    {
-        if (TgShowNudes.IsOn)
+        var item = SegmentedFilter.SelectedItem as SegmentedItem;
+        switch (item.Tag.ToString())
         {
-            TgShowOnlyNudes.IsEnabled = true;
+            case "NoNudes":
+                Settings.IsShowNudes = false;
+                Settings.IsShowOnlyNudes = false;
+                ViewModel.GetArts(false, false);
+                break;
+            case "ShowAll":
+                Settings.IsShowNudes = true;
+                Settings.IsShowOnlyNudes = false;
+                ViewModel.GetArts(true, false);
+                break;
+            case "OnlyNudes":
+                Settings.IsShowNudes = true;
+                Settings.IsShowOnlyNudes = true;
+                ViewModel.GetArts(true, true);
+                break;
         }
-        else
-        {
-            TgShowOnlyNudes.IsEnabled = false;
-            TgShowOnlyNudes.IsOn = false;
-        }
-
-        ViewModel.GetArts(TgShowNudes.IsOn, TgShowOnlyNudes.IsOn);
     }
 }

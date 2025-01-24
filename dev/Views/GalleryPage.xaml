@@ -24,38 +24,22 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Margin="10"
-                    Orientation="Horizontal"
-                    Spacing="5">
-            <TextBlock VerticalAlignment="Center"
-                       Style="{ThemeResource BaseTextBlockStyle}"
-                       Text="Search In" />
-            <community:Segmented SelectionMode="Multiple">
-                <community:SegmentedItem Content="Title"
-                                         IsSelected="{x:Bind ViewModel.IsTitleSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <community:SegmentedItem Content="Gallery"
-                                         IsSelected="{x:Bind ViewModel.IsGallerySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <community:SegmentedItem Content="Sig"
-                                         IsSelected="{x:Bind ViewModel.IsSigSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <community:SegmentedItem Content="Country"
-                                         IsSelected="{x:Bind ViewModel.IsCountrySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <community:SegmentedItem Content="City"
-                                         IsSelected="{x:Bind ViewModel.IsCitySelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <uc:ArtCommandBar />
+        <StackPanel Grid.Row="1"
+                    Margin="0,0,0,5">
+            <NavigationViewItemSeparator Margin="0,0,0,10" />
+            <community:Segmented x:Name="SegmentedFilter"
+                                 HorizontalAlignment="Center"
+                                 SelectionChanged="Segmented_SelectionChanged">
+                <community:SegmentedItem Content="Show All"
+                                         Tag="ShowAll" />
+                <community:SegmentedItem Content="Do Not Show Nudes"
+                                         Tag="NoNudes" />
+                <community:SegmentedItem Content="Show Only Nudes"
+                                         Tag="OnlyNudes" />
             </community:Segmented>
-
-            <ToggleSwitch x:Name="TgShowNudes"
-                          IsOn="{x:Bind settings:ArtWorkHelper.Settings.IsShowNudes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          OffContent="Do Not Show Nudes"
-                          OnContent="Show Nudes"
-                          Toggled="TgShowNudes_Toggled" />
-            <ToggleSwitch x:Name="TgShowOnlyNudes"
-                          IsEnabled="False"
-                          IsOn="{x:Bind settings:ArtWorkHelper.Settings.IsShowOnlyNudes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          OffContent="Show All"
-                          OnContent="Only Show Nudes"
-                          Toggled="TgShowOnlyNudes_Toggled" />
+            <NavigationViewItemSeparator Margin="0,10,0,0" />
         </StackPanel>
-        <uc:ArtCommandBar Grid.Row="1" />
         <ItemsView x:Name="ArtItemsView"
                    Grid.Row="2"
                    Margin="20,0,20,0"

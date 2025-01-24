@@ -71,8 +71,10 @@
         </StackPanel>
         <InfoBar Title="Select an artist to view their artwork"
                  IsClosable="False"
+                 IsIconVisible="False"
                  IsOpen="True"
-                 Message="{x:Bind ViewModel.MessageStatus, Mode=OneWay}" />
+                 Message="{x:Bind ViewModel.MessageStatus, Mode=OneWay}"
+                 Severity="Success" />
         <ListView x:Name="ListView"
                   Grid.Row="2"
                   Margin="5,10"
