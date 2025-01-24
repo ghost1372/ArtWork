@@ -73,6 +73,7 @@ public sealed partial class ArtWorkDetailPage : Page
         var item = SegmentedFilter.SelectedItem as SegmentedItem;
         switch (item.Tag.ToString())
         {
+            case "NoNudes":
                 Settings.IsShowNudes = false;
                 Settings.IsShowOnlyNudes = false;
                 ViewModel.GetArts(false);
