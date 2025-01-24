@@ -5,10 +5,10 @@ using ArtWork.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArtWork.ViewModels;
-public partial class ArtWorkDetailViewModel : ObservableRecipient, INavigationAware
+public partial class ArtWorkDetailViewModel : ObservableRecipient, INavigationAwareEx
 {
     [ObservableProperty]
-    private ObservableCollection<Art> arts;
+    public partial ObservableCollection<Art> Arts { get; set; }
 
     private ArtWorkNavigationParameter artWorkNavigationParameter;
 

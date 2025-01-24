@@ -7,30 +7,27 @@ using CommunityToolkit.WinUI.Collections;
 using Microsoft.UI.Xaml.Media.Animation;
 
 namespace ArtWork.ViewModels;
-public partial class ArtWorkViewModel : ObservableRecipient
+public partial class ArtWorkViewModel : ObservableRecipient, ITitleBarAutoSuggestBoxAware
 {
     [ObservableProperty]
-    private ObservableCollection<Art> artists;
+    public partial ObservableCollection<Art> Artists { get; set; }
 
     [ObservableProperty]
-    private AdvancedCollectionView artistsACV;
+    public partial AdvancedCollectionView ArtistsACV { get; set; }
 
     [ObservableProperty]
-    private string messageStatus;
+    public partial string MessageStatus { get; set; }
 
     [ObservableProperty]
-    private object listViewSelectedItem;
+    public partial object ListViewSelectedItem { get; set; }
 
     [ObservableProperty]
-    private object cmbSelectedItem = "SimplifiedSig";
+    public partial object CmbSelectedItem { get; set; } = "SimplifiedSig";
 
     public DataFilter Filter { get; set; }
-    private IJsonNavigationViewService jsonNavigationViewService;
 
-    public ArtWorkViewModel(IJsonNavigationViewService jsonNavigationViewService)
+    public ArtWorkViewModel()
     {
-        this.jsonNavigationViewService = jsonNavigationViewService;
-
         OnComboBoxItemChanged();
     }
 
@@ -42,7 +39,7 @@ public partial class ArtWorkViewModel : ObservableRecipient
         Filter = DataFilter.SimplifiedSig;
         if (item != null)
         {
-            Filter = ApplicationHelper.GetEnum<DataFilter>(item.Tag.ToString());
+            Filter = GeneralHelper.GetEnum<DataFilter>(item.Tag.ToString());
         }
         using var db = new ArtWorkDbContext();
         IQueryable<Art> uniqueItems = null;
@@ -89,7 +86,7 @@ public partial class ArtWorkViewModel : ObservableRecipient
         if (item != null)
         {
             EntranceNavigationTransitionInfo entranceNavigation = new EntranceNavigationTransitionInfo();
-            jsonNavigationViewService.NavigateTo(typeof(ArtWorkDetailPage), new ArtWorkNavigationParameter(Filter, item), false, entranceNavigation);
+            App.Current.GetJsonNavigationService.NavigateTo(typeof(ArtWorkDetailPage), new ArtWorkNavigationParameter(Filter, item), false, entranceNavigation);
         }
     }
 
@@ -121,5 +118,14 @@ public partial class ArtWorkViewModel : ObservableRecipient
                 return query.Country.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase);
         }
         return false;
+    }
+
+    public void OnAutoSuggestBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        Search();
+    }
+
+    public void OnAutoSuggestBoxQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
     }
 }

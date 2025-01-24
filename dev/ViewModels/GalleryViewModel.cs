@@ -4,25 +4,25 @@ using ArtWork.Database.Tables;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArtWork.ViewModels;
-public partial class GalleryViewModel : ObservableRecipient
+public partial class GalleryViewModel : ObservableRecipient, ITitleBarAutoSuggestBoxAware
 {
     [ObservableProperty]
-    private ObservableCollection<Art> arts;
+    public partial ObservableCollection<Art> Arts { get; set; }
 
     [ObservableProperty]
-    public bool isTitleSelected;
+    public partial bool IsTitleSelected { get; set; }
 
     [ObservableProperty]
-    public bool isGallerySelected;
+    public partial bool IsGallerySelected { get; set; }
 
     [ObservableProperty]
-    public bool isSigSelected;
+    public partial bool IsSigSelected { get; set; }
 
     [ObservableProperty]
-    public bool isCountrySelected;
+    public partial bool IsCountrySelected { get; set; }
 
     [ObservableProperty]
-    public bool isCitySelected;
+    public partial bool IsCitySelected { get; set; }
 
     [RelayCommand]
     private void OnPageLoaded()
@@ -116,5 +116,14 @@ public partial class GalleryViewModel : ObservableRecipient
                 (IsCitySelected && !string.IsNullOrEmpty(x.City) && x.City.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase)));
 
         Arts = new(filteredArts);
+    }
+
+    public void OnAutoSuggestBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        Search();
+    }
+
+    public void OnAutoSuggestBoxQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
     }
 }

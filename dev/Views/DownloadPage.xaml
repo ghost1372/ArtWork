@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:settings="using:ArtWork.Common"
-      xmlns:wuc="using:WinUICommunity"
+      xmlns:dev="using:DevWinUI"
       mc:Ignorable="d">
 
     <ScrollView Margin="{ThemeResource ContentPageMargin}"
@@ -27,13 +27,13 @@
                         IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
                         IsOpen="False">
                 <AppBarButton Command="{x:Bind ViewModel.GenerateIDMDownloadFileCommand}"
-                              Icon="{wuc:BitmapIcon Source=Assets/Fluent/idm.png}"
+                              Icon="{dev:BitmapIcon Source=Assets/Fluent/idm.png}"
                               Label="Generate Download File For IDM" />
                 <AppBarButton Command="{x:Bind ViewModel.ChangeDirectoryCommand}"
-                              Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
+                              Icon="{dev:BitmapIcon Source=Assets/Fluent/explorer.png}"
                               Label="Change Directory" />
                 <AppBarButton Command="{x:Bind ViewModel.ValidateCommand}"
-                              Icon="{wuc:BitmapIcon Source=Assets/Fluent/validate.png}"
+                              Icon="{dev:BitmapIcon Source=Assets/Fluent/validate.png}"
                               Label="Validate" />
             </CommandBar>
 
@@ -84,11 +84,11 @@
                             DefaultLabelPosition="Right"
                             IsOpen="False">
                     <AppBarButton Command="{x:Bind ViewModel.DownloadCommand}"
-                                  Icon="{wuc:BitmapIcon Source=Assets/Fluent/download.png}"
+                                  Icon="{dev:BitmapIcon Source=Assets/Fluent/download.png}"
                                   IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"
                                   Label="Download" />
                     <AppBarButton Command="{x:Bind ViewModel.CancelCommand}"
-                                  Icon="{wuc:BitmapIcon Source=Assets/Fluent/cancel.png}"
+                                  Icon="{dev:BitmapIcon Source=Assets/Fluent/cancel.png}"
                                   IsEnabled="{x:Bind ViewModel.IsActive, Mode=OneWay}"
                                   Label="Cancel" />
                 </CommandBar>
@@ -96,7 +96,7 @@
                 <NavigationViewItemSeparator />
             </StackPanel>
 
-            <wuc:ImageEx Grid.Row="2"
+            <dev:ImageEx Grid.Row="2"
                          Grid.Column="1"
                          Height="200"
                          VerticalAlignment="Top"

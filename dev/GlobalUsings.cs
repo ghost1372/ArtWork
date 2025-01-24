@@ -14,6 +14,6 @@ global using Microsoft.UI.Xaml.Navigation;
 
 global using Windows.System;
 
-global using WinUICommunity;
+global using DevWinUI;
 
 global using static ArtWork.Common.ArtWorkHelper;

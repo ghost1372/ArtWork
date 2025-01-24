@@ -3,10 +3,9 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:dev="using:DevWinUI"
+      xmlns:local="using:ArtWork"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:wuc="using:WinUICommunity"
       mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -20,18 +19,11 @@
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Page.Resources>
-    <wuc:AllLandingPage x:Name="allLandingPage"
-                        HeaderImage="{x:Bind ViewModel.HeaderCover}"
-                        HeaderOverlayImage="{x:Bind ViewModel.HeaderCover}"
-                        HeaderText="{x:Bind AppInfo}"
-                        PlaceholderSource="{ThemeResource HeaderCover}">
-        <i:Interaction.Behaviors>
-            <ic:EventTriggerBehavior EventName="OnItemClick">
-                <ic:EventTriggerBehavior.Actions>
-                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
-                </ic:EventTriggerBehavior.Actions>
-            </ic:EventTriggerBehavior>
-        </i:Interaction.Behaviors>
-    </wuc:AllLandingPage>
+    <dev:AllLandingPage HeaderImage="{ThemeResource HeaderCover}"
+                        HeaderOverlayImage="{ThemeResource HeaderCover}"
+                        HeaderSubtitleText="Thosands Art"
+                        HeaderText="{x:Bind dev:ProcessInfoHelper.ProductNameAndVersion}"
+                        JsonNavigationService="{x:Bind local:App.Current.GetJsonNavigationService}" />
+
 </Page>
 

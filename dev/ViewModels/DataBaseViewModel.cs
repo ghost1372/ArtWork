@@ -7,16 +7,16 @@ namespace ArtWork.ViewModels;
 public partial class DataBaseViewModel : ObservableRecipient
 {
     [ObservableProperty]
-    private string titleStatus;
+    public partial string TitleStatus { get; set; }
 
     [ObservableProperty]
-    private string messageStatus;
+    public partial string MessageStatus { get; set; }
 
     [ObservableProperty]
-    private int progressValue;
+    public partial int ProgressValue { get; set; }
 
     [ObservableProperty]
-    private int progressMaxValue;
+    public partial int ProgressMaxValue { get; set; }
 
     public DataBaseViewModel()
     {

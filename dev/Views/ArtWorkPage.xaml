@@ -4,7 +4,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:local="using:ArtWork.Common"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tables="using:ArtWork.Database.Tables"
@@ -62,11 +61,11 @@
                               Tag="Country" />
 
                 <i:Interaction.Behaviors>
-                    <ic:EventTriggerBehavior EventName="SelectionChanged">
-                        <ic:EventTriggerBehavior.Actions>
-                            <ic:InvokeCommandAction Command="{x:Bind ViewModel.ComboBoxItemChangedCommand}" />
-                        </ic:EventTriggerBehavior.Actions>
-                    </ic:EventTriggerBehavior>
+                    <i:EventTriggerBehavior EventName="SelectionChanged">
+                        <i:EventTriggerBehavior.Actions>
+                            <i:InvokeCommandAction Command="{x:Bind ViewModel.ComboBoxItemChangedCommand}" />
+                        </i:EventTriggerBehavior.Actions>
+                    </i:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ComboBox>
         </StackPanel>
@@ -81,11 +80,11 @@
                   ItemsSource="{x:Bind ViewModel.ArtistsACV, Mode=OneWay}"
                   SelectedItem="{x:Bind ViewModel.ListViewSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Behaviors>
-                <ic:EventTriggerBehavior EventName="SelectionChanged">
-                    <ic:EventTriggerBehavior.Actions>
-                        <ic:InvokeCommandAction Command="{x:Bind ViewModel.GoToDetailPageCommand}" />
-                    </ic:EventTriggerBehavior.Actions>
-                </ic:EventTriggerBehavior>
+                <i:EventTriggerBehavior EventName="SelectionChanged">
+                    <i:EventTriggerBehavior.Actions>
+                        <i:InvokeCommandAction Command="{x:Bind ViewModel.GoToDetailPageCommand}" />
+                    </i:EventTriggerBehavior.Actions>
+                </i:EventTriggerBehavior>
             </i:Interaction.Behaviors>
         </ListView>
         <ProgressRing Grid.Row="2"

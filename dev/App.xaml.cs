@@ -2,14 +2,13 @@
 
 public partial class App : Application
 {
-    public static Window currentWindow = Window.Current;
+    public static Window MainWindow = Window.Current;
     public IServiceProvider Services { get; }
     public new static App Current => (App)Application.Current;
-    public string AppVersion { get; set; } = ApplicationHelper.GetAppVersion();
-    public string AppName { get; set; } = "ArtWork";
+    public IJsonNavigationService GetJsonNavigationService => GetService<IJsonNavigationService>();
+    public IThemeService GetThemeService => GetService<IThemeService>();
 
-    public static T GetService<T>()
-        where T : class
+    public static T GetService<T>() where T : class
     {
         if ((App.Current as App)!.Services.GetService(typeof(T)) is not T service)
         {
@@ -31,21 +30,25 @@ public partial class App : Application
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        currentWindow = new Window();
+        MainWindow = new Window();
 
-        currentWindow.AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-        currentWindow.AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-
-        if (currentWindow.Content is not Frame rootFrame)
+        if (MainWindow.Content is not Frame rootFrame)
         {
-            currentWindow.Content = rootFrame = new Frame();
+            MainWindow.Content = rootFrame = new Frame();
+        }
+
+        if (GetThemeService != null)
+        {
+            GetThemeService.AutoInitialize(MainWindow)
+                .ConfigureTintColor();
         }
 
         rootFrame.Navigate(typeof(MainPage));
 
-        currentWindow.Title = currentWindow.AppWindow.Title = $"{AppName} v{AppVersion}";
-        currentWindow.AppWindow.SetIcon("Assets/icon.ico");
-        currentWindow.Activate();
+        MainWindow.Title = MainWindow.AppWindow.Title = ProcessInfoHelper.ProductNameAndVersion;
+        MainWindow.AppWindow.SetIcon("Assets/icon.ico");
+
+        MainWindow.Activate();
 
         await AddNudesIntoDataBase();
     }
@@ -54,18 +57,8 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
         services.AddSingleton<IThemeService, ThemeService>();
-        services.AddSingleton<IJsonNavigationViewService>(factory =>
-        {
-            var json = new JsonNavigationViewService();
-            json.ConfigDefaultPage(typeof(HomeLandingPage));
-            json.ConfigSettingsPage(typeof(SettingsPage));
-            return json;
-        });
+        services.AddSingleton<IJsonNavigationService, JsonNavigationService>();
 
-        services.AddTransient<HomeLandingViewModel>();
-        services.AddTransient<MainViewModel>();
-        services.AddTransient<SettingsViewModel>();
-        services.AddTransient<BreadCrumbBarViewModel>();
         services.AddTransient<DownloadViewModel>();
         services.AddTransient<DataBaseViewModel>();
         services.AddTransient<ArtWorkViewModel>();
@@ -75,7 +68,6 @@ public partial class App : Application
 
         //Settings
         services.AddTransient<AboutUsSettingViewModel>();
-        services.AddTransient<ThemeSettingViewModel>();
         services.AddTransient<GeneralSettingViewModel>();
 
         return services.BuildServiceProvider();

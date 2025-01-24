@@ -4,20 +4,19 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:community="using:CommunityToolkit.WinUI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:dev="using:DevWinUI"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:settings="using:ArtWork.Common"
       xmlns:tables="using:ArtWork.Database.Tables"
       xmlns:uc="using:ArtWork.Views.UserControls"
-      xmlns:wuc="using:WinUICommunity"
       mc:Ignorable="d">
     <i:Interaction.Behaviors>
-        <ic:EventTriggerBehavior EventName="Loaded">
-            <ic:EventTriggerBehavior.Actions>
-                <ic:InvokeCommandAction Command="{x:Bind ViewModel.PageLoadedCommand}" />
-            </ic:EventTriggerBehavior.Actions>
-        </ic:EventTriggerBehavior>
+        <i:EventTriggerBehavior EventName="Loaded">
+            <i:EventTriggerBehavior.Actions>
+                <i:InvokeCommandAction Command="{x:Bind ViewModel.PageLoadedCommand}" />
+            </i:EventTriggerBehavior.Actions>
+        </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid>
         <Grid.RowDefinitions>
@@ -72,7 +71,7 @@
                                    DataContext="{x:Bind}"
                                    DoubleTapped="Grid_DoubleTapped"
                                    RightTapped="GridView_RightTapped">
-                        <wuc:ImageEx CacheMode="BitmapCache"
+                        <dev:ImageEx CacheMode="BitmapCache"
                                      CornerRadius="{ThemeResource OverlayCornerRadius}"
                                      EnableLazyLoading="True"
                                      IsCacheEnabled="True"
@@ -80,7 +79,7 @@
                                      PlaceholderStretch="UniformToFill"
                                      Source="{x:Bind FileFolderPath}"
                                      Stretch="UniformToFill">
-                            <wuc:ImageEx.ContextFlyout>
+                            <dev:ImageEx.ContextFlyout>
                                 <Flyout>
                                     <StackPanel Spacing="5">
                                         <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
@@ -171,8 +170,8 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Flyout>
-                            </wuc:ImageEx.ContextFlyout>
-                        </wuc:ImageEx>
+                            </dev:ImageEx.ContextFlyout>
+                        </dev:ImageEx>
                         <ToolTipService.ToolTip>
                             <StackPanel Spacing="5">
                                 <TextBlock Margin="10,5"

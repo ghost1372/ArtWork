@@ -1,11 +1,12 @@
 ﻿using Windows.Storage;
 using Windows.Storage.Pickers;
+using WinRT.Interop;
 
 namespace ArtWork.ViewModels;
 public partial class GeneralSettingViewModel : ObservableObject
 {
     [ObservableProperty]
-    public string artWorkFolderPath = Settings.ArtWorkDirectory;
+    public partial string ArtWorkFolderPath { get; set; } = Settings.ArtWorkDirectory;
 
     [RelayCommand]
     private async Task OnLaunchArtWorkPath()
@@ -19,7 +20,7 @@ public partial class GeneralSettingViewModel : ObservableObject
         FolderPicker folderPicker = new();
         folderPicker.FileTypeFilter.Add("*");
 
-        WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, WindowHelper.GetWindowHandleForCurrentWindow(App.currentWindow));
+        WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, WindowNative.GetWindowHandle(App.MainWindow));
 
         StorageFolder folder = await folderPicker.PickSingleFolderAsync();
         if (folder is not null)

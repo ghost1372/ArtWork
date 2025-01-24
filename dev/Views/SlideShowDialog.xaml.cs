@@ -6,6 +6,6 @@ public sealed partial class SlideShowDialog : ContentDialog
     public SlideShowDialog()
     {
         this.InitializeComponent();
-        XamlRoot = App.currentWindow.Content.XamlRoot;
+        XamlRoot = App.MainWindow.Content.XamlRoot;
     }
 }

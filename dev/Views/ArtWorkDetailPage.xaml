@@ -3,11 +3,11 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:dev="using:DevWinUI"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:settings="using:ArtWork.Common"
       xmlns:tables="using:ArtWork.Database.Tables"
       xmlns:uc="using:ArtWork.Views.UserControls"
-      xmlns:wuc="using:WinUICommunity"
       mc:Ignorable="d">
     <Grid Margin="10"
           ChildrenTransitions="{StaticResource SettingsCardsAnimations}">
@@ -45,29 +45,29 @@
                             <MenuFlyout>
                                 <MenuFlyoutItem x:Name="menuOpenImage"
                                                 Click="menuOpenImage_Click"
-                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                Icon="{dev:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
                                                 Text="Open Image (Photo App)" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem x:Name="menuGoToDirectory"
                                                 Click="menuGoToDirectory_Click"
-                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
+                                                Icon="{dev:BitmapIcon Source=Assets/Fluent/explorer.png}"
                                                 Text="Open Folder" />
                                 <MenuFlyoutItem x:Name="menuGotoFile"
                                                 Click="menuGotoFile_Click"
-                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/explorer.png}"
+                                                Icon="{dev:BitmapIcon Source=Assets/Fluent/explorer.png}"
                                                 Text="Open File" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem x:Name="menuSetWallpaper"
                                                 Click="menuSetWallpaper_Click"
-                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                Icon="{dev:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
                                                 Text="Set as Desktop background" />
                                 <MenuFlyoutItem x:Name="menuSetSlideShow"
                                                 Click="menuSetSlideShow_Click"
-                                                Icon="{wuc:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
+                                                Icon="{dev:BitmapIcon Source=Assets/Fluent/wallpaper.png}"
                                                 Text="Set Folder as SlideShow" />
                             </MenuFlyout>
                         </ItemContainer.ContextFlyout>
-                        <wuc:ImageEx CacheMode="BitmapCache"
+                        <dev:ImageEx CacheMode="BitmapCache"
                                      CornerRadius="{ThemeResource OverlayCornerRadius}"
                                      EnableLazyLoading="True"
                                      IsCacheEnabled="True"

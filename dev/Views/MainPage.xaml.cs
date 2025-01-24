@@ -3,78 +3,48 @@
 public sealed partial class MainPage : Page
 {
     public static MainPage Instance { get; set; }
-    public MainViewModel ViewModel { get; }
     public MainPage()
     {
-        ViewModel = App.GetService<MainViewModel>();
         this.InitializeComponent();
         Instance = this;
-        appTitleBar.Window = App.currentWindow;
-        ViewModel.JsonNavigationViewService.Initialize(NavView, NavFrame);
-        ViewModel.JsonNavigationViewService.ConfigJson("Assets/NavViewMenu/AppData.json");
-    }
 
-    private void appTitleBar_BackButtonClick(object sender, RoutedEventArgs e)
-    {
-        if (NavFrame.CanGoBack)
+        App.MainWindow.ExtendsContentIntoTitleBar = true;
+        App.MainWindow.SetTitleBar(AppTitleBar);
+
+        var NavService = App.GetService<IJsonNavigationService>() as JsonNavigationService;
+        if (NavService != null)
         {
-            NavFrame.GoBack();
+            NavService.Initialize(NavView, NavFrame, NavigationPageMappings.PageDictionary)
+                .ConfigureDefaultPage(typeof(HomeLandingPage))
+                .ConfigureSettingsPage(typeof(SettingsPage))
+                .ConfigureJsonFile("Assets/NavViewMenu/AppData.json")
+                .ConfigureTitleBar(AppTitleBar)
+                .ConfigureBreadcrumbBar(BreadCrumbNav, BreadcrumbPageMappings.PageDictionary);
         }
     }
-
-    private void appTitleBar_PaneButtonClick(object sender, RoutedEventArgs e)
+    private void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        NavView.IsPaneOpen = !NavView.IsPaneOpen;
+        AutoSuggestBoxHelper.OnITitleBarAutoSuggestBoxTextChangedEvent(sender, args, NavFrame);
     }
 
-    private void NavFrame_Navigated(object sender, NavigationEventArgs e)
+    private void OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
-        appTitleBar.IsBackButtonVisible = NavFrame.CanGoBack;
+        AutoSuggestBoxHelper.OnITitleBarAutoSuggestBoxQuerySubmittedEvent(sender, args, NavFrame);
     }
 
-    private void ThemeButton_Click(object sender, RoutedEventArgs e)
+    private void KeyboardAccelerator_Invoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
     {
-        var element = App.currentWindow.Content as FrameworkElement;
-
-        if (element.ActualTheme == ElementTheme.Light)
-        {
-            element.RequestedTheme = ElementTheme.Dark;
-        }
-        else if (element.ActualTheme == ElementTheme.Dark)
-        {
-            element.RequestedTheme = ElementTheme.Light;
-        }
+        HeaderAutoSuggestBox.Focus(FocusState.Programmatic);
     }
 
     public AutoSuggestBox GetAutoSuggestBox()
     {
-        return TxtSearch;
+        return HeaderAutoSuggestBox;
     }
 
-    private void TxtSearch_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    private void ThemeButton_Click(object sender, RoutedEventArgs e)
     {
-        var viewModel = GetCurrentViewModel();
-        if (viewModel != null)
-        {
-            viewModel.Search();
-        }
-    }
-
-    private dynamic GetCurrentViewModel()
-    {
-        var rootFrame = ViewModel.JsonNavigationViewService.Frame;
-        dynamic root = rootFrame.Content;
-        dynamic viewModel = null;
-        if (root is ArtWorkPage)
-        {
-            viewModel = ArtWorkPage.Instance.ViewModel;
-        }
-        else if (root is GalleryPage)
-        {
-            viewModel = GalleryPage.Instance.ViewModel;
-        }
-
-        return viewModel;
+        ThemeService.ChangeThemeWithoutSave(App.MainWindow);
     }
 }
 

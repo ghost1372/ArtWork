@@ -10,7 +10,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 
 using Nucs.JsonSettings;
-using Nucs.JsonSettings.Autosave;
 using Nucs.JsonSettings.Fluent;
 using Nucs.JsonSettings.Modulation;
 using Nucs.JsonSettings.Modulation.Recovery;
@@ -21,8 +20,7 @@ public static class ArtWorkHelper
     public static ArtWorkConfig Settings = JsonSettings.Configure<ArtWorkConfig>()
                                .WithRecovery(RecoveryAction.RenameAndLoadDefault)
                                .WithVersioning(VersioningResultAction.RenameAndLoadDefault)
-                               .LoadNow()
-                               .EnableAutosave();
+                               .LoadNow();
 
     public static string[] ImageFilesCacheForHomeLandingPage = null;
 
@@ -88,7 +86,7 @@ public static class ArtWorkHelper
         var existNude = await db.Nudes.AnyAsync();
         if (!existNude)
         {
-            var file = await FileLoaderHelper.GetPath(Constants.NudesPath);
+            var file = await PathHelper.GetFilePath(Constants.NudesPath);
             using StreamReader reader = new StreamReader(file);
             string line;
             while ((line = reader.ReadLine()) != null)

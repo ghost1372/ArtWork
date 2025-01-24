@@ -8,19 +8,19 @@ namespace ArtWork.ViewModels;
 public partial class ArtCommandBarViewModel : ObservableObject
 {
     [ObservableProperty]
-    private object selectedItem;
+    public partial object SelectedItem { get; set; }
 
     [ObservableProperty]
-    private object selectedTime;
+    public partial object SelectedTime { get; set; }
 
     [ObservableProperty]
-    private object selectedWallpaperFit;
+    public partial object SelectedWallpaperFit { get; set; }
 
     [ObservableProperty]
-    private int selectedInterval = 5;
+    public partial int SelectedInterval { get; set; } = 5;
 
     [ObservableProperty]
-    private bool shuffleSlideShow;
+    public partial bool ShuffleSlideShow { get; set; }
 
     public ContentDialog SlideShowDialog { get; set; }
 
@@ -35,7 +35,7 @@ public partial class ArtCommandBarViewModel : ObservableObject
             var button = sender as Button;
             if (button != null && button.Tag != null)
             {
-                var wallpaperFit = ApplicationHelper.GetEnum<WallpaperFit>(button.Tag.ToString());
+                var wallpaperFit = GeneralHelper.GetEnum<WallpaperFit>(button.Tag.ToString());
                 WallpaperManager.WallpaperFit = wallpaperFit;
             }
             else
@@ -58,7 +58,7 @@ public partial class ArtCommandBarViewModel : ObservableObject
                 if (SelectedWallpaperFit != null)
                 {
                     var cmbItem = SelectedWallpaperFit as ComboBoxItem;
-                    wallpaperFit = ApplicationHelper.GetEnum<WallpaperFit>(cmbItem.Content.ToString());
+                    wallpaperFit = GeneralHelper.GetEnum<WallpaperFit>(cmbItem.Content.ToString());
                 }
 
                 if (SelectedTime != null)

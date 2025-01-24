@@ -13,42 +13,36 @@ public partial class DownloadViewModel : ObservableRecipient
     private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
     [ObservableProperty]
-    private string titleStatus = $"Total ArtWorks: {Settings.AvailableArtWorkCount}";
+    public partial string TitleStatus { get; set; } = $"Total ArtWorks: {Settings.AvailableArtWorkCount}";
 
     [ObservableProperty]
-    private string messageStatus;
+    public partial string MessageStatus { get; set; }
 
     [ObservableProperty]
-    private string errorMessage;
+    public partial string ErrorMessage { get; set; }
 
     [ObservableProperty]
-    private int progressValue;
+    public partial int ProgressValue { get; set; }
 
     [ObservableProperty]
-    private int totalProgressValue;
+    public partial int TotalProgressValue { get; set; }
 
     [ObservableProperty]
-    private string previewImage;
+    public partial string PreviewImage { get; set; }
 
     [ObservableProperty]
-    private int chunkCount = 1;
+    public partial int ChunkCount { get; set; } = 1;
 
     [ObservableProperty]
-    private bool useParallelDownload;
+    public partial bool UseParallelDownload { get; set; }
 
     [ObservableProperty]
-    private bool usePreviewImage;
+    public partial bool UsePreviewImage { get; set; }
 
     private readonly Queue<ArtWorkUrl> _downloadUrls = new Queue<ArtWorkUrl>();
     private IDownload download;
     private DownloadPackage downloadPack;
     private bool isCanceled = false;
-
-    private IJsonNavigationViewService jsonNavigationViewService;
-    public DownloadViewModel(IJsonNavigationViewService jsonNavigationViewService)
-    {
-        this.jsonNavigationViewService = jsonNavigationViewService;
-    }
 
     [RelayCommand]
     private async Task OnNavigateToDirectory()
@@ -59,7 +53,7 @@ public partial class DownloadViewModel : ObservableRecipient
     [RelayCommand]
     private void OnChangeDirectory()
     {
-        jsonNavigationViewService.NavigateTo(typeof(GeneralSettingPage));
+        App.Current.GetJsonNavigationService.NavigateTo(typeof(GeneralSettingPage));
     }
 
     [RelayCommand]
@@ -69,7 +63,7 @@ public partial class DownloadViewModel : ObservableRecipient
 
         var fileTypeChoices = new Dictionary<string, IList<string>>();
         fileTypeChoices.Add("Text", new List<string> { ".txt" });
-        var file = await ApplicationHelper.PickSaveFileAsync(App.currentWindow, fileTypeChoices);
+        var file = await FileAndFolderPickerHelper.PickSaveFileAsync(App.MainWindow, fileTypeChoices);
         if (file != null)
         {
             using FileStream fs = new FileStream(file.Path, FileMode.Create);
@@ -96,7 +90,7 @@ public partial class DownloadViewModel : ObservableRecipient
         {
             var fileTypeChoices = new Dictionary<string, IList<string>>();
             fileTypeChoices.Add("Text", new List<string> { ".txt" });
-            var file = await ApplicationHelper.PickSaveFileAsync(App.currentWindow, fileTypeChoices);
+            var file = await FileAndFolderPickerHelper.PickSaveFileAsync(App.MainWindow, fileTypeChoices);
             if (file != null)
             {
                 using FileStream fs = new FileStream(file.Path, FileMode.Create);
@@ -112,7 +106,7 @@ public partial class DownloadViewModel : ObservableRecipient
         else
         {
             ContentDialog contentDialog = new ContentDialog();
-            contentDialog.XamlRoot = App.currentWindow.Content.XamlRoot;
+            contentDialog.XamlRoot = App.MainWindow.Content.XamlRoot;
             contentDialog.Title = "Validate";
             contentDialog.Content = "All files have been downloaded successfully";
             contentDialog.PrimaryButtonText = "Ok";

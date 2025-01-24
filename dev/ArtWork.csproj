@@ -1,20 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+		<TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>ArtWork</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64;ARM64</Platforms>
-		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<Version>2.3.0</Version>
 		<ImplicitUsings>true</ImplicitUsings>
-		<LangVersion>Latest</LangVersion>
+		<LangVersion>preview</LangVersion>
 		<ApplicationIcon>Assets\icon.ico</ApplicationIcon>
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,20 +25,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.230907" />
-		<PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.230907" />
-		<PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.230907" />
-		<PackageReference Include="Downloader" Version="3.0.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
-		<PackageReference Include="Vanara.Windows.Shell" Version="3.4.16" />
-		<PackageReference Include="WinUICommunity.Components" Version="5.3.0" />
-		<PackageReference Include="WinUICommunity.Core" Version="5.3.1" />
-		<PackageReference Include="WinUICommunity.LandingPages" Version="5.3.1" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2-build.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+		<PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.241112-preview1" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.2.241112-preview1" />
+		<PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.241112-preview1" />
+		<PackageReference Include="DevWinUI" Version="8.0.0-Preview5" />
+		<PackageReference Include="DevWinUI.Controls" Version="8.0.0-Preview5" />
+		<PackageReference Include="Downloader" Version="3.3.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250109001-experimental2" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0-preview2" />
+		<PackageReference Include="Vanara.Windows.Shell" Version="4.0.4" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
+    <PackageReference Include="nucs.JsonSettings" Version="2.0.2" />
+    <PackageReference Include="nucs.JsonSettings.AutosaveGenerator" Version="2.0.4" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -49,6 +51,31 @@
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Update="T4Templates\BreadcrumbPageMappings.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>BreadcrumbPageMappings.cs</LastGenOutput>
+	  </None>
+	  <None Update="T4Templates\NavigationPageMappings.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>NavigationPageMappings.cs</LastGenOutput>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="T4Templates\BreadcrumbPageMappings.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>BreadcrumbPageMappings.tt</DependentUpon>
+	  </Compile>
+	  <Compile Update="T4Templates\NavigationPageMappings.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>NavigationPageMappings.tt</DependentUpon>
+	  </Compile>
+	</ItemGroup>
 	<!-- 
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
     Explorer "Package and Publish" context menu entry to be enabled for this project even if 
@@ -57,4 +84,13 @@
 	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
+  <Target Name="TransformAllT4Templates" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <!-- This picks up all T4 templates in the project -->
+      <T4Template Include="**\*.tt" />
+    </ItemGroup>
+
+    <!-- Check if TextTransform.exe exists before running -->
+    <Exec Command="if exist &quot;$(EnvDir)TextTransform.exe&quot; &quot;$(EnvDir)TextTransform.exe&quot; &quot;%(T4Template.FullPath)&quot;" Condition="Exists('$(EnvDir)TextTransform.exe')" />
+  </Target>
 </Project>
