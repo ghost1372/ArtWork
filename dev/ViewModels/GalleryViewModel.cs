@@ -55,7 +55,7 @@ public partial class GalleryViewModel : ObservableRecipient, ITitleBarAutoSugges
 
     public async void Search()
     {
-        var txtSearch = MainPage.Instance.GetAutoSuggestBox();
+        var txtSearch = MainWindow.Instance.GetAutoSuggestBox();
         using var db = new ArtWorkDbContext();
         IQueryable<Art> arts = db.Arts;
 

@@ -17,7 +17,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <uc:ArtCommandBar />
+        <Border Margin="10"
+                CornerRadius="{ThemeResource OverlayCornerRadius}">
+            <uc:ArtCommandBar />
+        </Border>
         <StackPanel Grid.Row="1"
                     Margin="0,0,0,5">
             <NavigationViewItemSeparator Margin="0,0,0,10" />

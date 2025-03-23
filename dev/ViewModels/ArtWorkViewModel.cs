@@ -105,7 +105,7 @@ public partial class ArtWorkViewModel : ObservableRecipient, ITitleBarAutoSugges
             return false;
 
         var query = (Art)item;
-        var txtSearch = MainPage.Instance.GetAutoSuggestBox();
+        var txtSearch = MainWindow.Instance.GetAutoSuggestBox();
         switch (Filter)
         {
             case DataFilter.SimplifiedSig:

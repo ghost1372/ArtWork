@@ -30,23 +30,12 @@ public partial class App : Application
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        MainWindow = new Window();
-
-        if (MainWindow.Content is not Frame rootFrame)
-        {
-            MainWindow.Content = rootFrame = new Frame();
-        }
+        MainWindow = new MainWindow();
 
         if (GetThemeService != null)
         {
-            GetThemeService.AutoInitialize(MainWindow)
-                .ConfigureTintColor();
+            GetThemeService.AutoInitialize(MainWindow);
         }
-
-        rootFrame.Navigate(typeof(MainPage));
-
-        MainWindow.Title = MainWindow.AppWindow.Title = ProcessInfoHelper.ProductNameAndVersion;
-        MainWindow.AppWindow.SetIcon("Assets/icon.ico");
 
         MainWindow.Activate();
 

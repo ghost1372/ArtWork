@@ -1,14 +1,17 @@
-﻿namespace ArtWork.Views;
+﻿namespace ArtWork;
 
-public sealed partial class MainPage : Page
+public sealed partial class MainWindow : Window
 {
-    public static MainPage Instance { get; set; }
-    public MainPage()
+    internal static MainWindow Instance { get; private set; }
+    public MainWindow()
     {
         this.InitializeComponent();
         Instance = this;
-        App.MainWindow.ExtendsContentIntoTitleBar = true;
-        App.MainWindow.SetTitleBar(AppTitleBar);
+
+        ExtendsContentIntoTitleBar = true;
+        SetTitleBar(AppTitleBar);
+        Title = AppWindow.Title = ProcessInfoHelper.ProductNameAndVersion;
+        AppWindow.SetIcon("Assets/icon.ico");
 
         var NavService = App.GetService<IJsonNavigationService>() as JsonNavigationService;
         if (NavService != null)
@@ -21,6 +24,7 @@ public sealed partial class MainPage : Page
                 .ConfigureBreadcrumbBar(BreadCrumbNav, BreadcrumbPageMappings.PageDictionary);
         }
     }
+
     private void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
         AutoSuggestBoxHelper.OnITitleBarAutoSuggestBoxTextChangedEvent(sender, args, NavFrame);
@@ -43,7 +47,6 @@ public sealed partial class MainPage : Page
 
     private void ThemeButton_Click(object sender, RoutedEventArgs e)
     {
-        ThemeService.ChangeThemeWithoutSave(App.MainWindow);
+        ThemeService.ChangeThemeWithoutSave(this);
     }
 }
-

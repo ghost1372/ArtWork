@@ -63,7 +63,9 @@ public partial class DownloadViewModel : ObservableRecipient
 
         var fileTypeChoices = new Dictionary<string, IList<string>>();
         fileTypeChoices.Add("Text", new List<string> { ".txt" });
-        var file = await FileAndFolderPickerHelper.PickSaveFileAsync(App.MainWindow, fileTypeChoices);
+        var picker = new SavePicker(App.MainWindow);
+        picker.FileTypeChoices = fileTypeChoices;
+        var file = await picker.PickSaveFileAsync();
         if (file != null)
         {
             using FileStream fs = new FileStream(file.Path, FileMode.Create);
@@ -90,7 +92,9 @@ public partial class DownloadViewModel : ObservableRecipient
         {
             var fileTypeChoices = new Dictionary<string, IList<string>>();
             fileTypeChoices.Add("Text", new List<string> { ".txt" });
-            var file = await FileAndFolderPickerHelper.PickSaveFileAsync(App.MainWindow, fileTypeChoices);
+            var picker = new SavePicker(App.MainWindow);
+            picker.FileTypeChoices = fileTypeChoices;
+            var file = await picker.PickSaveFileAsync();
             if (file != null)
             {
                 using FileStream fs = new FileStream(file.Path, FileMode.Create);

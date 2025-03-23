@@ -17,11 +17,7 @@ public partial class GeneralSettingViewModel : ObservableObject
     [RelayCommand]
     private async Task OnChooseArtWorkPath()
     {
-        FolderPicker folderPicker = new();
-        folderPicker.FileTypeFilter.Add("*");
-
-        WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, WindowNative.GetWindowHandle(App.MainWindow));
-
+        DevWinUI.FolderPicker folderPicker = new(App.MainWindow);
         StorageFolder folder = await folderPicker.PickSingleFolderAsync();
         if (folder is not null)
         {

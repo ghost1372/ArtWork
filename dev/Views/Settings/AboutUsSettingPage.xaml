@@ -13,7 +13,7 @@
         <StackPanel Margin="10"
                     ChildrenTransitions="{StaticResource SettingsCardsAnimations}"
                     Spacing="5">
-            <dev:SettingsExpander Description="Description"
+            <dev:SettingsExpander Description="Download and Search over 12,000 beautiful, high-resolution artworks famous paintings, sculptures, and architectural wonders from around the world."
                                   Header="ArtWork"
                                   HeaderIcon="{dev:BitmapIcon Source=Assets/icon.png}"
                                   IsExpanded="True">
